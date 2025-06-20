@@ -2,37 +2,44 @@ import React, { useState, useEffect } from 'react';
 
 const TrackerBarca = () => {
   const [barca, setBarca] = useState({
-    nome: "Barca Test",
-    latitudine: 44.1015,
-    longitudine: 9.8195
+    nome: "Titanic",
+    latitudine: 50.9039,
+    longitudine: -1.4043
   });
 
   const [posizioni, setPosizioni] = useState([]);
 
   useEffect(() => {
+    // Velocità in gradi lat/lng per aggiornamento
+    const velocità = 0.0005; 
+    // Direzione in radianti (ad esempio 45°)
+    const direzione = Math.PI / 4; 
+
     const timer = setInterval(() => {
-      const nuovaLat = barca.latitudine + (Math.random() - 0.5) * 0.001;
-      const nuovaLng = barca.longitudine + (Math.random() - 0.5) * 0.001;
-      const ora = new Date();
+      setBarca(barcaPrecedente => {
+        const nuovaLat = barcaPrecedente.latitudine + velocità * Math.cos(direzione);
+        const nuovaLng = barcaPrecedente.longitudine + velocità * Math.sin(direzione);
+        const ora = new Date();
 
-      setBarca({
-        ...barca,
-        latitudine: nuovaLat,
-        longitudine: nuovaLng
+        setPosizioni(vecchiePosizioni => [
+          ...vecchiePosizioni,
+          {
+            lat: nuovaLat,
+            lng: nuovaLng,
+            tempo: ora.toLocaleTimeString()
+          }
+        ]);
+  
+        return {
+          ...barcaPrecedente,
+          latitudine: nuovaLat,
+          longitudine: nuovaLng
+        };
       });
-
-      setPosizioni(vecchiePosizioni => [
-        ...vecchiePosizioni,
-        {
-          lat: nuovaLat,
-          lng: nuovaLng,
-          tempo: ora.toLocaleTimeString()
-        }
-      ]);
     }, 3000);
 
     return () => clearInterval(timer);
-  }, [barca]);
+}, []);
 
   return (
     <div style={{
@@ -59,7 +66,7 @@ const TrackerBarca = () => {
           textAlign: 'center',
           letterSpacing: '-0.5px'
         }}>
-          🚢 Tracker della Barca
+          🚢 Tracker Titanic
         </h1>
       </div>
 
@@ -114,83 +121,6 @@ const TrackerBarca = () => {
           }}>
             <div style={{ fontSize: '14px', opacity: '0.8', marginBottom: '5px' }}>Longitudine</div>
             <div style={{ fontSize: '18px', fontWeight: '600' }}>{barca.longitudine.toFixed(6)}</div>
-          </div>
-        </div>
-      </div>
-
-      <div style={{
-        background: 'rgba(255, 255, 255, 0.95)',
-        backdropFilter: 'blur(20px)',
-        borderRadius: '20px',
-        padding: '30px',
-        marginBottom: '25px',
-        border: '1px solid rgba(255, 255, 255, 0.3)',
-        boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)'
-      }}>
-        <h3 style={{
-          fontSize: '20px',
-          fontWeight: '600',
-          color: '#1d1d1f',
-          margin: '0 0 20px 0',
-          letterSpacing: '-0.2px'
-        }}>
-          Mappa di Navigazione
-        </h3>
-
-        <div style={{
-          background: 'linear-gradient(135deg, #74b9ff 0%, #0984e3 100%)',
-          height: '350px',
-          borderRadius: '15px',
-          position: 'relative',
-          overflow: 'hidden',
-          boxShadow: '0 10px 25px rgba(0, 0, 0, 0.15)'
-        }}>
-          <div style={{
-            position: 'absolute',
-            top: '30px',
-            left: '30px',
-            background: 'rgba(0, 0, 0, 0.8)',
-            color: 'white',
-            padding: '12px 20px',
-            borderRadius: '25px',
-            fontSize: '14px',
-            fontWeight: '600',
-            backdropFilter: 'blur(10px)',
-            border: '1px solid rgba(255, 255, 255, 0.2)'
-          }}>
-            ⚓ PORTO DI BOLANO
-          </div>
-
-          {posizioni.slice(-20).map((pos, index) => (
-            <div key={index} style={{
-              position: 'absolute',
-              top: `${120 + (pos.lat - 44.1) * 15000}px`,
-              left: `${120 + (pos.lng - 9.82) * 15000}px`,
-              width: `${3 + index * 0.5}px`,
-              height: `${3 + index * 0.5}px`,
-              background: `rgba(255, 255, 255, ${0.3 + index * 0.035})`,
-              borderRadius: '50%',
-              transition: 'all 0.3s ease'
-            }} />
-          ))}
-
-          <div style={{
-            position: 'absolute',
-            top: `${120 + (barca.latitudine - 44.1) * 15000}px`,
-            left: `${120 + (barca.longitudine - 9.82) * 15000}px`,
-            width: '24px',
-            height: '24px',
-            background: 'linear-gradient(135deg, #fd79a8 0%, #e84393 100%)',
-            borderRadius: '50%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '12px',
-            boxShadow: '0 0 20px rgba(253, 121, 168, 0.8)',
-            animation: 'pulse 2s infinite',
-            border: '3px solid white'
-          }}>
-            🚢
           </div>
         </div>
       </div>
