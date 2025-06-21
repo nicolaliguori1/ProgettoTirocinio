@@ -61,7 +61,7 @@ const TrackerBarca = () => {
         <h1 style={{
           fontSize: '32px',
           fontWeight: '700',
-          color: 'white',
+          color: '#003366',
           margin: '0',
           textAlign: 'center',
           letterSpacing: '-0.5px'
