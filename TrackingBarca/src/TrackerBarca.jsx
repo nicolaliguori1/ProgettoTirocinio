@@ -66,7 +66,7 @@ const TrackerBarca = () => {
           textAlign: 'center',
           letterSpacing: '-0.5px'
         }}>
-        Tracker Titanic
+        Tracking {barca.nome}
         </h1>
       </div>
 
@@ -82,9 +82,10 @@ const TrackerBarca = () => {
         <h2 style={{
           fontSize: '24px',
           fontWeight: '600',
-          color: '#1d1d1f',
+          color: '#003366',
           margin: '0 0 20px 0',
-          letterSpacing: '-0.3px'
+          letterSpacing: '-0.3px',
+          textAlign: 'center'
         }}>
           Posizione Live
         </h2>
@@ -94,7 +95,7 @@ const TrackerBarca = () => {
             background: 'linear-gradient(135deg, #007fff 0%, #ffffff 100%)',
             borderRadius: '15px',
             padding: '20px',
-            color: 'white',
+            color: '#003366',
             textAlign: 'center',
             boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)' // leggera ombra per profondità
           }}>
@@ -106,7 +107,7 @@ const TrackerBarca = () => {
             background: 'linear-gradient(135deg, #007fff 0%, #ffffff 100%)',
             borderRadius: '15px',
             padding: '20px',
-            color: 'white',
+            color: '#003366',
             textAlign: 'center',
             boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)' // leggera ombra per profondità
           }}>
@@ -118,7 +119,7 @@ const TrackerBarca = () => {
                   background: 'linear-gradient(135deg, #007fff 0%, #ffffff 100%)',
                   borderRadius: '15px',
                   padding: '20px',
-                  color: 'white',
+                  color: '#003366',
                   textAlign: 'center',
                   boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)' // leggera ombra per profondità
           }}>
@@ -138,11 +139,12 @@ const TrackerBarca = () => {
         boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)'
       }}>
         <h3 style={{
-          fontSize: '20px',
+          fontSize: '24px',
           fontWeight: '600',
-          color: '#1d1d1f',
+          color: '#003366',
           margin: '0 0 20px 0',
-          letterSpacing: '-0.2px'
+          letterSpacing: '-0.2px',
+          textAlign: 'center'
         }}>
           Statistiche di Viaggio
         </h3>
@@ -152,7 +154,7 @@ const TrackerBarca = () => {
                   background: 'linear-gradient(135deg, #007fff 0%, #ffffff 100%)',
                   borderRadius: '15px',
                   padding: '20px',
-                  color: 'white',
+                  color: '#003366',
                   textAlign: 'center',
                   boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)' // leggera ombra per profondità
           }}>
@@ -164,7 +166,7 @@ const TrackerBarca = () => {
               background: 'linear-gradient(135deg, #007fff 0%, #ffffff 100%)',
               borderRadius: '15px',
               padding: '20px',
-              color: 'white',
+              color: '#003366',
               textAlign: 'center',
               boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)' // leggera ombra per profondità
           }}>
@@ -178,7 +180,7 @@ const TrackerBarca = () => {
             background: 'linear-gradient(135deg, #007fff 0%, #ffffff 100%)',
             borderRadius: '15px',
             padding: '20px',
-            color: 'white',
+            color: '#003366',
             textAlign: 'center',
             boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)' // leggera ombra per profondità
           }}>
@@ -199,11 +201,12 @@ const TrackerBarca = () => {
         boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)'
       }}>
         <h3 style={{
-          fontSize: '20px',
+          fontSize: '24px',
           fontWeight: '600',
-          color: '#1d1d1f',
+          color: '#003366',
           margin: '0 0 20px 0',
-          letterSpacing: '-0.2px'
+          letterSpacing: '-0.2px',
+          textAlign: 'center'
         }}>
           Storico Recente
         </h3>
@@ -223,20 +226,20 @@ const TrackerBarca = () => {
             }}>
               <div style={{
                 fontWeight: '600',
-                color: 'black',
+                color: '#003366',
                 fontSize: '14px'
               }}>
                 {pos.tempo}
               </div>
               <div style={{
-                color: '#1d1d1f',
+                color: '#003366',
                 fontSize: '14px',
                 fontFamily: 'SF Mono, Monaco, monospace'
               }}>
                 {pos.lat.toFixed(6)}
               </div>
               <div style={{
-                color: '#1d1d1f',
+                color: '#003366',
                 fontSize: '14px',
                 fontFamily: 'SF Mono, Monaco, monospace'
               }}>
