@@ -44,7 +44,7 @@ const TrackerBarca = () => {
   return (
     <div style={{
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      background: 'linear-gradient(135deg, #007fff 0%, #ffffff 100%)',
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
       padding: '20px'
     }}>
@@ -66,7 +66,7 @@ const TrackerBarca = () => {
           textAlign: 'center',
           letterSpacing: '-0.5px'
         }}>
-          🚢 Tracker Titanic
+        Tracker Titanic
         </h1>
       </div>
 
@@ -91,33 +91,36 @@ const TrackerBarca = () => {
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '20px' }}>
           <div style={{
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            background: 'linear-gradient(135deg, #007fff 0%, #ffffff 100%)',
             borderRadius: '15px',
             padding: '20px',
             color: 'white',
-            textAlign: 'center'
+            textAlign: 'center',
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)' // leggera ombra per profondità
           }}>
             <div style={{ fontSize: '14px', opacity: '0.8', marginBottom: '5px' }}>Nome</div>
             <div style={{ fontSize: '18px', fontWeight: '600' }}>{barca.nome}</div>
           </div>
 
           <div style={{
-            background: 'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)',
+            background: 'linear-gradient(135deg, #007fff 0%, #ffffff 100%)',
             borderRadius: '15px',
             padding: '20px',
-            color: '#8b4513',
-            textAlign: 'center'
+            color: 'white',
+            textAlign: 'center',
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)' // leggera ombra per profondità
           }}>
             <div style={{ fontSize: '14px', opacity: '0.8', marginBottom: '5px' }}>Latitudine</div>
             <div style={{ fontSize: '18px', fontWeight: '600' }}>{barca.latitudine.toFixed(6)}</div>
           </div>
 
           <div style={{
-            background: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)',
-            borderRadius: '15px',
-            padding: '20px',
-            color: '#2c5aa0',
-            textAlign: 'center'
+                  background: 'linear-gradient(135deg, #007fff 0%, #ffffff 100%)',
+                  borderRadius: '15px',
+                  padding: '20px',
+                  color: 'white',
+                  textAlign: 'center',
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)' // leggera ombra per profondità
           }}>
             <div style={{ fontSize: '14px', opacity: '0.8', marginBottom: '5px' }}>Longitudine</div>
             <div style={{ fontSize: '18px', fontWeight: '600' }}>{barca.longitudine.toFixed(6)}</div>
@@ -146,22 +149,24 @@ const TrackerBarca = () => {
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '15px' }}>
           <div style={{
-            background: 'linear-gradient(135deg, #fd79a8 0%, #fdcb6e 100%)',
-            borderRadius: '15px',
-            padding: '25px',
-            color: 'white',
-            textAlign: 'center'
+                  background: 'linear-gradient(135deg, #007fff 0%, #ffffff 100%)',
+                  borderRadius: '15px',
+                  padding: '20px',
+                  color: 'white',
+                  textAlign: 'center',
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)' // leggera ombra per profondità
           }}>
             <div style={{ fontSize: '32px', fontWeight: '700', marginBottom: '5px' }}>{posizioni.length}</div>
             <div style={{ fontSize: '14px', opacity: '0.9' }}>Punti Tracciati</div>
           </div>
 
           <div style={{
-            background: 'linear-gradient(135deg, #00cec9 0%, #55a3ff 100%)',
-            borderRadius: '15px',
-            padding: '25px',
-            color: 'white',
-            textAlign: 'center'
+              background: 'linear-gradient(135deg, #007fff 0%, #ffffff 100%)',
+              borderRadius: '15px',
+              padding: '20px',
+              color: 'white',
+              textAlign: 'center',
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)' // leggera ombra per profondità
           }}>
             <div style={{ fontSize: '16px', fontWeight: '600', marginBottom: '5px' }}>
               {posizioni.length > 0 ? posizioni[0].tempo : '--:--'}
@@ -170,11 +175,12 @@ const TrackerBarca = () => {
           </div>
 
           <div style={{
-            background: 'linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%)',
+            background: 'linear-gradient(135deg, #007fff 0%, #ffffff 100%)',
             borderRadius: '15px',
-            padding: '25px',
+            padding: '20px',
             color: 'white',
-            textAlign: 'center'
+            textAlign: 'center',
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)' // leggera ombra per profondità
           }}>
             <div style={{ fontSize: '16px', fontWeight: '600', marginBottom: '5px' }}>
               {posizioni.length > 0 ? posizioni[posizioni.length - 1].tempo : '--:--'}
@@ -217,7 +223,7 @@ const TrackerBarca = () => {
             }}>
               <div style={{
                 fontWeight: '600',
-                color: '#667eea',
+                color: 'black',
                 fontSize: '14px'
               }}>
                 {pos.tempo}
