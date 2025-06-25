@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
+
 const TrackerBarca = () => {
   const [barca, setBarca] = useState({
     nome: "Titanic",
@@ -10,6 +11,7 @@ const TrackerBarca = () => {
   const [posizioni, setPosizioni] = useState([]);
 
   useEffect(() => {
+    document.title = `${barca.nome}`;
     // Velocità in gradi lat/lng per aggiornamento
     const velocità = 0.0005; 
     // Direzione in radianti (ad esempio 45°)

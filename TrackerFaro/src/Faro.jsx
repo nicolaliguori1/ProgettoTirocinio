@@ -13,6 +13,7 @@ const TrackerFaro = () => {
   });
 
   useEffect(() => {
+    document.title = `${faro.nome}`;
     const timer = setInterval(() => {
       setStato(prev => ({
         ...prev,
