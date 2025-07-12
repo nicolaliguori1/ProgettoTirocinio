@@ -1,0 +1,18 @@
+{
+    "lang": "it",
+    "name": "PWA Faro",
+    "short_name": "Faro",
+    "description": "Applicazione web per il monitoraggio del punto di riferimento a terra/molo)",
+    "start_url": "/",
+    "background_color": "#FFD700",
+    "theme_color": "#FFD700",
+    "orientation": "any",
+    "display": "natural",
+    "icons": [
+    {
+    "src": "/icons/icona_faro.png",
+    "sizes": "512x512"
+    }
+    ]
+    }
+    
