@@ -19,9 +19,23 @@ function getStats() {
   };
 }
 
+// 🔽 Nuova funzione per inviare la posizione al backend
+async function saveToServer(position) {
+  try {
+    await fetch('/api/position', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(position),
+    });
+  } catch (error) {
+    console.error("Errore nel salvataggio della posizione:", error);
+  }
+}
+
 function stepSimulation() {
   const newPos = generateNextPosition();
   updateHistory(newPos);
+  saveToServer(newPos); // 🔽 Invio al backend
   return newPos;
 }
 
