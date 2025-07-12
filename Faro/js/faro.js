@@ -57,3 +57,9 @@ window.addEventListener("DOMContentLoaded", () => {
     setInterval(controllaStatoFaro, 10000);
   });
   
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/service-worker.js')
+      .then(() => console.log('Service Worker registrato'))
+      .catch(err => console.error('Service Worker fallito:', err));
+  }
+  
