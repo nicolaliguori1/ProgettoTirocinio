@@ -45,3 +45,4 @@ function tick() {
 
 // Avvia la simulazione ogni 2 secondi
 setInterval(tick, 2000);
+//commento

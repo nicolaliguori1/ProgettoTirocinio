@@ -40,3 +40,4 @@ function stepSimulation() {
 }
 
 export { stepSimulation, getHistory, getStats };
+//commento

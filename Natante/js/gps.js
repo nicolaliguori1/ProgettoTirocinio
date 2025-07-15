@@ -20,3 +20,4 @@ let currentPosition = {
   }
   
   export { generateNextPosition };
+  //commento
