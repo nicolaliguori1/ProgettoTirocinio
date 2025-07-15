@@ -4,11 +4,11 @@ let history = [];
 
 function updateHistory(position) {
   history.push(position);
-  if (history.length > 10) history.shift(); // Mantieni solo ultimi 10
+  if (history.length > 10) history.shift(); // Mantieni solo gli ultimi 10 punti
 }
 
 function getHistory() {
-  return [...history]; // Copia immutabile
+  return [...history]; // restituisce una copia immutabile
 }
 
 function getStats() {
@@ -19,25 +19,37 @@ function getStats() {
   };
 }
 
-// 🔽 Nuova funzione per inviare la posizione al backend
+// Funzione per inviare la posizione al backend
 async function saveToServer(position) {
   try {
-    await fetch('/api/position', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+    const response = await fetch("http://localhost:3000/api/position", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(position),
     });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    console.log("✅ Posizione salvata:", data);
   } catch (error) {
-    console.error("Errore nel salvataggio della posizione:", error);
+    console.error("❌ Errore nel salvataggio della posizione:", error);
   }
 }
 
 function stepSimulation() {
   const newPos = generateNextPosition();
+
+  // Assicurati che newPos abbia timestamp
+  if (!newPos.timestamp) {
+    newPos.timestamp = new Date().toISOString();
+  }
+
   updateHistory(newPos);
-  saveToServer(newPos); // 🔽 Invio al backend
+  saveToServer(newPos); // invia al backend (in modo asincrono, non blocca)
+
   return newPos;
 }
 
 export { stepSimulation, getHistory, getStats };
-//commento
+
