@@ -26,4 +26,5 @@ $barca = pg_fetch_assoc($result);
     <link rel="stylesheet" href="style.css">
     <title><?php echo htmlspecialchars($barca['nome']); ?></title>
 </head>
+
 </html>

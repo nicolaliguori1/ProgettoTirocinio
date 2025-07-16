@@ -9,7 +9,7 @@
         if (!empty($email) && !empty($password)) {
             $db = pg_connect($connection_string) or die('Impossibile connettersi al database.');
 
-            $query = "SELECT * FROM registrazione WHERE email = $1";
+            $query = "SELECT * FROM users WHERE email = $1";
             $prep = pg_prepare($db, "login_query", $query);
             $result = pg_execute($db, "login_query", [$email]);
 
@@ -18,9 +18,7 @@
             if ($data && password_verify($password, $data['pw'])) {
                 $_SESSION['nome'] = $data['nome_utente']; // Cambiato da nome → nome_utente
                 $_SESSION['email'] = $data['email'];
-                $_SESSION['cap'] = $data['cap'] ?? null;
-                $_SESSION['data'] = $data['data'] ?? null;
-                $_SESSION['tipo'] = $data['tipo'] ?? null;
+                header("Location: dashboard.php");
 
                 http_response_code(200); // Successo
             } else {
