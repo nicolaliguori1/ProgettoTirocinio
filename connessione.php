@@ -1,9 +1,9 @@
 <?php
 $host = 'localhost';
 $port = '5432';
-$db = 'Tirocinio';
-$username = 'www';
-$db_password = 'tw2024';
+$db = 'tirocinio';
+$username = 'tiroboat';
+$db_password = 'tiroboat';
 $connection_string = "host=$host dbname=$db user=$username password=$db_password ";
 
 $db = pg_connect($connection_string)
