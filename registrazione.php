@@ -8,13 +8,10 @@
     require_once 'connessione.php';
 
     // Inizializzazione variabili
-    $nome = $_POST["nome"] ?? "";
+    $nome_utente = $_POST["nome_utente"] ?? "";
     $email = $_POST["email"] ?? "";
     $password = $_POST["password"] ?? "";
     $conferma_password = $_POST["conferma-password"] ?? "";
-    $cap = $_POST['cap'] ?? "";
-    $data = $_POST['data'] ?? "";
-    $tipo = $_POST['tipo'] ?? "";
     $errore_email = $errore_conferma_password = "";
     $email_valid = true; // Variabile per segnalare se l'email è valida
 
