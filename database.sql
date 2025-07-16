@@ -1,9 +1,3 @@
--- Creazione del database
-CREATE DATABASE TIROCINIO 
-    WITH OWNER = postgres 
-    ENCODING = 'UTF8' 
-    LOCALE_PROVIDER = libc 
-    LOCALE = 'C';
 
 -- Abilita l'estensione per l'hashing delle password
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
