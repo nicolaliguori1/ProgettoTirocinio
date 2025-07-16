@@ -1,7 +1,7 @@
 <?php
 $host = 'localhost';
 $port = '5432';
-$db = 'gruppo19';
+$db = 'Tirocinio';
 $username = 'www';
 $db_password = 'tw2024';
 $connection_string = "host=$host dbname=$db user=$username password=$db_password ";
