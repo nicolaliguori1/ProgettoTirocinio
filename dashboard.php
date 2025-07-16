@@ -3,45 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="home.css">
-    <link rel="stylesheet" href="FOOTER/footer.css">
+    <link rel="stylesheet" href="dashboard.css">
     <title>Dashboard</title>
 </head>
 
 <body>
 
-    <div class="Dasboard">
+<div class="Dasboard">
 
-        <div class="Opzioni">
+<!-- Logo centrato -->
+<div class="Logo">
+    <img src="icona_natante.png" alt="Logo" class="logo-img">
+</div>
 
-            <div class="myboat">
-                <button class="custom-button" onclick="location.href='elencoBarche.php'">My Boats</button>
-            </div>
-
-            <div class="myport">
-            <button class="custom-button" onclick="location.href='elencoPorti.php'">Ports</button>
-            </div>
-
-            
-
-            
-
-            
-
-            
-
-            
-            
-
-            
-
-            
-
-            
-
-            
-        </div>
+<div class="Opzioni">
+    <div class="myboat">
+        <button class="custom-button" onclick="location.href='elencoBarche.php'">My Boats</button>
     </div>
+
+    <div class="myport">
+        <button class="custom-button" onclick="location.href='elencoPorti.php'">Ports</button>
+    </div>
+</div>
+</div>
+
     
 
     <?php
