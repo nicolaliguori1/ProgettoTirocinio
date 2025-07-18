@@ -24,20 +24,20 @@ CREATE TABLE boats (
   id_user INT,
   id_faro INT,
   FOREIGN KEY (id_user) REFERENCES users(id)
-    ON DELETE CASCADE 
+    ON DELETE SET NULL 
     ON UPDATE CASCADE
   FOREIGN KEY (id_faro) REFERENCES fari(id)
-    ON DELETE CASCADE 
+    ON DELETE SET NULL 
     ON UPDATE CASCADE
 );
 
 CREATE TABLE boats_position (
   ts TIMESTAMP DEFAULT NOW(),
-  targa_barca VARCHAR(20),
+  targa_barca VARCHAR(20) NOT NULL,
   lat DOUBLE PRECISION NOT NULL,
   lon DOUBLE PRECISION NOT NULL,
   PRIMARY KEY (ts, targa_barca),
   FOREIGN KEY (targa_barca) REFERENCES boats(targa)
-    ON DELETE SET NULL 
+    ON DELETE CASCADE
     ON UPDATE CASCADE
 );

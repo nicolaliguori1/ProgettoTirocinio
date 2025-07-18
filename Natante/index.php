@@ -16,11 +16,11 @@
       }
 
       try {
-        const res = await fetch(`/api/cerca-nave.php?nome=` + encodeURIComponent(input));
+        const res = await fetch(`boat_info.php?nome=` + encodeURIComponent(input));
         const data = await res.json();
 
         if (data.trovata) {
-          window.location.href = 'nave.php?nome=' + encodeURIComponent(input);
+          window.location.href = 'barca.php?nome=' + encodeURIComponent(input);
         } else {
           alert("Barca non trovata.");
         }

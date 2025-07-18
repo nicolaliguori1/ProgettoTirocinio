@@ -32,25 +32,6 @@ function renderHistory() {
   });
 }
 
-// Funzione per inviare la posizione al backend
-function sendPositionToServer(position) {
-  fetch("http://localhost:3000/api/position", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(position),
-  })
-    .then((res) => {
-      if (!res.ok) throw new Error("Errore nel salvataggio");
-      return res.json();
-    })
-    .then((data) => {
-      console.log("✅ Posizione salvata:", data);
-    })
-    .catch((err) => {
-      console.error("❌ Errore fetch:", err);
-    });
-}
-
 function tick() {
   const newPos = stepSimulation();
 
