@@ -1,35 +1,23 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+include 'connessione.php';
 
-session_start();
-require_once 'connessione.php';
-
-$query = "SELECT nome FROM boats ORDER BY nome ASC";
+// Query per tutte le barche
+$query = "SELECT * FROM boats";
 $result = pg_query($conn, $query);
 
 if (!$result) {
-    die("Errore nella query al database.");
+    die("Errore nella query.");
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="it">
-<head>
-  <meta charset="UTF-8">
-  <title>Elenco Barche</title>
-</head>
-<body>
-  <h1>Seleziona una barca</h1>
-  <ul>
-    <?php while ($row = pg_fetch_assoc($result)): ?>
-      <li>
-        <a href="DettaglioBarca.php?boats=<?php echo urlencode($row['nome']); ?>">
-          <?php echo htmlspecialchars($row['nome']); ?>
-        </a>
-      </li>
+<h1>Elenco Barche</h1>
+<ul>
+    <?php while ($barca = pg_fetch_assoc($result)): ?>
+        <li>
+            <strong><?php echo htmlspecialchars($barca['nome']); ?></strong> - 
+            Targa: <?php echo htmlspecialchars($barca['targa']); ?> - 
+            Lunghezza: <?php echo htmlspecialchars($barca['lunghezza']); ?>m
+            <a href="DettaglioBarca.php?targa=<?php echo urlencode($barca['targa']); ?>">Dettagli</a>
+        </li>
     <?php endwhile; ?>
-  </ul>
-</body>
-</html>
+</ul>
