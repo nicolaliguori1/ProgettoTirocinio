@@ -11,7 +11,7 @@ if (!$conn) {
 $nome = $_GET['nome'] ?? '';
 $nome = pg_escape_string($conn, $nome);
 
-$query = "SELECT * FROM boats WHERE nome = '$nome' OR targa = '$nome'";
+$query = "SELECT * FROM boats WHERE targa = '$nome'";
 $result = pg_query($conn, $query);
 
 if ($result && pg_num_rows($result) > 0) {

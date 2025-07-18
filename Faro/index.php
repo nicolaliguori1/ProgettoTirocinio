@@ -11,16 +11,22 @@
       const input = document.getElementById('codiceFaro').value.trim();
 
       if (input === '') {
-        alert("Inserisci un codice o nome valido.");
+        alert("Inserisci un codice ID valido.");
+        return;
+      }
+
+      // opzionale: verifica che input sia numerico
+      if (!/^\d+$/.test(input)) {
+        alert("Inserisci un ID numerico valido.");
         return;
       }
 
       try {
-        const res = await fetch(`/api/cerca-faro.php?nome=` + encodeURIComponent(input));
+        const res = await fetch(`faro_info.php?id=` + encodeURIComponent(input));
         const data = await res.json();
 
         if (data.trovato) {
-          window.location.href = 'faro.php?nome=' + encodeURIComponent(input);
+          window.location.href = 'faro.php?id=' + encodeURIComponent(input);
         } else {
           alert("Faro non trovato.");
         }
@@ -35,10 +41,11 @@
 <body>
   <div class="container">
     <h1>Benvenuto nel Lighthouse Tracker</h1>
-    <p>Inserisci il nome o codice del faro per visualizzare i dettagli.</p>
+    <p>Inserisci l'ID numerico del faro per visualizzare i dettagli.</p>
 
-    <input type="text" id="codiceFaro" placeholder="Es: Port of Southampton, FARO-123">
+    <input type="text" id="codiceFaro" placeholder="Es: 1, 2, 3...">
     <button onclick="cercaFaro()">Cerca</button>
   </div>
 </body>
 </html>
+
