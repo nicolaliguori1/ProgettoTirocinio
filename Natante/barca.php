@@ -1,12 +1,11 @@
 <?php
 require __DIR__ . '/../connessione.php';
 
+$targa = $_GET['targa'] ?? '';
+$targa = pg_escape_string($conn, $targa);
 
-$nome = $_GET['nome'] ?? '';
-$nome = pg_escape_string($conn, $nome);
-
-// Prendi targa e nome della barca
-$query_barca = "SELECT * FROM boats WHERE nome = '$nome' OR targa = '$nome'";
+// Recupera i dati della barca tramite targa
+$query_barca = "SELECT * FROM boats WHERE targa = '$targa'";
 $res_barca = pg_query($conn, $query_barca);
 $barca = pg_fetch_assoc($res_barca);
 
@@ -15,31 +14,27 @@ if (!$barca) {
     exit;
 }
 
-
-
-$targa = $barca['targa'];
 $nome_barca = $barca['nome'];
 
-// Ultima posizione (live)
+// Ultima posizione
 $res_live = pg_query($conn, "
     SELECT ts, lat, lon 
-FROM boats_position 
-WHERE targa_barca = '$targa' 
-  AND ts = (SELECT MAX(ts) FROM boats_position WHERE targa_barca = '$targa')
-
+    FROM boats_position 
+    WHERE targa_barca = '$targa' 
+      AND ts = (SELECT MAX(ts) FROM boats_position WHERE targa_barca = '$targa')
 ");
 $live = pg_fetch_assoc($res_live);
 
-
-// Storico recente (ultimi 10)
+// Storico ultimi 10
 $res_storico = pg_query($conn, "
    SELECT ts, lat, lon 
-FROM boats_position 
-WHERE targa_barca = '$targa' 
-ORDER BY ts DESC 
-LIMIT 10;
+   FROM boats_position 
+   WHERE targa_barca = '$targa' 
+   ORDER BY ts DESC 
+   LIMIT 10
 ");
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en-US" dir="ltr">

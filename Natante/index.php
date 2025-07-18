@@ -11,16 +11,16 @@
       const input = document.getElementById('codiceBarca').value.trim();
 
       if (input === '') {
-        alert("Inserisci un codice o nome valido.");
+        alert("Inserisci una targa valida.");
         return;
       }
 
       try {
-        const res = await fetch(`boat_info.php?nome=` + encodeURIComponent(input));
+        const res = await fetch(`boat_info.php?targa=` + encodeURIComponent(input));
         const data = await res.json();
 
         if (data.trovata) {
-          window.location.href = 'barca.php?nome=' + encodeURIComponent(input);
+          window.location.href = 'barca.php?targa=' + encodeURIComponent(input);
         } else {
           alert("Barca non trovata.");
         }
@@ -35,9 +35,9 @@
 <body>
   <div class="container">
     <h1>Benvenuto nel Boat Tracker</h1>
-    <p>Inserisci il nome o codice della barca per visualizzare i dettagli.</p>
+    <p>Inserisci la targa della barca per visualizzare i dettagli.</p>
 
-    <input type="text" id="codiceBarca" placeholder="Es: Titanic, ITA-001">
+    <input type="text" id="codiceBarca" placeholder="Es: ITA-001">
     <button onclick="cercaBarca()">Cerca</button>
   </div>
 </body>
