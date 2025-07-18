@@ -4,7 +4,7 @@ session_start();
 require_once 'connessione.php';
 
 // Verifica se è stato passato un parametro "barca"
-if (!isset($_GET['barca'])) || !is_numeric($_GET['barca']) {
+if (!isset($_GET['barca']) || !is_numeric($_GET['barca'])) {
     die("Errore: nessuna barca selezionata.");
 }
 
@@ -26,5 +26,59 @@ $barca = pg_fetch_assoc($result);
     <link rel="stylesheet" href="style.css">
     <title><?php echo htmlspecialchars($barca['nome']); ?></title>
 </head>
+<body>
+<div class="sezione">
+    <h1></h1>
+    <div class="box-wrapper">
+      <div class="box">
+        <h2><strong>Targa</strong></h2>
+        <h2></h2>
+      </div>
+      <div class="box">
+        <h2><strong>Proprietario</strong></h2>
+        <h2></h2>
+      </div>
+    </div>
+  </div>
 
+  <div class="sezione">
+    <h1>Posizione Barca</h1>
+    <div class="box-wrapper">
+      <div class="box">
+        <h2>Latitudine</h2>
+        <h2></h2>
+      </div>
+      <div class="box">
+        <h2>Longitudine</h2>
+        <h2></h2>
+      </div>
+    </div>
+  </div>
+
+  <div class="sezione">
+    <h1>INFORMAZIONI MOLO</h1>
+    <div class="box-wrapper">
+      <div class="box">
+        <h2>Nome Faro</h2>
+        <h2></h2>
+      </div>
+      <div class="box">
+        <h2>Distanza Dal Faro</h2>
+        <h2></h2>
+      </div>
+      <div class="box">
+        <h2></h2>
+      </div>
+    </div>
+  </div>
+
+  <div class="sezione">
+    <h1>Storico Recente</h1>
+    <div class="storico">
+      <ul id="storico-list">
+        <!-- JS inserirà qui gli elementi -->
+      </ul>
+    </div>    
+  </div>
+</body>
 </html>
