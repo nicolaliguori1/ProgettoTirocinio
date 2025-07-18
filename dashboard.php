@@ -22,7 +22,7 @@
     </div>
 
     <div class="myport">
-        <button class="custom-button" onclick="location.href='elencoPorti.php'">Ports</button>
+        <button class="custom-button" onclick="location.href='elencoFari.php'">Ports</button>
     </div>
 </div>
 </div>

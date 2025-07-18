@@ -23,7 +23,7 @@ if ($result) {
 </head>
 <body>
     <h1>Elenco Fari</h1>
-
+    <button onclick="window.location.href='AddFaro.php'">Aggiungi Faro</button>
     <?php if (count($fari) > 0): ?>
         <ul>
             <?php foreach ($fari as $faro): ?>
