@@ -10,18 +10,6 @@ CREATE TABLE users (
   email VARCHAR(50) NOT NULL
 );
 
-CREATE TABLE boats_position (
-  ts TIMESTAMP DEFAULT NOW(),
-  targa_barca VARCHAR(20),
-  lat DOUBLE PRECISION NOT NULL,
-  lon DOUBLE PRECISION NOT NULL,
-  PRIMARY KEY (ts, targa_barca),
-  FOREIGN KEY (targa_barca) REFERENCES boats(targa)
-    ON DELETE SET NULL 
-    ON UPDATE CASCADE
-);
-
-
 CREATE TABLE fari (
   id SERIAL PRIMARY KEY,
   nome VARCHAR(20) NOT NULL,
@@ -40,5 +28,16 @@ CREATE TABLE boats (
     ON UPDATE CASCADE
   FOREIGN KEY (id_faro) REFERENCES fari(id)
     ON DELETE CASCADE 
+    ON UPDATE CASCADE
+);
+
+CREATE TABLE boats_position (
+  ts TIMESTAMP DEFAULT NOW(),
+  targa_barca VARCHAR(20),
+  lat DOUBLE PRECISION NOT NULL,
+  lon DOUBLE PRECISION NOT NULL,
+  PRIMARY KEY (ts, targa_barca),
+  FOREIGN KEY (targa_barca) REFERENCES boats(targa)
+    ON DELETE SET NULL 
     ON UPDATE CASCADE
 );
