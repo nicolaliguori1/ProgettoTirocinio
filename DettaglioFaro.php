@@ -1,29 +1,67 @@
 <?php
-// Avvio della sessione
-session_start();
-require_once 'connessione.php';
+include 'connessione.php';
 
-// Verifica se è stato passato un parametro "faro"
-if (!isset($_GET['faro'])) || !is_numeric($_GET['faro']) {
-    die("Errore: nessun faro selezionato.");
-}
+$faro = null;
+$barche = [];
 
-// Recupera l'ID della barca dall'URL e lo rende intero
-$faro_id = (int) $_GET['faro'];
-// Prepara e esegue la query per ottenere la barca
-if (pg_num_rows($result) === 0) {
-    die("Errore: faro non trovato.");
+if (isset($_GET['id'])) {
+    $id = $_GET['id'];
+
+    // Query per i dettagli del faro
+    $queryFaro = "
+        SELECT f.nome, f.lat, f.lon
+        FROM fari f
+        WHERE f.id = $1
+    ";
+    $resultFaro = pg_query_params($conn, $queryFaro, array($id));
+
+    if ($resultFaro && pg_num_rows($resultFaro) > 0) {
+        $faro = pg_fetch_assoc($resultFaro);
+
+        // Query per le barche associate a questo faro
+        $queryBarche = "
+            SELECT nome, targa, lunghezza
+            FROM boats
+            WHERE id_faro = $1
+        ";
+        $resultBarche = pg_query_params($conn, $queryBarche, array($id));
+
+        if ($resultBarche && pg_num_rows($resultBarche) > 0) {
+            while ($row = pg_fetch_assoc($resultBarche)) {
+                $barche[] = $row;
+            }
+        }
+    }
 }
-// Dati della barca
-$faro = pg_fetch_assoc($result);
 ?>
-
 <!DOCTYPE html>
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title><?php echo htmlspecialchars($faro['nome']); ?></title>
+    <title>Dettaglio Faro</title>
 </head>
+<body>
+<?php if ($faro): ?>
+    <h1>Dettagli Faro: <?= htmlspecialchars($faro['nome']) ?></h1>
+    <p><strong>Latitudine:</strong> <?= htmlspecialchars($faro['lat']) ?></p>
+    <p><strong>Longitudine:</strong> <?= htmlspecialchars($faro['lon']) ?></p>
+
+    <h2>Barche associate al faro</h2>
+
+    <?php if (count($barche) > 0): ?>
+        <ul>
+            <?php foreach ($barche as $barca): ?>
+                <li>
+                    <strong><?= htmlspecialchars($barca['nome']) ?></strong>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    <?php else: ?>
+        <p>Nessuna barca associata a questo faro.</p>
+    <?php endif; ?>
+
+<?php else: ?>
+    <p>Faro non trovato o ID non specificato.</p>
+<?php endif; ?>
+</body>
 </html>
