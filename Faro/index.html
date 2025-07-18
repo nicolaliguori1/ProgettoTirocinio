@@ -1,41 +1,44 @@
 <!DOCTYPE html>
-<html lang="en-US" dir="ltr">
+<html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="manifest" href="/manifest.json">
-  <script type="module" src="js/faro.js"></script>
+  <meta charset="UTF-8">
+  <title>Ricerca Faro</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="css/style1.css">
+  <script>
+    async function cercaFaro() {
+      const input = document.getElementById('codiceFaro').value.trim();
 
-  <title>Port of Southampton</title>
+      if (input === '') {
+        alert("Inserisci un codice o nome valido.");
+        return;
+      }
+
+      try {
+        const res = await fetch(`/api/cerca-faro.php?nome=` + encodeURIComponent(input));
+        const data = await res.json();
+
+        if (data.trovato) {
+          window.location.href = 'faro.php?nome=' + encodeURIComponent(input);
+        } else {
+          alert("Faro non trovato.");
+        }
+      } catch (error) {
+        console.error("Errore nella ricerca:", error);
+        alert("Errore nella connessione al server.");
+      }
+    }
+  </script>
 </head>
 
-<body>  
-  <div class="NomeFaro">
-    <h1>PORT OF SOUTHAMPTON</h1>
-  </div>
+<body>
+  <div class="container">
+    <h1>Benvenuto nel Lighthouse Tracker</h1>
+    <p>Inserisci il nome o codice del faro per visualizzare i dettagli.</p>
 
-  <div class="sezione">
-    <h1>Posizione</h1>
-    <div class="box-wrapper">
-      <div class="box">
-        <h2><strong>Nome</strong></h2>
-        <h2>Port of Southampton</h2>
-      </div>
-      <div class="box">
-        <h2><strong>Stato Faro</strong></h2>
-        <h2 id="stato-faro">In attesa...</h2>
-      </div>    
-      <div class="box">
-        <h2><strong>Latitudine</strong></h2>
-        <h2>   </h2>
-      </div>
-      <div class="box">  
-        <h2><strong>Longitudine</strong></h2>
-        <h2>   </h2>
-      </div>  
-    </div>
+    <input type="text" id="codiceFaro" placeholder="Es: Port of Southampton, FARO-123">
+    <button onclick="cercaFaro()">Cerca</button>
   </div>
-
 </body>
 </html>
