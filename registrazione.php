@@ -1,4 +1,8 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
     session_start();
 
     require_once 'connessione.php';
@@ -15,8 +19,8 @@
     if ($_SERVER["REQUEST_METHOD"] === "POST") {
         // Controllo se l'email è già registrata
         $check_query = "SELECT COUNT(*) FROM users WHERE email = $1";
-        pg_prepare($db, "check_email", $check_query);
-        $check_result = pg_execute($db, "check_email", array($email));
+        pg_prepare($conn, "check_email", $check_query);
+        $check_result = pg_execute($conn, "check_email", array($email));
         
         if (pg_fetch_result($check_result, 0, 0) > 0) {
             $errore_email = "L'email è già stata utilizzata.";
@@ -26,12 +30,12 @@
         } else {
         // Inserimento nel database
         $query = "INSERT INTO users (nome_utente, email, pw) VALUES ($1, $2, $3)";
-        $result = pg_query_params($db, $query, array($nome_utente,$email,password_hash($password, PASSWORD_DEFAULT)));
+        $result = pg_query_params($conn, $query, array($nome_utente,$email,password_hash($password, PASSWORD_DEFAULT)));
 
         if ($result) {
             $_SESSION['nome_utente'] = $nome_utente;
             $_SESSION['email'] = $email;
-            header("Location: dashboard.php");
+            header("Location: login.php");
             exit();
         } else {
             $errore_email = "Errore durante la registrazione: " . pg_last_error($db);

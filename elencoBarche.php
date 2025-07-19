@@ -1,9 +1,17 @@
 <?php
+session_start();
 include 'connessione.php';
 
-// Query per tutte le barche
-$query = "SELECT * FROM boats";
-$result = pg_query($conn, $query);
+// Verifica se l'utente è loggato
+if (!isset($_SESSION["id"])) {
+    die("Accesso non autorizzato.");
+}
+
+$user_id = $_SESSION["id"];
+
+// Query per tutte le barche dell'utente loggato
+$query = "SELECT * FROM boats WHERE id_user = $1";
+$result = pg_query_params($conn, $query, array($user_id));
 
 $barche = [];
 
@@ -23,7 +31,7 @@ if ($result) {
 </head>
 <body>
     <h1>Elenco Barche</h1>
-    <button onclick="window.location.href='AddBarca.php'">Aggiungi Faro</button>
+    <button onclick="window.location.href='AddBarca.php'">Aggiungi Barca</button>
     <?php if (count($barche) > 0): ?>
         <ul>
             <?php foreach ($barche as $barca): ?>

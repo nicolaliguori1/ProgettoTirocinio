@@ -21,6 +21,7 @@ if (isset($_GET['targa'])) {
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="it">
 <head>

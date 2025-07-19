@@ -1,31 +1,43 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['id'])) {
+    header("Location: login.php");
+    exit();
+}
+
+$utente= $_SESSION['nome'] ?? "Utente";
+?>
+
 <!DOCTYPE html>
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="dashboard.css">
     <title>Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css">
 </head>
-
 <body>
-
-<div class="Dasboard">
-
-<!-- Logo centrato -->
-<div class="Logo">
-    <img src="icona_natante.png" alt="Logo" class="logo-img">
-</div>
-
-<div class="Opzioni">
-    <div class="myboat">
-        <button class="custom-button" onclick="location.href='elencoBarche.php'">My Boats</button>
+<div class="Dashboard">
+    <div class="Logo">
+        <img src="icona_natante.png" alt="Logo" class="logo-img">
     </div>
 
-    <div class="myport">
-        <button class="custom-button" onclick="location.href='elencoFari.php'">Ports</button>
+    <div class="welcome">
+        <h2>Benvenuto, <?= htmlspecialchars($utente) ?>!</h2>
+    </div>
+
+    <div class="Opzioni">
+        <div class="myboat">
+            <button class="custom-button" onclick="location.href='elencoBarche.php'">My Boats</button>
+        </div>
+        <div class="myport">
+            <button class="custom-button" onclick="location.href='elencoFari.php'">Ports</button>
+        </div>
     </div>
 </div>
-</div>
+</body>
+</html>
+
 
     
 
@@ -114,7 +126,3 @@
             document.getElementById("alert-modal").style.display = "none";
         }
     </script>
-
-</body>
-
-</html>
