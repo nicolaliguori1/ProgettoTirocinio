@@ -1,7 +1,6 @@
 <?php
 include 'connessione.php';
 
-// Esegui la query per recuperare tutti i fari
 $query = "SELECT * FROM fari";
 $result = pg_query($conn, $query);
 
@@ -23,14 +22,15 @@ if ($result) {
 </head>
 <body>
     <h1>Elenco Fari</h1>
-    <button onclick="window.location.href='AddFaro.php'">Aggiungi Faro</button>
+    <button onclick="window.location.href='addFaro.php'">➕ Aggiungi Faro</button>
     <?php if (count($fari) > 0): ?>
         <ul>
             <?php foreach ($fari as $faro): ?>
                 <li>
-                    <a href="DettaglioFaro.php?id=<?= urlencode($faro['id']) ?>">
-                        <?= htmlspecialchars($faro['nome']) ?>
-                    </a>
+                    <strong><?= htmlspecialchars($faro['nome']) ?></strong><br>
+                    Lat: <?= htmlspecialchars($faro['lat']) ?>, Lon: <?= htmlspecialchars($faro['lon']) ?><br>
+                    <a href="modificaFaro.php?id=<?= $faro['id'] ?>">✏️ Modifica</a>
+                    <a href="eliminaFaro.php?id=<?= $faro['id'] ?>" onclick="return confirm('Sei sicuro di voler eliminare questo faro?');">🗑️ Elimina</a>
                 </li>
             <?php endforeach; ?>
         </ul>
