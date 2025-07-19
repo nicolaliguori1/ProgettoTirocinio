@@ -61,14 +61,15 @@ $res_storico = pg_query($conn, "
     <h2><strong>Nome</strong></h2>
     <h2><?= htmlspecialchars($nome_barca) ?></h2>
   </div>
-  <div class="box">
-    <h2><strong>Latitudine</strong></h2>
-    <h2><?= $live['lat'] ?? 'N/D' ?></h2>
-  </div>
-  <div class="box">
-    <h2><strong>Longitudine</strong></h2>
-    <h2><?= $live['lon'] ?? 'N/D' ?></h2>
-  </div>
+ <div class="box">
+  <h2><strong>Latitudine</strong></h2>
+  <h2 id="lat"><?= $live['lat'] ?? 'N/D' ?></h2>
+</div>
+<div class="box">
+  <h2><strong>Longitudine</strong></h2>
+  <h2 id="lon"><?= $live['lon'] ?? 'N/D' ?></h2>
+</div>
+
 </div>
 
   </div>
@@ -85,6 +86,36 @@ $res_storico = pg_query($conn, "
       </ul>
     </div>    
   </div>
+  <script>
+const targa = <?= json_encode($targa) ?>;
+
+function aggiornaDati() {
+  fetch('api_posizione_barca.php?targa=' + encodeURIComponent(targa))
+    .then(res => res.json())
+    .then(data => {
+      if (data.live) {
+        document.getElementById('lat').textContent = data.live.lat ?? 'N/D';
+        document.getElementById('lon').textContent = data.live.lon ?? 'N/D';
+      }
+
+      const storicoList = document.getElementById('storico-list');
+      storicoList.innerHTML = '';
+      if (data.storico && data.storico.length) {
+        data.storico.forEach(punto => {
+          const li = document.createElement('li');
+          li.textContent = `${punto.ts} — ${punto.lat}, ${punto.lon}`;
+          storicoList.appendChild(li);
+        });
+      }
+    })
+    .catch(err => console.error('Errore aggiornamento dati:', err));
+}
+
+// Aggiorna subito e poi ogni 10 secondi
+aggiornaDati();
+setInterval(aggiornaDati, 10);
+</script>
+
 </body>
 </html>
 <!-- commento nuovo-->
