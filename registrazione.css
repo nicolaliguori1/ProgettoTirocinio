@@ -1,100 +1,79 @@
-/* Reset base */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
-    color: #fff;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-  }
-  
-  /* Container generale */
-  .container {
-    background-color: rgba(255, 255, 255, 0.05);
-    padding: 40px;
-    border-radius: 20px;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-    text-align: center;
-    max-width: 400px;
-    width: 100%;
-  }
-  
-  /* Titolo */
-  h2 {
-    font-size: 2em;
-    margin-bottom: 20px;
-    color: #00d4ff;
-  }
-  
-  /* Input */
-  input[type="text"],
-  input[type="email"],
-  input[type="password"] {
-    width: 100%;
-    padding: 12px 16px;
-    border: none;
-    border-radius: 10px;
-    margin-bottom: 20px;
-    font-size: 1em;
-    outline: none;
-    background: rgba(255, 255, 255, 0.1);
-    color: #fff;
-    transition: background 0.3s ease;
-  }
-  
-  input::placeholder {
-    color: #aaa;
-  }
-  
-  input:focus {
-    background: rgba(255, 255, 255, 0.2);
-  }
-  
-  /* Checkbox e link */
-  input[type="checkbox"] {
-    transform: scale(1.1);
-    margin-left: 10px;
-  }
-  
-  a {
-    color: #00d4ff;
-    text-decoration: none;
-  }
-  
-  a:hover {
-    text-decoration: underline;
-  }
-  
-  /* Pulsante submit */
-  input[type="submit"] {
-    padding: 12px 20px;
-    font-size: 1em;
-    background: #00d4ff;
-    color: #000;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: background 0.3s ease;
-  }
-  
-  input[type="submit"]:hover {
-    background: #00aacc;
-  }
-  
-  /* Messaggi di errore */
-  .errore {
-    color: #ff6b6b;
-    font-size: 0.9em;
-    margin-bottom: 15px;
-    display: none;
-  }
-  
+/* Stile coerente per la pagina di registrazione */
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+  color: #fff;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  width: 100%;
+  max-width: 500px;
+  padding: 30px;
+}
+
+.blocco-registrazione {
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  text-align: center;
+}
+
+h2 {
+  color: #00d4ff;
+  margin-bottom: 30px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  padding: 12px 15px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  border: none;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: 1em;
+  display: block; /* Mantieni blocco per larghezza */
+  margin: 0 auto 20px auto; /* Centro orizzontalmente */
+  width: 90%; /* Regola larghezza visiva */
+}
+
+input[type="submit"] {
+  background-color: #00d4ff;
+  color: #000;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  margin-top: 10px;
+}
+
+input[type="submit"]:hover {
+  background-color: #00aacc;
+}
+
+.errore {
+  color: #ff6b6b;
+  font-size: 0.9em;
+  margin-top: -15px;
+  margin-bottom: 15px;
+  display: none;
+}
+
+a {
+  color: #00d4ff;
+  text-decoration: underline;
+  font-size: 0.85em;
+}

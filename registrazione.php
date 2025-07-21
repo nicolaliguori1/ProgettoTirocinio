@@ -60,8 +60,8 @@ error_reporting(E_ALL);
 <body>
     <div class="container">
         <div class="blocco-registrazione">
-            <h2 style="color:rgb(4, 3, 46); text-align: center; font-size: 26px; font-weight: bold; margin-top: 40px; margin-bottom: 20px;">Registrazione</h2>
-            <form id="form" method="post" class="registrazione" action="" onsubmit="return controllaForm()">
+        <h2 style="color: #00d4ff; text-align: center; font-size: 26px; font-weight: bold; margin-top: 40px; margin-bottom: 20px;">Registrazione</h2>
+        <form id="form" method="post" class="registrazione" action="" onsubmit="return controllaForm()">
 
                 <p><label>
                     <input maxlength="20" type="text" name="nome_utente" placeholder="Nome utente" value="<?= htmlspecialchars($nome_utente); ?>" required>
@@ -83,7 +83,7 @@ error_reporting(E_ALL);
 
                 <p class="errore" id="errore-conferma-password" style="<?= $errore_conferma_password ? 'display:block' : '' ?>"><?= $errore_conferma_password; ?></p>
 
-                <p style="color: black;">Dai il tuo consenso per il trattamento di dati: 
+                <p style="color: #ccc;">Dai il tuo consenso per il trattamento di dati: 
                     <input type="checkbox" required> 
                     <a href="https://protezionedatipersonali.it/informativa" style="font-size: smaller;">Informazioni sulla privacy</a>
                 </p>
