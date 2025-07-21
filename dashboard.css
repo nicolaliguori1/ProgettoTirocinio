@@ -29,16 +29,15 @@
   
   /* Logo */
   .logo-img {
-    width: 100px;
+    width: 300px;
     height: auto;
-    margin-bottom: 20px;
   }
   
   /* Messaggio di benvenuto */
   .welcome h2 {
     font-size: 1.8em;
     color: #00d4ff;
-    margin-bottom: 30px;
+    margin-bottom: 100px;
   }
   
   /* Pulsanti delle opzioni */
