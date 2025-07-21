@@ -18,6 +18,7 @@ if ($result) {
 <html lang="it">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="elenco.css?v=2">
     <title>Elenco Fari</title>
 </head>
 <body>

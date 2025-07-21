@@ -31,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="addFaro.css">
+    <link rel="stylesheet" href="add.css">
     <title>Aggiungi Nuovo Faro</title>
 </head>
 <body>

@@ -45,16 +45,13 @@ if (!$faro) {
 <head>
     <meta charset="UTF-8">
     <title>Modifica Faro</title>
-    <style>
-        body { font-family: Arial; padding: 20px; background-color: #f4f4f4; }
-        form { background: white; padding: 20px; border-radius: 10px; max-width: 600px; margin: auto; }
-        input, label { display: block; margin-bottom: 10px; width: 100%; }
-        input[type="submit"] { width: auto; cursor: pointer; padding: 10px 20px; }
-    </style>
+    <link rel="stylesheet" href="modifica.css?v=2">
+ 
 </head>
 <body>
-    <h2>Modifica Faro</h2>
+    
     <form method="POST" action="">
+    <h2>Modifica Faro</h2>
         <label>Nome</label>
         <input type="text" name="nome" value="<?= htmlspecialchars($faro["nome"]) ?>" required>
 

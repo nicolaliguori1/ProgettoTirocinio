@@ -27,13 +27,8 @@ if ($result) {
 <html lang="it">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="elenco.css?v=2">
     <title>Elenco Barche</title>
-    <style>
-        body { font-family: Arial; padding: 20px; background-color: #f4f4f4; }
-        ul { list-style: none; padding: 0; }
-        li { background: white; margin: 10px 0; padding: 10px; border-radius: 5px; }
-        a, button { margin-right: 10px; }
-    </style>
 </head>
 <body>
     <h1>Elenco Barche</h1>

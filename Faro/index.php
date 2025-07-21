@@ -5,7 +5,7 @@
   <title>Ricerca Faro</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="manifest" href="manifest.json">
-  <link rel="stylesheet" href="css/style1.css">
+  <link rel="stylesheet" href="css/style1.css?v=2">
   <script>
     async function cercaFaro() {
       const input = document.getElementById('codiceFaro').value.trim();
