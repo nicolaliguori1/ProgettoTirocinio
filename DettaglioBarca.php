@@ -27,18 +27,21 @@ if (isset($_GET['targa'])) {
 <head>
     <meta charset="UTF-8">
     <title>Dettagli Barca</title>
+    <link rel="stylesheet" href="dettaglio.css?v=2">
 </head>
 <body>
-    <?php if ($barca): ?>
-        <h1>Dettagli Barca: <?= htmlspecialchars($barca['nome']) ?></h1>
-        <p><strong>Targa:</strong> <?= htmlspecialchars($barca['targa']) ?></p>
-        <p><strong>Lunghezza:</strong> <?= htmlspecialchars($barca['lunghezza']) ?> metri</p>
-        <p><strong>Proprietario:</strong> <?= htmlspecialchars($barca['nome_utente'] ?? 'N/A') ?></p>
-        <p><strong>Faro Associato:</strong> <?= htmlspecialchars($barca['nome_faro'] ?? 'Nessuno') ?></p>
-    <?php elseif (isset($targa)): ?>
-        <p>Barca non trovata.</p>
-    <?php else: ?>
-        <p>Nessuna targa specificata.</p>
-    <?php endif; ?>
+    <div class="container">
+        <?php if ($barca): ?>
+            <h1 class="titolo">Dettagli Barca: <?= htmlspecialchars($barca['nome']) ?></h1>
+            <p><strong>Targa:</strong> <?= htmlspecialchars($barca['targa']) ?></p>
+            <p><strong>Lunghezza:</strong> <?= htmlspecialchars($barca['lunghezza']) ?> metri</p>
+            <p><strong>Proprietario:</strong> <?= htmlspecialchars($barca['nome_utente'] ?? 'N/A') ?></p>
+            <p><strong>Faro Associato:</strong> <?= htmlspecialchars($barca['nome_faro'] ?? 'Nessuno') ?></p>
+        <?php elseif (isset($targa)): ?>
+            <p class="errore">Barca non trovata.</p>
+        <?php else: ?>
+            <p class="errore">Nessuna targa specificata.</p>
+        <?php endif; ?>
+    </div>
 </body>
 </html>
