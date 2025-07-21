@@ -31,17 +31,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <html lang="it">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="addFaro.css">
     <title>Aggiungi Nuovo Faro</title>
-    <style>
-        body { font-family: Arial; padding: 20px; background-color: #f4f4f4; }
-        form { background: white; padding: 20px; border-radius: 10px; max-width: 600px; margin: auto; }
-        input, label { display: block; margin-bottom: 10px; width: 100%; }
-        input[type="submit"] { width: auto; cursor: pointer; padding: 10px 20px; }
-    </style>
 </head>
 <body>
-    <h2>Aggiungi un Nuovo Faro</h2>
     <form method="POST" action="">
+    <h2>Aggiungi un Nuovo Faro</h2>
         <label>Nome</label>
         <input type="text" name="nome" required>
 
