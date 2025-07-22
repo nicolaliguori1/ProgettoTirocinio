@@ -53,7 +53,7 @@
             </form>
             <div id="message" class="message"></div>
             <div class="register-link">
-            Non hai un account? <a href="/TiroBarca/BoatWatch/Registrazione/registrazione.php">Registrati</a>
+            Non hai un account? <a href="../Registrazione/registrazione.php">Registrati</a>
             </div>
         </div>
     </div>
@@ -73,7 +73,7 @@
             xhttp.onreadystatechange = function () {
                 if (this.readyState === 4) {
                     if (this.status === 200) {
-                        window.location.href = '/TiroBarca/BoatWatch/dashboard.php';
+                        window.location.href = '../dashboard.php';
                     } else if (this.status === 401) {
                         messageDiv.textContent = 'E-mail o password errati!';
                         messageDiv.className = 'message error';

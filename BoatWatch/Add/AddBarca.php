@@ -25,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($result) {
         // ✅ Redirect alla pagina elencoBarche.php
-        header("Location: /TiroBarca/BoatWatch/Elenco/elencoBarche.php");
+        header("Location: ../Elenco/elencoBarche.php");
         exit();
     } else {
         die("<p>❌ Errore durante l'inserimento: " . pg_last_error($conn) . "</p>");

@@ -19,7 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($result) {
         echo "<p>✅ Faro aggiunto con successo!</p>";
-        header("Location: /TiroBarca/BoatWatch/Elenco/elencoFari.php");
+        header("Location: ../Elenco/elencoFari.php");
         exit();
     } else {
         echo "<p>❌ Errore durante l'inserimento: " . pg_last_error($conn) . "</p>";

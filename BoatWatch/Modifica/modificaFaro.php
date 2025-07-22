@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $result = pg_execute($conn, "update_faro", [$nome, $lat, $lon, $id_faro]);
 
     if ($result) {
-        header("Location: ./Elenco/elencoFari.php");
+        header("Location: ../Elenco/elencoFari.php");
         exit();
     } else {
         die("Errore aggiornamento faro: " . pg_last_error($conn));

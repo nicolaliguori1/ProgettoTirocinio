@@ -31,7 +31,7 @@ if ($result) {
 <body>
     <div class="container">
         <h1>Elenco Fari</h1>
-        <button onclick="window.location.href='/TiroBarca/BoatWatch/Add/AddFaro.php'">➕ Aggiungi Faro</button>
+        <button onclick="window.location.href='../Add/AddFaro.php'">➕ Aggiungi Faro</button>
 
         <?php if (count($fari) > 0): ?>
             <table>
@@ -46,12 +46,12 @@ if ($result) {
                 <tbody>
                     <?php foreach ($fari as $faro): ?>
                         <tr>
-                            <td><a href="/TiroBarca/BoatWatch/Dettaglio/DettaglioFaro.php?id=<?= $faro['id'] ?>"><strong><?= htmlspecialchars($faro['nome']) ?></strong></a></td>
+                            <td><a href="../Dettaglio/DettaglioFaro.php?id=<?= $faro['id'] ?>"><strong><?= htmlspecialchars($faro['nome']) ?></strong></a></td>
                             <td><?= htmlspecialchars($faro['lat']) ?></td>
                             <td><?= htmlspecialchars($faro['lon']) ?></td>
                             <td>
-                                <a href="/TiroBarca/BoatWatch/Modifica/modificaFaro.php?id=<?= $faro['id'] ?>">✏️ Modifica</a>
-                                <a href="/TiroBarca/BoatWatch/Elimina/eliminaFaro.php?id=<?= $faro['id'] ?>" onclick="return confirm('Sei sicuro di voler eliminare questo faro?');">🗑️ Elimina</a>
+                                <a href="../Modifica/modificaFaro.php?id=<?= $faro['id'] ?>">✏️ Modifica</a>
+                                <a href="../Elimina/eliminaFaro.php?id=<?= $faro['id'] ?>" onclick="return confirm('Sei sicuro di voler eliminare questo faro?');">🗑️ Elimina</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>

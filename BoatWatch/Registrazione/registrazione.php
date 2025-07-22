@@ -34,7 +34,7 @@ error_reporting(E_ALL);
         if ($result) {
             $_SESSION['nome_utente'] = $nome_utente;
             $_SESSION['email'] = $email;
-            header("Location: /TiroBarca/BoatWatch/Login/login.php");
+            header("Location: ../Login/login.php");
             exit();
         } else {
             $errore_email = "Errore durante la registrazione: " . pg_last_error($conn);
