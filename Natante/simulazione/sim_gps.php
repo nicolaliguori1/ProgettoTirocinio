@@ -6,6 +6,10 @@ function randomFloat() {
     return mt_rand() / mt_getrandmax();
 }
 
+function randomFloatRange($min, $max) {
+    return $min + mt_rand() / mt_getrandmax() * ($max - $min);
+}
+
 while (true) {
     $status = @file_get_contents($status_file);
     if (trim($status) !== 'on') {
@@ -52,10 +56,22 @@ while (true) {
             }
         }
 
-        $deltaLat = (randomFloat() - 0.5) * 0.01;
-        $deltaLon = (randomFloat() - 0.5) * 0.01;
+        $maxDelta = 0.001; // circa 100 metri di spostamento massimo
+
+        $deltaLat = randomFloatRange(-$maxDelta, $maxDelta);
+        $deltaLon = randomFloatRange(-$maxDelta, $maxDelta);
+
         $newLat = $lat + $deltaLat;
         $newLon = $lon + $deltaLon;
+
+        // Limita il movimento a circa 1 km dal faro
+        if ($faroLat !== null && $faroLon !== null) {
+            $distanceLat = abs($newLat - $faroLat);
+            $distanceLon = abs($newLon - $faroLon);
+
+            if ($distanceLat > 0.01) $newLat = $lat - $deltaLat;
+            if ($distanceLon > 0.01) $newLon = $lon - $deltaLon;
+        }
 
         $insert = pg_query_params($conn,
             "INSERT INTO boats_position (targa_barca, lat, lon) VALUES ($1, $2, $3)",
@@ -72,3 +88,4 @@ while (true) {
     pg_close($conn);
     sleep(3);
 }
+
