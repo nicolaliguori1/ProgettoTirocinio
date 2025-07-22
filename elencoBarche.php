@@ -31,23 +31,36 @@ if ($result) {
     <title>Elenco Barche</title>
 </head>
 <body>
-    <h1>Elenco Barche</h1>
-    <button onclick="window.location.href='AddBarca.php'">➕ Aggiungi Barca</button>
+    <div class="container">
+        <h1>Elenco Barche</h1>
+        <button onclick="window.location.href='AddBarca.php'">➕ Aggiungi Barca</button>
 
-    <?php if (count($barche) > 0): ?>
-        <ul>
-            <?php foreach ($barche as $barca): ?>
-                <li>
-                    <strong><?= htmlspecialchars($barca['nome']) ?></strong><br>
-                    Targa: <?= htmlspecialchars($barca['targa']) ?><br>
-                    <a href="DettaglioBarca.php?targa=<?= urlencode($barca['targa']) ?>">📍 Dettaglio</a>
-                    <a href="modificaBarca.php?targa=<?= urlencode($barca['targa']) ?>">✏️ Modifica</a>
-                    <a href="eliminaBarca.php?targa=<?= urlencode($barca['targa']) ?>" onclick="return confirm('Sei sicuro di voler eliminare questa barca?');">🗑️ Elimina</a>
-                </li>
-            <?php endforeach; ?>
-        </ul>
-    <?php else: ?>
-        <p>Nessuna barca trovata.</p>
-    <?php endif; ?>
+        <?php if (count($barche) > 0): ?>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Targa</th>
+                        <th>Azioni</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($barche as $barca): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($barca['nome']) ?></td>
+                            <td><?= htmlspecialchars($barca['targa']) ?></td>
+                            <td>
+                                <a href="DettaglioBarca.php?targa=<?= urlencode($barca['targa']) ?>">📍 Dettaglio</a>
+                                <a href="modificaBarca.php?targa=<?= urlencode($barca['targa']) ?>">✏ Modifica</a>
+                                <a href="eliminaBarca.php?targa=<?= urlencode($barca['targa']) ?>" onclick="return confirm('Sei sicuro di voler eliminare questa barca?');">🗑 Elimina</a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php else: ?>
+            <p class="no-boats">Nessuna barca trovata.</p>
+        <?php endif; ?>
+    </div>
 </body>
 </html>
