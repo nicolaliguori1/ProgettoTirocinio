@@ -56,10 +56,10 @@ if (!$faro) {
         <input type="text" name="nome" value="<?= htmlspecialchars($faro["nome"]) ?>" required>
 
         <label>Latitudine</label>
-        <input type="text" name="latitudine" value="<?= htmlspecialchars($faro["lat"]) ?>" required>
+        <input type="number" step="any" name="latitudine" value="<?= htmlspecialchars($faro["lat"]) ?>" required>
 
         <label>Longitudine</label>
-        <input type="text" name="longitudine" value="<?= htmlspecialchars($faro["lon"]) ?>" required>
+        <input type="number" step="any" name="longitudine" value="<?= htmlspecialchars($faro["lon"]) ?>" required>
 
         <input type="submit" value="Salva modifiche">
     </form>

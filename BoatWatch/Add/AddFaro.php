@@ -43,10 +43,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <input type="text" name="nome" required>
 
         <label>Latitudine</label>
-        <input type="text"  name="latitudine" required>
+        <input type="number" step="any" name="latitudine" value="<?= htmlspecialchars($faro["lat"]) ?>" required>
 
         <label>Longitudine</label>
-        <input type="text" name="longitudine" required>
+        <input type="number" step="any" name="longitudine" value="<?= htmlspecialchars($faro["lon"]) ?>" required>
 
         <input type="submit" value="Aggiungi Faro">
     </form>

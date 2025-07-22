@@ -8,8 +8,8 @@ if (!isset($_SESSION["id"])) {
 
 $user_id = $_SESSION["id"];
 
-$query = "SELECT * FROM fari join boats b on b.id_faro=fari.id WHERE b.id_user = $1";
-$result = pg_query_params($conn, $query, array($user_id));
+$query = "SELECT * FROM fari";
+$result = pg_query($conn, $query);
 
 $fari = [];
 
