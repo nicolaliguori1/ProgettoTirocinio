@@ -2,12 +2,12 @@
 session_start();
 include __DIR__ . '/../../connessione.php';
 
-// Verifica se l'utente è loggato
 if (!isset($_SESSION["id"])) {
     die("Accesso non autorizzato.");
 }
 
 $user_id = $_SESSION["id"];
+$errorMessage = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nome = $_POST["nome"];
@@ -15,20 +15,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $targa = $_POST["targa"];
     $id_faro = intval($_POST["id_faro"]);
 
-    // Query di inserimento
-    $sql = "INSERT INTO boats (nome, lunghezza, targa, id_faro, id_user) VALUES ($1, $2, $3, $4, $5)";
-    $prep_name = "insert_boat";
-
-    // Prepara ed esegui
-    pg_prepare($conn, $prep_name, $sql);
-    $result = pg_execute($conn, $prep_name, array($nome, $lunghezza, $targa, $id_faro, $user_id));
-
-    if ($result) {
-        // ✅ Redirect alla pagina elencoBarche.php
-        header("Location: ../Elenco/elencoBarche.php");
-        exit();
+    // Controllo targa duplicata
+    $check_targa = pg_query_params($conn, "SELECT 1 FROM boats WHERE targa = $1", array($targa));
+    if (pg_num_rows($check_targa) > 0) {
+        $errorMessage = "Esiste già una barca con questa targa.";
     } else {
-        die("<p>❌ Errore durante l'inserimento: " . pg_last_error($conn) . "</p>");
+        // Controllo faro esistente
+        $check_faro = pg_query_params($conn, "SELECT 1 FROM fari WHERE id = $1", array($id_faro));
+        if (pg_num_rows($check_faro) === 0) {
+            $errorMessage = "Il faro associato non esiste.";
+        } else {
+            // Inserimento
+            $sql = "INSERT INTO boats (nome, lunghezza, targa, id_faro, id_user) VALUES ($1, $2, $3, $4, $5)";
+            $prep_name = "insert_boat";
+
+            pg_prepare($conn, $prep_name, $sql);
+            $result = pg_execute($conn, $prep_name, array($nome, $lunghezza, $targa, $id_faro, $user_id));
+
+            if ($result) {
+                header("Location: ../Elenco/elencoBarche.php");
+                exit();
+            } else {
+                $errorMessage = "Errore durante l'inserimento: " . pg_last_error($conn);
+            }
+        }
     }
 }
 ?>
@@ -37,27 +47,40 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="add.css?v=2">
-    <title>Aggiungi Nuova Barca</title>
-
+    <title>Aggiungi Barca</title>
+    <link rel="stylesheet" href="../Add/add.css">
 </head>
 <body>
-   
-    <form method="POST" action="">
-    <h2>Aggiungi una Nuova Barca</h2>
-        <label>Nome</label>
-        <input type="text" name="nome" required>
+<?php if (!empty($errorMessage)): ?>
+<div class="popup-overlay">
+    <div class="popup">
+        <p><?= htmlspecialchars($errorMessage) ?></p>
+        <button onclick="closePopup()">OK</button>
+    </div>
+</div>
+<script>
+    function closePopup() {
+        document.querySelector('.popup-overlay').style.display = 'none';
+    }
+</script>
+<?php endif; ?>
 
-        <label>Lunghezza (metri)</label>
-        <input type="number" step="0.01" name="lunghezza" required>
+<form method="post">
+    <h2>Aggiungi Barca</h2>
 
-        <label>Targa</label>
-        <input type="text" name="targa" required>
+    <label for="nome">Nome</label>
+    <input type="text" name="nome" required>
 
-        <label>Id faro</label>
-        <input type="text" name="id_faro" required>
+    <label for="lunghezza">Lunghezza</label>
+    <input type="text" name="lunghezza" required>
 
-        <input type="submit" value="Aggiungi Barca">
-    </form>
+    <label for="targa">Targa</label>
+    <input type="text" name="targa" required>
+
+    <label for="id_faro">ID Faro</label>
+    <input type="text" name="id_faro" required>
+
+    <input type="submit" value="Aggiungi">
+</form>
 </body>
 </html>
