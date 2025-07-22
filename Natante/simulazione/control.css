@@ -1,0 +1,75 @@
+/* Reset base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  
+  /* Contenitore principale */
+  .sim-wrapper {
+    max-width: 400px;
+    width: 100%;
+  }
+  
+  /* Box contenente i controlli */
+  .sim-container {
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: 40px;
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    text-align: center;
+  }
+  
+  .sim-container h1 {
+    font-size: 2em;
+    margin-bottom: 20px;
+    color: #00d4ff;
+  }
+  
+  .sim-container p {
+    font-size: 1.1em;
+    margin-bottom: 20px;
+  }
+  
+  #status-text {
+    font-weight: bold;
+    color: #00d4ff;
+  }
+  
+  /* Pulsanti */
+  .sim-container button {
+    padding: 12px 20px;
+    margin: 10px 5px;
+    font-size: 1em;
+    background: #00d4ff;
+    color: #000;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .sim-container button:hover {
+    background: #00aacc;
+  }
+  
+  /* Nota in basso */
+  .sim-container small {
+    display: block;
+    margin-top: 25px;
+    font-size: 0.9em;
+    color: #ccc;
+  }
+  

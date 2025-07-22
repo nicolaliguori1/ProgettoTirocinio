@@ -7,6 +7,7 @@ $current_status = trim(@file_get_contents($status_file)) ?: 'off';
 <html lang="it">
 <head>
 <meta charset="UTF-8" />
+<link rel="stylesheet" href="control.css?v=2">
 <title>Controllo Simulazione GPS</title>
 <script>
 function setStatus(status) {
@@ -29,14 +30,18 @@ function setStatus(status) {
 </head>
 <body>
 
-<h1>Controllo Simulazione GPS</h1>
+  <div class="sim-wrapper">
+    <div class="sim-container">
+      <h1>Controllo Simulazione GPS</h1>
 
-<p>Stato attuale: <strong id="status-text"><?= htmlspecialchars($current_status) ?></strong></p>
+      <p>Stato attuale: <strong id="status-text"><?= htmlspecialchars($current_status) ?></strong></p>
 
-<button onclick="setStatus('on')">Avvia Simulazione</button>
-<button onclick="setStatus('off')">Ferma Simulazione</button>
+      <button onclick="setStatus('on')">Avvia Simulazione</button>
+      <button onclick="setStatus('off')">Ferma Simulazione</button>
 
-<p><small>Lo script <code>sim_gps.php</code> deve essere avviato da terminale e ascolta questo stato.</small></p>
+      <small>Lo script <code>sim_gps.php</code> deve essere avviato da terminale e ascolta questo stato.</small>
+    </div>
+  </div>
 
 </body>
 </html>
