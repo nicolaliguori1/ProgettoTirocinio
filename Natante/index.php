@@ -16,7 +16,7 @@
       }
 
       try {
-        const res = await fetch(`boat_info.php?targa=` + encodeURIComponent(input));
+        const res = await fetch(`simulazione/boat_info.php?targa=` + encodeURIComponent(input));
         const data = await res.json();
 
         if (data.trovata) {

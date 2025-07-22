@@ -1,5 +1,5 @@
 <?php
-require __DIR__ . '/../connessione.php';
+require __DIR__ . '/../../connessione.php'; 
 
 if (!$conn) {
     echo json_encode(['trovata' => false]);

@@ -1,5 +1,5 @@
 <?php
-require __DIR__ . '/../connessione.php';
+require __DIR__ . '/../../connessione.php';
 $status_file = __DIR__ . '/sim_status.txt';
 
 function randomFloat() {

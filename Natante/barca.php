@@ -41,7 +41,7 @@ $res_storico = pg_query($conn, "
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <link rel="stylesheet" href="css/style.css?v=2">
+  <link rel="stylesheet" href="css/style.css">
   <link rel="manifest" href="manifest.json">
   <script type="module" src="js/app.js"></script>
 
@@ -90,7 +90,7 @@ $res_storico = pg_query($conn, "
 const targa = <?= json_encode($targa) ?>;
 
 function aggiornaDati() {
-  fetch('api_posizione_barca.php?targa=' + encodeURIComponent(targa))
+  fetch('simulazione/api_posizione_barca.php?targa=' + encodeURIComponent(targa))
     .then(res => res.json())
     .then(data => {
       if (data.live) {

@@ -1,5 +1,5 @@
 <?php
-require __DIR__ . '/../connessione.php';
+require __DIR__ . '/../../connessione.php';
 
 header('Content-Type: application/json');
 
