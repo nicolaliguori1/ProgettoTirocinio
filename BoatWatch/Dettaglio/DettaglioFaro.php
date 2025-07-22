@@ -1,5 +1,5 @@
 <?php
-include 'connessione.php';
+    include __DIR__ . '/../../connessione.php';
 
 $faro = null;
 $barche = [];
@@ -42,27 +42,29 @@ if (isset($_GET['id'])) {
     <title>Dettaglio Faro</title>
 </head>
 <body>
-<?php if ($faro): ?>
-    <h1>Dettagli Faro: <?= htmlspecialchars($faro['nome']) ?></h1>
-    <p><strong>Latitudine:</strong> <?= htmlspecialchars($faro['lat']) ?></p>
-    <p><strong>Longitudine:</strong> <?= htmlspecialchars($faro['lon']) ?></p>
+    <div class="container">
+        <?php if ($faro): ?>
+            <h1>Dettagli Faro: <?= htmlspecialchars($faro['nome']) ?></h1>
+            <p><strong>Latitudine:</strong> <?= htmlspecialchars($faro['lat']) ?></p>
+            <p><strong>Longitudine:</strong> <?= htmlspecialchars($faro['lon']) ?></p>
 
-    <h2>Barche associate al faro</h2>
+            <h2>Barche associate al faro</h2>
 
-    <?php if (count($barche) > 0): ?>
-        <ul>
-            <?php foreach ($barche as $barca): ?>
-                <li>
-                    <strong><?= htmlspecialchars($barca['nome']) ?></strong>
-                </li>
-            <?php endforeach; ?>
-        </ul>
-    <?php else: ?>
-        <p>Nessuna barca associata a questo faro.</p>
-    <?php endif; ?>
+            <?php if (count($barche) > 0): ?>
+                <ul>
+                    <?php foreach ($barche as $barca): ?>
+                        <li>
+                            <strong><?= htmlspecialchars($barca['nome']) ?></strong>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php else: ?>
+                <p>Nessuna barca associata a questo faro.</p>
+            <?php endif; ?>
 
-<?php else: ?>
-    <p>Faro non trovato o ID non specificato.</p>
-<?php endif; ?>
+        <?php else: ?>
+            <p>Faro non trovato o ID non specificato.</p>
+        <?php endif; ?>
+    </div>
 </body>
 </html>

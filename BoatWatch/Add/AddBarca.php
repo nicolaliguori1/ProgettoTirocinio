@@ -1,6 +1,6 @@
 <?php
 session_start();
-include 'connessione.php';
+include __DIR__ . '/../../connessione.php';
 
 // Verifica se l'utente è loggato
 if (!isset($_SESSION["id"])) {
@@ -25,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($result) {
         // ✅ Redirect alla pagina elencoBarche.php
-        header("Location: elencoBarche.php");
+        header("Location: /TiroBarca/BoatWatch/Elenco/elencoBarche.php");
         exit();
     } else {
         die("<p>❌ Errore durante l'inserimento: " . pg_last_error($conn) . "</p>");

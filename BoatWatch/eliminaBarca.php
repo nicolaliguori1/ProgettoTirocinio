@@ -1,6 +1,6 @@
 <?php
 session_start();
-include 'connessione.php';
+include './connessione.php';
 
 if (!isset($_SESSION["id"])) {
     die("Accesso non autorizzato.");

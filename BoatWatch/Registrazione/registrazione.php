@@ -4,8 +4,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
     session_start();
-
-    require_once 'connessione.php';
+    include __DIR__ . '/../../connessione.php';
 
     // Inizializzazione variabili
     $nome_utente = $_POST["nome_utente"] ?? "";
@@ -35,10 +34,10 @@ error_reporting(E_ALL);
         if ($result) {
             $_SESSION['nome_utente'] = $nome_utente;
             $_SESSION['email'] = $email;
-            header("Location: login.php");
+            header("Location: /TiroBarca/BoatWatch/Login/login.php");
             exit();
         } else {
-            $errore_email = "Errore durante la registrazione: " . pg_last_error($db);
+            $errore_email = "Errore durante la registrazione: " . pg_last_error($conn);
         }}
     }
 ?>

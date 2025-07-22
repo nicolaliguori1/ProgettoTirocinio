@@ -1,5 +1,5 @@
 <?php
-include 'connessione.php';
+    include __DIR__ . '/../../connessione.php';
 
 $barca = null;
 

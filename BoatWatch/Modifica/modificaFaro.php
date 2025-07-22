@@ -1,6 +1,6 @@
 <?php
 session_start();
-include 'connessione.php';
+include __DIR__ . '/../../connessione.php';
 
 // Per sicurezza potresti mettere controllo login qui
 // ma se i fari non sono legati a utenti, puoi saltarlo
@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $result = pg_execute($conn, "update_faro", [$nome, $lat, $lon, $id_faro]);
 
     if ($result) {
-        header("Location: elencoFari.php");
+        header("Location: ./Elenco/elencoFari.php");
         exit();
     } else {
         die("Errore aggiornamento faro: " . pg_last_error($conn));

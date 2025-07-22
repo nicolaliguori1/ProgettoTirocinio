@@ -1,6 +1,6 @@
 <?php
 session_start();
-include 'connessione.php';
+include __DIR__ . '/../../connessione.php';
 
 // Verifica se l'utente è loggato
 if (!isset($_SESSION["id"])) {
@@ -22,6 +22,7 @@ if ($result) {
 } else {
     die("Errore nella query.");
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="it">
@@ -33,7 +34,7 @@ if ($result) {
 <body>
     <div class="container">
         <h1>Elenco Barche</h1>
-        <button onclick="window.location.href='AddBarca.php'">➕ Aggiungi Barca</button>
+        <button onclick="window.location.href='/TiroBarca/BoatWatch/Add/AddBarca.php'">➕ Aggiungi Barca</button>
 
         <?php if (count($barche) > 0): ?>
             <table>
@@ -50,9 +51,9 @@ if ($result) {
                             <td><?= htmlspecialchars($barca['nome']) ?></td>
                             <td><?= htmlspecialchars($barca['targa']) ?></td>
                             <td>
-                                <a href="DettaglioBarca.php?targa=<?= urlencode($barca['targa']) ?>">📍 Dettaglio</a>
-                                <a href="modificaBarca.php?targa=<?= urlencode($barca['targa']) ?>">✏ Modifica</a>
-                                <a href="eliminaBarca.php?targa=<?= urlencode($barca['targa']) ?>" onclick="return confirm('Sei sicuro di voler eliminare questa barca?');">🗑 Elimina</a>
+                                <a href="/TiroBarca/BoatWatch/Dettaglio/DettaglioBarca.php?targa=<?= urlencode($barca['targa']) ?>">📍 Dettaglio</a>
+                                <a href="/TiroBarca//TiroBoat/BoatWatch/Modifica/modificaBarca.php?targa=<?= urlencode($barca['targa']) ?>">✏ Modifica</a>
+                                <a href="/TiroBarca/BoatWatch/Elimina/eliminaBarca.php?targa=<?= urlencode($barca['targa']) ?>" onclick="return confirm('Sei sicuro di voler eliminare questa barca?');">🗑 Elimina</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>

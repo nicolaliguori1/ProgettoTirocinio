@@ -1,6 +1,6 @@
 <?php
 session_start();
-include 'connessione.php';
+include __DIR__ . '/../../connessione.php';
 
 // Verifica se l'utente è loggato
 if (!isset($_SESSION["id"])) {
@@ -33,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $result = pg_execute($conn, $prep_name, [$nome, $lunghezza, $nuova_targa, $id_faro, $targa_originale, $user_id]);
 
     if ($result) {
-        header("Location: elencoBarche.php");
+        header("Location: ./Elenco/elencoBarche.php");
         exit();
     } else {
         die("❌ Errore aggiornamento: " . pg_last_error($conn));

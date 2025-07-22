@@ -1,6 +1,6 @@
 <?php
 session_start();
-include 'connessione.php';
+include './connessione.php';
 
 // Controllo login opzionale
 

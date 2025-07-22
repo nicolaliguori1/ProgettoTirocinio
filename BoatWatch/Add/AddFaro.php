@@ -3,7 +3,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-include 'connessione.php';
+include __DIR__ . '/../../connessione.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nome = $_POST["nome"];
@@ -19,6 +19,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($result) {
         echo "<p>✅ Faro aggiunto con successo!</p>";
+        header("Location: /TiroBarca/BoatWatch/Elenco/elencoFari.php");
+        exit();
     } else {
         echo "<p>❌ Errore durante l'inserimento: " . pg_last_error($conn) . "</p>";
     }
@@ -31,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="add.css">
+    <link rel="stylesheet" href="add.css?v=2">
     <title>Aggiungi Nuovo Faro</title>
 </head>
 <body>

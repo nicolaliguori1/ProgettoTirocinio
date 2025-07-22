@@ -1,8 +1,15 @@
 <?php
-include 'connessione.php';
+session_start();
+include __DIR__ . '/../../connessione.php';
 
-$query = "SELECT * FROM fari";
-$result = pg_query($conn, $query);
+if (!isset($_SESSION["id"])) {
+    die("Accesso non autorizzato.");
+}
+
+$user_id = $_SESSION["id"];
+
+$query = "SELECT * FROM fari join boats b on b.id_faro=fari.id WHERE b.id_user = $1";
+$result = pg_query_params($conn, $query, array($user_id));
 
 $fari = [];
 
@@ -16,7 +23,7 @@ if ($result) {
 ?>
 <!DOCTYPE html>
 <html lang="it">
-<head>
+<head> 
     <meta charset="UTF-8">
     <link rel="stylesheet" href="elenco.css?v=2">
     <title>Elenco Fari</title>
@@ -24,7 +31,7 @@ if ($result) {
 <body>
     <div class="container">
         <h1>Elenco Fari</h1>
-        <button onclick="window.location.href='addFaro.php'">➕ Aggiungi Faro</button>
+        <button onclick="window.location.href='/TiroBarca/BoatWatch/Add/AddFaro.php'">➕ Aggiungi Faro</button>
 
         <?php if (count($fari) > 0): ?>
             <table>
@@ -39,12 +46,12 @@ if ($result) {
                 <tbody>
                     <?php foreach ($fari as $faro): ?>
                         <tr>
-                            <td><?= htmlspecialchars($faro['nome']) ?></td>
+                            <td><a href="/TiroBarca/BoatWatch/Dettaglio/DettaglioFaro.php?id=<?= $faro['id'] ?>"><strong><?= htmlspecialchars($faro['nome']) ?></strong></a></td>
                             <td><?= htmlspecialchars($faro['lat']) ?></td>
                             <td><?= htmlspecialchars($faro['lon']) ?></td>
                             <td>
-                                <a href="modificaFaro.php?id=<?= $faro['id'] ?>">✏️ Modifica</a>
-                                <a href="eliminaFaro.php?id=<?= $faro['id'] ?>" onclick="return confirm('Sei sicuro di voler eliminare questo faro?');">🗑️ Elimina</a>
+                                <a href="/TiroBarca/BoatWatch/Modifica/modificaFaro.php?id=<?= $faro['id'] ?>">✏️ Modifica</a>
+                                <a href="/TiroBarca/BoatWatch/Elimina/eliminaFaro.php?id=<?= $faro['id'] ?>" onclick="return confirm('Sei sicuro di voler eliminare questo faro?');">🗑️ Elimina</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
