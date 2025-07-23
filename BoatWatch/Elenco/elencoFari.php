@@ -51,7 +51,6 @@ if ($result) {
                             <td><?= htmlspecialchars($faro['lon']) ?></td>
                             <td>
                                 <a href="../Modifica/modificaFaro.php?id=<?= $faro['id'] ?>">✏️ Modifica</a>
-                                <a href="../Elimina/eliminaFaro.php?id=<?= $faro['id'] ?>" onclick="return confirm('Sei sicuro di voler eliminare questo faro?');">🗑️ Elimina</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>

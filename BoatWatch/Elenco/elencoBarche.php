@@ -48,12 +48,14 @@ if ($result) {
                 <tbody>
                     <?php foreach ($barche as $barca): ?>
                         <tr>
-                            <td><?= htmlspecialchars($barca['nome']) ?></td>
+                        <td>
+    <a href="../Dettaglio/DettaglioBarca.php?targa=<?= urlencode($barca['targa']) ?>">
+        <strong><?= htmlspecialchars($barca['nome']) ?></strong>
+    </a>
+</td>
                             <td><?= htmlspecialchars($barca['targa']) ?></td>
                             <td>
-                                <a href="../Dettaglio/DettaglioBarca.php?targa=<?= urlencode($barca['targa']) ?>">📍 Dettaglio</a>
                                 <a href="../Modifica/modificaBarca.php?targa=<?= urlencode($barca['targa']) ?>">✏ Modifica</a>
-                                <a href="../Elimina/eliminaBarca.php?targa=<?= urlencode($barca['targa']) ?>" onclick="return confirm('Sei sicuro di voler eliminare questa barca?');">🗑 Elimina</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
