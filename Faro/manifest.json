@@ -7,7 +7,7 @@
     "background_color": "#FFD700",
     "theme_color": "#FFD700",
     "orientation": "any",
-    "display": "natural",
+    "display": "standalone",
     "icons": [
     {
     "src": "/icons/icona_faro.png",

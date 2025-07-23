@@ -17,6 +17,14 @@ CREATE TABLE fari (
   lon DOUBLE PRECISION NOT NULL
 );
 
+create table fari_position(
+id_faro int not null,
+lat DOUBLE PRECISION NOT NULL,
+lon DOUBLE PRECISION NOT NULL,
+ts timestamp,
+foreign key(id_faro) references fari(id)
+);
+
 CREATE TABLE boats (
   targa VARCHAR(20) PRIMARY KEY,
   lunghezza INT NOT NULL,
