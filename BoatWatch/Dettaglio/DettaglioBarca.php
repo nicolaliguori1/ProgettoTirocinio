@@ -34,7 +34,7 @@ if (isset($_GET['targa'])) {
         <?php if ($barca): ?>
             <h1 class="titolo">Dettagli Barca: <?= htmlspecialchars($barca['nome']) ?></h1>
             <p><strong>Targa:</strong> <?= htmlspecialchars($barca['targa']) ?></p>
-            <p><strong>Lunghezza:</strong> <?= htmlspecialchars($barca['lunghezza']) ?> metri</p>
+            <p><strong>Lunghezza:</strong> <?= number_format((float)$barca['lunghezza'], 1) ?> metri</p>
             <p><strong>Proprietario:</strong> <?= htmlspecialchars($barca['nome_utente'] ?? 'N/A') ?></p>
             <p><strong>Faro Associato:</strong> <?= htmlspecialchars($barca['nome_faro'] ?? 'Nessuno') ?></p>
         <?php elseif (isset($targa)): ?>
