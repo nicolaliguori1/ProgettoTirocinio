@@ -9,34 +9,64 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nome = $_POST["nome"];
     $lat = floatval($_POST["latitudine"]);
     $lon = floatval($_POST["longitudine"]);
+    $tolleranza = 0.01; // 0.01 ~ 1.1 km (approx)
 
-    $query = "INSERT INTO fari (nome, lat, lon) VALUES ($1, $2, $3)";
-    $prep_name = "insert_faro";
+    // Query con confronto tolleranza
+    $check_query = "
+        SELECT 1 FROM fari 
+        WHERE ABS(lat - $1) < $3 
+          AND ABS(lon - $2) < $3
+        LIMIT 1
+    ";
+    $check_name = "check_faro";
 
-    // Prepara ed esegui
-    pg_prepare($conn, $prep_name, $query);
-    $result = pg_execute($conn, $prep_name, array($nome, $lat, $lon));
+    // Prepara ed esegui query
+    pg_prepare($conn, $check_name, $check_query);
+    $check_result = pg_execute($conn, $check_name, array($lat, $lon, $tolleranza));
 
-    if ($result) {
-        echo "<p>✅ Faro aggiunto con successo!</p>";
-        header("Location: ../Elenco/elencoFari.php");
-        exit();
+
+    if (pg_num_rows($check_result) > 0) {
+        $errorMessage = "Faro con coordinate simili già esistente.";
     } else {
-        echo "<p>❌ Errore durante l'inserimento: " . pg_last_error($conn) . "</p>";
+        $query = "INSERT INTO fari (nome, lat, lon) VALUES ($1, $2, $3)";
+        $prep_name = "insert_faro";
+
+        pg_prepare($conn, $prep_name, $query);
+        $result = pg_execute($conn, $prep_name, array($nome, $lat, $lon));
+
+        if ($result) {
+            header("Location: ../Elenco/elencoFari.php");
+            exit();
+        } else {
+            echo "<p>❌ Errore durante l'inserimento: " . pg_last_error($conn) . "</p>";
+        }
     }
 }
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="it">
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="add.css?v=2">
+    <link rel="stylesheet" href="../alert.css">
     <title>Aggiungi Nuovo Faro</title>
 </head>
 <body>
+<?php if (!empty($errorMessage)): ?>
+<div class="popup-overlay">
+    <div class="popup">
+        <p><?= htmlspecialchars($errorMessage) ?></p>
+        <button onclick="closePopup()">OK</button>
+    </div>
+</div>
+<script>
+    function closePopup() {
+        document.querySelector('.popup-overlay').style.display = 'none';
+    }
+</script>
+<?php endif; ?>
+
     <form method="POST" action="">
     <h2>Aggiungi un Nuovo Faro</h2>
         <label>Nome</label>
