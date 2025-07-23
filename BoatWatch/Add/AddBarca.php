@@ -43,6 +43,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
 
+<?php
+$fari = [];
+$query = "SELECT id, nome FROM fari ORDER BY nome";
+$result = pg_query($conn, $query);
+
+if ($result) {
+    while ($row = pg_fetch_assoc($result)) {
+        $fari[] = $row;
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -74,13 +86,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <input type="text" name="nome" required>
 
     <label for="lunghezza">Lunghezza</label>
-    <input type="text" name="lunghezza" required>
+    <input type="number" name="lunghezza" required>
 
     <label for="targa">Targa</label>
     <input type="text" name="targa" required>
 
     <label for="id_faro">ID Faro</label>
-    <input type="text" name="id_faro" required>
+    <select name="id_faro" id="id_faro" required>
+        <option value="">-- Seleziona un faro --</option>
+        <?php foreach ($fari as $faro): ?>
+            <option value="<?= htmlspecialchars($faro['id']) ?>">
+                <?= htmlspecialchars($faro['nome']) ?>
+            </option>
+        <?php endforeach; ?>
+    </select>
+
 
     <input type="submit" value="Aggiungi">
 </form>
