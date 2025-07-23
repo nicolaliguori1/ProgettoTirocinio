@@ -68,7 +68,7 @@ if ($result) {
 <head>
     <meta charset="UTF-8">
     <title>Modifica Barca</title>
-    <link rel="stylesheet" href="modifica.css?v=2">
+    <link rel="stylesheet" href="../Add/add.css?v=2">
 </head>
 <body>
     <form method="POST" action="">
@@ -82,6 +82,7 @@ if ($result) {
         <label>Targa</label>
         <input type="text" name="targa" value="<?= htmlspecialchars($boat["targa"]) ?>" required>
 
+        <label>ID Faro</label>
         <select name="id_faro" id="id_faro" required>
             <option value=""></option>
             <?php foreach ($fari as $faro): ?>

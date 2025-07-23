@@ -29,7 +29,7 @@ function setStatus(status) {
 </script>
 </head>
 <body>
-
+marcogay
   <div class="sim-wrapper">
     <div class="sim-container">
       <h1>Controllo Simulazione GPS</h1>
