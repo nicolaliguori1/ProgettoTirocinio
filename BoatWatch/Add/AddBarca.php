@@ -54,8 +54,8 @@ if ($result) {
 <head>
     <meta charset="UTF-8">
     <title>Aggiungi Barca</title>
-    <link rel="stylesheet" href="../Add/add.css">
-    <link rel="stylesheet" href="../alert.css">
+    <link rel="stylesheet" href="../Add/add.css?v=2">
+    <link rel="stylesheet" href="../alert.css?v=2">
 </head>
 <body>
 

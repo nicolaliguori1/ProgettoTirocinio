@@ -2,14 +2,16 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+
 include __DIR__ . '/../../connessione.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nome = $_POST["nome"];
     $lat = floatval($_POST["latitudine"]);
     $lon = floatval($_POST["longitudine"]);
-    $tolleranza = 0.01;
+    $tolleranza = 0.01; // 0.01 ~ 1.1 km (approx)
 
+    // Query con confronto tolleranza
     $check_query = "
         SELECT 1 FROM fari 
         WHERE ABS(lat - $1) < $3 
@@ -18,6 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     ";
     $check_name = "check_faro";
 
+    // Prepara ed esegui query
     pg_prepare($conn, $check_name, $check_query);
     $check_result = pg_execute($conn, $check_name, array($lat, $lon, $tolleranza));
 
@@ -71,13 +74,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <label>Latitudine</label>
         <input type="number" step="any" name="latitudine" value="<?= htmlspecialchars($faro["lat"]) ?>" required>
-        <div style="margin-top: 20px;">
-            <label>Longitudine</label>
-        </div>
+
+        <label>Longitudine</label>
         <input type="number" step="any" name="longitudine" value="<?= htmlspecialchars($faro["lon"]) ?>" required>
-        <div style="margin-top: 30px;">
-            <input type="submit" value="Aggiungi Faro">
-        </div>
+
+        <input type="submit" value="Aggiungi Faro">
     </form>
 </body>
 </html>
