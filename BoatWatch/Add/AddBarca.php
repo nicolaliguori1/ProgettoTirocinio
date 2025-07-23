@@ -49,6 +49,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <title>Aggiungi Barca</title>
     <link rel="stylesheet" href="../Add/add.css">
+    <link rel="stylesheet" href="../alert.css">
+
 </head>
 <body>
 <?php if (!empty($errorMessage)): ?>
