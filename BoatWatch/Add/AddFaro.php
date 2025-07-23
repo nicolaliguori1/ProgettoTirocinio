@@ -18,14 +18,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           AND ABS(lon - $2) < $3
         LIMIT 1
     ";
-    $check_name = "check_faro";
+    $check_pos = "check_faro";
 
     // Prepara ed esegui query
-    pg_prepare($conn, $check_name, $check_query);
-    $check_result = pg_execute($conn, $check_name, array($lat, $lon, $tolleranza));
-
-
-    if (pg_num_rows($check_result) > 0) {
+    pg_prepare($conn, $check_pos, $check_query);
+    $check_result = pg_execute($conn, $check_pos, array($lat, $lon, $tolleranza));
+    
+    $check_faro = pg_query_params($conn, "SELECT 1 FROM fari WHERE  nome= $1", array($nome));
+    
+    if (pg_num_rows($check_faro) > 0) {
+        $errorMessage = "Esiste già un faro con questo nome.";
+    }else if(pg_num_rows($check_result) > 0) {
         $errorMessage = "Faro con coordinate simili già esistente.";
     } else {
         $query = "INSERT INTO fari (nome, lat, lon) VALUES ($1, $2, $3)";
@@ -74,11 +77,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <label>Latitudine</label>
         <input type="number" step="any" name="latitudine" value="<?= htmlspecialchars($faro["lat"]) ?>" required>
-
+        <div style="margin-top: 20px;">
         <label>Longitudine</label>
+</div>
         <input type="number" step="any" name="longitudine" value="<?= htmlspecialchars($faro["lon"]) ?>" required>
-
+        <div style="margin-top: 30px;">
         <input type="submit" value="Aggiungi Faro">
+</div>
     </form>
 </body>
 </html>
