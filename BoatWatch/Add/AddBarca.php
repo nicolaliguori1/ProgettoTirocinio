@@ -93,7 +93,7 @@ if ($result) {
 
     <label for="id_faro">ID Faro</label>
     <select name="id_faro" id="id_faro" required>
-        <option value="">-- Seleziona un faro --</option>
+        <option value=""></option>
         <?php foreach ($fari as $faro): ?>
             <option value="<?= htmlspecialchars($faro['id']) ?>">
                 <?= htmlspecialchars($faro['nome']) ?>
@@ -101,8 +101,9 @@ if ($result) {
         <?php endforeach; ?>
     </select>
 
-
+    <div style="margin-top: 30px;">
     <input type="submit" value="Aggiungi">
+        </div>
 </form>
 </body>
 </html>

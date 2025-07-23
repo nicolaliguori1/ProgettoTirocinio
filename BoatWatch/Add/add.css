@@ -1,4 +1,16 @@
-/* Stile coerente per il form di aggiunta faro */
+/* Applica lo stesso box model */
+input, select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  border: none;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 1em;
+}
+
 body {
     font-family: 'Segoe UI', sans-serif;
     background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
@@ -35,7 +47,11 @@ body {
     color: #ccc;
   }
   
-  input[type="text"] {
+  input[type="text"],
+  input[type="number"],
+  select
+  {
+  
     width: 100%;
     padding: 12px 15px;
     margin-bottom: 20px;
@@ -66,4 +82,8 @@ body {
     font-weight: bold;
     margin-top: 20px;
   }
+
+
+  
+  
   
