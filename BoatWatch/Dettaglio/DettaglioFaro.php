@@ -9,7 +9,7 @@ if (isset($_GET['id'])) {
 
     // Query per i dettagli del faro
     $queryFaro = "
-        SELECT f.nome, f.lat, f.lon
+        SELECT f.nome, f.lat, f.lon, f.id
         FROM fari f
         WHERE f.id = $1
     ";
@@ -47,7 +47,7 @@ if (isset($_GET['id'])) {
             <h1>Dettagli Faro: <?= htmlspecialchars($faro['nome']) ?></h1>
             <p><strong>Latitudine:</strong> <?= htmlspecialchars($faro['lat']) ?></p>
             <p><strong>Longitudine:</strong> <?= htmlspecialchars($faro['lon']) ?></p>
-
+            <p><strong>Id:</strong> <?= htmlspecialchars($faro['id']) ?></p>
             <h2>Barche associate al faro</h2>
 
             <?php if (count($barche) > 0): ?>
