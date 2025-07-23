@@ -2,9 +2,6 @@
 session_start();
 include __DIR__ . '/../../connessione.php';
 
-// Per sicurezza potresti mettere controllo login qui
-// ma se i fari non sono legati a utenti, puoi saltarlo
-
 if (!isset($_GET["id"])) {
     die("ID faro mancante.");
 }

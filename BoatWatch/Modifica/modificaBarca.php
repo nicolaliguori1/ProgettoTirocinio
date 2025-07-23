@@ -49,7 +49,19 @@ $boat = pg_fetch_assoc($res);
 if (!$boat) {
     die("Barca non trovata o accesso negato.");
 }
+
+// Fari menu a tendina
+$fari = [];
+$query = "SELECT id, nome FROM fari ORDER BY nome";
+$result = pg_query($conn, $query);
+
+if ($result) {
+    while ($row = pg_fetch_assoc($result)) {
+        $fari[] = $row;
+    }
+}
 ?>
+
 
 <!DOCTYPE html>
 <html lang="it">
@@ -57,11 +69,8 @@ if (!$boat) {
     <meta charset="UTF-8">
     <title>Modifica Barca</title>
     <link rel="stylesheet" href="modifica.css?v=2">
-  
-
 </head>
 <body>
-   
     <form method="POST" action="">
     <h2>Modifica Barca</h2>
         <label>Nome</label>
@@ -73,10 +82,15 @@ if (!$boat) {
         <label>Targa</label>
         <input type="text" name="targa" value="<?= htmlspecialchars($boat["targa"]) ?>" required>
 
-        <label>Id faro</label>
-        <input type="number" name="id_faro" value="<?= htmlspecialchars($boat["id_faro"]) ?>" required>
+        <select name="id_faro" id="id_faro" required>
+            <option value=""></option>
+            <?php foreach ($fari as $faro): ?>
+                <option value="<?= htmlspecialchars($faro['id']) ?>">
+                    <?= htmlspecialchars($faro['nome']) ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
 
-        <!-- Campo hidden per tenere traccia della targa originale -->
         <input type="hidden" name="targa_originale" value="<?= htmlspecialchars($boat["targa"]) ?>">
 
         <input type="submit" value="Salva modifiche">
