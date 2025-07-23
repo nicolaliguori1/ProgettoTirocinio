@@ -74,11 +74,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <label>Latitudine</label>
         <input type="number" step="any" name="latitudine" value="<?= htmlspecialchars($faro["lat"]) ?>" required>
-
+        <div style="margin-top: 20px;">
         <label>Longitudine</label>
+</div>
         <input type="number" step="any" name="longitudine" value="<?= htmlspecialchars($faro["lon"]) ?>" required>
-
+        <div style="margin-top: 30px;">
         <input type="submit" value="Aggiungi Faro">
+</div>
     </form>
 </body>
 </html>

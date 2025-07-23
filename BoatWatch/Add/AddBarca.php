@@ -87,8 +87,9 @@ if ($result) {
 
     <label for="lunghezza">Lunghezza</label>
     <input type="number" name="lunghezza" required>
-
+    <div style="margin-top: 20px;">
     <label for="targa">Targa</label>
+</div>
     <input type="text" name="targa" required>
 
     <label for="id_faro">ID Faro</label>
@@ -101,8 +102,9 @@ if ($result) {
         <?php endforeach; ?>
     </select>
 
-
+    <div style="margin-top: 30px;">
     <input type="submit" value="Aggiungi">
+        </div>
 </form>
 </body>
 </html>
