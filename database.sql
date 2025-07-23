@@ -17,13 +17,17 @@ CREATE TABLE fari (
   lon DOUBLE PRECISION NOT NULL
 );
 
-create table fari_position(
-id_faro int not null,
-lat DOUBLE PRECISION NOT NULL,
-lon DOUBLE PRECISION NOT NULL,
-ts timestamp,
-foreign key(id_faro) references fari(id)
+CREATE TABLE fari_position (
+  id_faro INT NOT NULL,
+  lat DOUBLE PRECISION NOT NULL,
+  lon DOUBLE PRECISION NOT NULL,
+  ts TIMESTAMP NOT NULL DEFAULT NOW(),
+  FOREIGN KEY (id_faro) REFERENCES fari(id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  PRIMARY KEY (id_faro, ts)
 );
+
 
 CREATE TABLE boats (
   targa VARCHAR(20) PRIMARY KEY,
