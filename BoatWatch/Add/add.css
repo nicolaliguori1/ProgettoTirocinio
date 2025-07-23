@@ -48,8 +48,7 @@ body {
   }
   
   input[type="text"],
-  input[type="number"],
-  select
+  input[type="number"]
   {
   
     width: 100%;
@@ -83,7 +82,20 @@ body {
     margin-top: 20px;
   }
 
+  select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 15px;
+    font-size: 1em;
+  }
 
-  
-  
+  select option {
+    background-color: #1f3841; /* colore scuro */
+    color: white;
+  }
   
