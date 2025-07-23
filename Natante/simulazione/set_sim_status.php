@@ -15,4 +15,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['status'])) {
 } else {
     echo json_encode(['success' => false, 'message' => 'Parametro mancante']);
 }
+marcogay
 

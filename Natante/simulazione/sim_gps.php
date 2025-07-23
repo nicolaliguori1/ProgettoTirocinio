@@ -88,4 +88,4 @@ while (true) {
     pg_close($conn);
     sleep(3);
 }
-
+marcogay
