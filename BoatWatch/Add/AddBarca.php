@@ -15,17 +15,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $targa = $_POST["targa"];
     $id_faro = intval($_POST["id_faro"]);
 
-    // Controllo targa duplicata
     $check_targa = pg_query_params($conn, "SELECT 1 FROM boats WHERE targa = $1", array($targa));
     if (pg_num_rows($check_targa) > 0) {
         $errorMessage = "Esiste già una barca con questa targa.";
     } else {
-        // Controllo faro esistente
         $check_faro = pg_query_params($conn, "SELECT 1 FROM fari WHERE id = $1", array($id_faro));
         if (pg_num_rows($check_faro) === 0) {
             $errorMessage = "Il faro associato non esiste.";
         } else {
-            // Inserimento
             $sql = "INSERT INTO boats (nome, lunghezza, targa, id_faro, id_user) VALUES ($1, $2, $3, $4, $5)";
             $prep_name = "insert_boat";
 
@@ -41,9 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 }
-?>
 
-<?php
 $fari = [];
 $query = "SELECT id, nome FROM fari ORDER BY nome";
 $result = pg_query($conn, $query);
@@ -54,7 +49,6 @@ if ($result) {
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -62,21 +56,21 @@ if ($result) {
     <title>Aggiungi Barca</title>
     <link rel="stylesheet" href="../Add/add.css">
     <link rel="stylesheet" href="../alert.css">
-
 </head>
 <body>
+
 <?php if (!empty($errorMessage)): ?>
-<div class="popup-overlay">
-    <div class="popup">
-        <p><?= htmlspecialchars($errorMessage) ?></p>
-        <button onclick="closePopup()">OK</button>
+    <div class="popup-overlay">
+        <div class="popup">
+            <p><?= htmlspecialchars($errorMessage) ?></p>
+            <button onclick="closePopup()">OK</button>
+        </div>
     </div>
-</div>
-<script>
-    function closePopup() {
-        document.querySelector('.popup-overlay').style.display = 'none';
-    }
-</script>
+    <script>
+        function closePopup() {
+            document.querySelector('.popup-overlay').style.display = 'none';
+        }
+    </script>
 <?php endif; ?>
 
 <form method="post">
@@ -88,8 +82,8 @@ if ($result) {
     <label for="lunghezza">Lunghezza</label>
     <input type="number" name="lunghezza" required>
     <div style="margin-top: 20px;">
-    <label for="targa">Targa</label>
-</div>
+        <label for="targa">Targa</label>
+    </div>
     <input type="text" name="targa" required>
 
     <label for="id_faro">ID Faro</label>
@@ -103,8 +97,9 @@ if ($result) {
     </select>
 
     <div style="margin-top: 30px;">
-    <input type="submit" value="Aggiungi">
-        </div>
+        <input type="submit" value="Aggiungi">
+    </div>
 </form>
+
 </body>
 </html>
