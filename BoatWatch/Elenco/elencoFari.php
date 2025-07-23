@@ -21,6 +21,7 @@ if ($result) {
     die("Errore nella query.");
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="it">
 <head> 
@@ -61,5 +62,4 @@ if ($result) {
         <?php endif; ?>
     </div>
 </body>
-
 </html>
