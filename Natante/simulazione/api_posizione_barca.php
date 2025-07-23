@@ -39,4 +39,3 @@ echo json_encode([
     'live' => $live,
     'storico' => $storico,
 ]);
-marcogay
