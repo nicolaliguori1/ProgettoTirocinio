@@ -59,6 +59,7 @@ CREATE TABLE boats_current_position (
   lat DOUBLE PRECISION NOT NULL,
   lon DOUBLE PRECISION NOT NULL,
   ts TIMESTAMP NOT NULL,
+  id_rotta INT DEFAULT 0,
   FOREIGN KEY (targa_barca) REFERENCES boats(targa)
     ON DELETE CASCADE
     ON UPDATE CASCADE

@@ -105,85 +105,72 @@ $initialLon = is_numeric($live['lon']) ? floatval($live['lon']) : 0;
   </div>
 
 <script>
-  const targa = <?= json_encode($targa) ?>;
-  let initialLat = <?= json_encode($initialLat) ?>;
-  let initialLon = <?= json_encode($initialLon) ?>;
+const targa = <?= json_encode($targa) ?>;
+let initialLat = <?= json_encode($initialLat) ?>;
+let initialLon = <?= json_encode($initialLon) ?>;
 
-  if (typeof initialLat !== 'number' || isNaN(initialLat)) initialLat = 0;
-  if (typeof initialLon !== 'number' || isNaN(initialLon)) initialLon = 0;
+if (typeof initialLat !== 'number' || isNaN(initialLat)) initialLat = 0;
+if (typeof initialLon !== 'number' || isNaN(initialLon)) initialLon = 0;
 
-  const map = L.map('map').setView([initialLat, initialLon], 13);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; OpenStreetMap contributors'
-  }).addTo(map);
+const map = L.map('map').setView([initialLat, initialLon], 13);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; OpenStreetMap contributors'
+}).addTo(map);
 
-  let marker = null;
-  let polyline = null;
-  let startPoint = null;
-  let pathPoints = [];
-  let lineaVisibile = false;
+let marker = null;
+let polyline = null;
+let pathPoints = [];
+let lineaVisibile = false;
 
-  function aggiornaDati() {
-    fetch('simulazione/api_posizione_barca.php?targa=' + encodeURIComponent(targa))
-      .then(res => res.json())
-      .then(data => {
-        console.log('Dati live ricevuti:', data);
+function aggiornaDati() {
+  fetch('simulazione/api_posizione_barca.php?targa=' + encodeURIComponent(targa))
+    .then(res => res.json())
+    .then(data => {
+      console.log('Dati live ricevuti:', data);
 
-        if (data.live && data.live.lat != null && data.live.lon != null) {
-          const currentLat = parseFloat(data.live.lat);
-          const currentLon = parseFloat(data.live.lon);
-          const id_rotta = parseInt(data.live.id_rotta);
+      if (data.live && data.live.lat != null && data.live.lon != null) {
+        const currentLat = parseFloat(data.live.lat);
+        const currentLon = parseFloat(data.live.lon);
+        const id_rotta = parseInt(data.live.id_rotta);
 
-          if (isNaN(currentLat) || isNaN(currentLon)) {
-            console.warn('Coordinate non valide');
-            return;
-          }
-
-          document.getElementById('lat').textContent = currentLat;
-          document.getElementById('lon').textContent = currentLon;
-
-          const liveLatLng = [currentLat, currentLon];
-
-          if (marker) {
-            marker.setLatLng(liveLatLng);
-          } else {
-            marker = L.marker(liveLatLng).addTo(map);
-          }
-          map.setView(liveLatLng, 13);
-
-          if (id_rotta === 0) {
-            // Reset linea quando nave torna all'inizio
-            if (polyline) {
-              console.log('Nave tornata a id_rotta 0, resetto la linea');
-              map.removeLayer(polyline);
-              polyline = null;
-            }
-            pathPoints = [];
-            startPoint = liveLatLng; // aggiorno startPoint per prossimi punti
-            lineaVisibile = false;
-          } else {
-            // id_rotta diverso da 0 -> traccia la linea normalmente
-            if (!lineaVisibile) {
-              startPoint = liveLatLng;
-              pathPoints = [liveLatLng];
-              polyline = L.polyline(pathPoints, { color: 'blue' }).addTo(map);
-              lineaVisibile = true;
-            } else {
-              pathPoints.push(liveLatLng);
-              if (polyline) {
-                polyline.setLatLngs(pathPoints);
-              }
-            }
-          }
-        } else {
-          console.warn('Dati live non disponibili o non validi');
+        if (isNaN(currentLat) || isNaN(currentLon)) {
+          console.warn('Coordinate non valide');
+          return;
         }
-      })
-      .catch(err => console.error('Errore aggiornamento dati:', err));
-  }
 
-  aggiornaDati();
-  setInterval(aggiornaDati, 3000);
+        document.getElementById('lat').textContent = currentLat;
+        document.getElementById('lon').textContent = currentLon;
+
+        const liveLatLng = [currentLat, currentLon];
+
+        if (marker) {
+          marker.setLatLng(liveLatLng);
+        } else {
+          marker = L.marker(liveLatLng).addTo(map);
+        }
+        map.setView(liveLatLng, 13);
+
+        // Qui non resettiamo mai la linea, tracciamo sempre
+        if (!lineaVisibile) {
+          pathPoints = [liveLatLng];
+          polyline = L.polyline(pathPoints, { color: 'blue' }).addTo(map);
+          lineaVisibile = true;
+        } else {
+          pathPoints.push(liveLatLng);
+          if (polyline) {
+            polyline.setLatLngs(pathPoints);
+          }
+        }
+      } else {
+        console.warn('Dati live non disponibili o non validi');
+      }
+    })
+    .catch(err => console.error('Errore aggiornamento dati:', err));
+}
+
+aggiornaDati();
+setInterval(aggiornaDati, 3000);
+
 </script>
 
 </body>
