@@ -75,7 +75,14 @@ $initialLon = is_numeric($live['lon']) ? floatval($live['lon']) : 0;
   <title>Tracker <?= htmlspecialchars($nome_barca) ?></title>
 
   <style>
-    #map { height: 500px; margin: 20px 0; }
+  #map {
+  height: 300px;
+  width: 80%;
+  margin: 40px auto;
+  border-radius: 15px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  border: 1px solid #ccc;
+}
   </style>
 </head>
 
@@ -98,6 +105,9 @@ $initialLon = is_numeric($live['lon']) ? floatval($live['lon']) : 0;
       <div class="box">
         <h2><strong>Longitudine</strong></h2>
         <h2 id="lon"><?= (is_numeric($live['lon'])) ? htmlspecialchars($live['lon']) : 'N/D' ?></h2>
+      </div>
+      <div class="box">
+        <h2 id="presfaro"></h2>
       </div>
     </div>
 
