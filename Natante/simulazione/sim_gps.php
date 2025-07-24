@@ -1,14 +1,52 @@
 <?php
 require __DIR__ . '/../../connessione.php';
+
 $status_file = __DIR__ . '/sim_status.txt';
 
-function randomFloat() {
-    return mt_rand() / mt_getrandmax();
-}
-
-function randomFloatRange($min, $max) {
-    return $min + mt_rand() / mt_getrandmax() * ($max - $min);
-}
+$routes = [
+    '1' => [
+        [40.6333, 14.6833],
+        [40.6320, 14.6850],
+        [40.6300, 14.6900],
+        [40.6280, 14.7000],
+        [40.6250, 14.7100],
+        [40.6200, 14.7150],
+        [40.6150, 14.7200],
+        [40.6100, 14.7200],
+        [40.6150, 14.7050],
+        [40.6200, 14.6950],
+        [40.6220, 14.6900],
+        [40.6300, 14.6800]
+    ],
+    '2' => [
+        [40.2500, 14.9000],
+        [40.2510, 14.9020],
+        [40.2520, 14.9050],
+        [40.2480, 14.9100],
+        [40.2450, 14.9200],
+        [40.2420, 14.9250],
+        [40.2400, 14.9250],
+        [40.2380, 14.9200],
+        [40.2390, 14.9150],
+        [40.2420, 14.9150],
+        [40.2460, 14.9050],
+        [40.2500, 14.9000]
+    ],
+    '3' => [
+        [40.6745, 14.7519],
+        [40.6720, 14.7550],
+        [40.6700, 14.7600],
+        [40.6680, 14.7650],
+        [40.6650, 14.7700],
+        [40.6620, 14.7650],
+        [40.6600, 14.7600],
+        [40.6620, 14.7550],
+        [40.6630, 14.7500],
+        [40.6630, 14.7450],
+        [40.6680, 14.7400],
+        [40.6745, 14.7519]
+    ]
+];
 
 while (true) {
     $status = @file_get_contents($status_file);
@@ -25,63 +63,96 @@ while (true) {
         continue;
     }
 
-    $query = "
-        SELECT b.targa, f.lat AS faro_lat, f.lon AS faro_lon
-        FROM boats b
-        LEFT JOIN fari f ON b.id_faro = f.id
-    ";
+    $query = "SELECT b.targa, b.id_faro FROM boats b WHERE b.id_faro IS NOT NULL";
     $result = pg_query($conn, $query);
+    if (!$result) {
+        echo "[" . date('H:i:s') . "] Errore nella query barche.\n";
+        pg_close($conn);
+        sleep(3);
+        continue;
+    }
 
     while ($row = pg_fetch_assoc($result)) {
         $targa = $row['targa'];
-        $faroLat = $row['faro_lat'];
-        $faroLon = $row['faro_lon'];
+        $id_faro = $row['id_faro'];
 
+        if (!isset($routes[$id_faro])) {
+            echo "[" . date('H:i:s') . "] [$targa] Faro $id_faro senza rotta definita.\n";
+            continue;
+        }
+
+        $route = $routes[$id_faro];
+
+        // Applico rumore randomico ai punti tranne il primo (indice 0)
+        $noisyRoute = $route;
+        for ($i = 1; $i < count($route); $i++) {
+            $noiseLat = (mt_rand() / mt_getrandmax() - 0.5) * 0.0002; // +/- 0.0001
+            $noiseLon = (mt_rand() / mt_getrandmax() - 0.5) * 0.0002;
+            $noisyRoute[$i][0] = $route[$i][0] + $noiseLat;
+            $noisyRoute[$i][1] = $route[$i][1] + $noiseLon;
+        }
+
+        // Controllo posizione corrente
         $posQuery = pg_query_params($conn,
-            "SELECT lat, lon FROM boats_position WHERE targa_barca = $1 ORDER BY ts DESC LIMIT 1",
+            "SELECT id_rotta FROM boats_current_position WHERE targa_barca = $1",
             [$targa]
         );
 
-        if (pg_num_rows($posQuery) > 0) {
-            $lastPos = pg_fetch_assoc($posQuery);
-            $lat = $lastPos['lat'];
-            $lon = $lastPos['lon'];
+        if ($posQuery && pg_num_rows($posQuery) > 0) {
+            $rowPos = pg_fetch_assoc($posQuery);
+            $id_rotta = (int)$rowPos['id_rotta'];
         } else {
-            if ($faroLat !== null && $faroLon !== null) {
-                $lat = $faroLat;
-                $lon = $faroLon;
-            } else {
-                $lat = 41.5 + randomFloat() * 1.5;
-                $lon = 10.0 + randomFloat() * 2.0;
-            }
+            $id_rotta = 0;
         }
 
-        $maxDelta = 0.001; // circa 100 metri di spostamento massimo
+        // Coordinate attuali (con rumore)
+        $point = $noisyRoute[$id_rotta];
+        $newLat = $point[0];
+        $newLon = $point[1];
+        $now = date('Y-m-d H:i:s');
 
-        $deltaLat = randomFloatRange(-$maxDelta, $maxDelta);
-        $deltaLon = randomFloatRange(-$maxDelta, $maxDelta);
-
-        $newLat = $lat + $deltaLat;
-        $newLon = $lon + $deltaLon;
-
-        // Limita il movimento a circa 1 km dal faro
-        if ($faroLat !== null && $faroLon !== null) {
-            $distanceLat = abs($newLat - $faroLat);
-            $distanceLon = abs($newLon - $faroLon);
-
-            if ($distanceLat > 0.01) $newLat = $lat - $deltaLat;
-            if ($distanceLon > 0.01) $newLon = $lon - $deltaLon;
-        }
-
-        $insert = pg_query_params($conn,
-            "INSERT INTO boats_position (targa_barca, lat, lon) VALUES ($1, $2, $3)",
-            [$targa, $newLat, $newLon]
+        // Inserisco nello storico
+        $insertHist = pg_query_params($conn,
+            "INSERT INTO boats_position (targa_barca, lat, lon, ts) VALUES ($1, $2, $3, $4)",
+            [$targa, $newLat, $newLon, $now]
         );
 
-        if ($insert) {
-            echo "[" . date('H:i:s') . "] [$targa] $newLat, $newLon\n";
+        if (!$insertHist) {
+            echo "[" . date('H:i:s') . "] [$targa] Errore inserimento storico\n";
+            continue;
+        }
+
+        $next_rotta = ($id_rotta + 1) % count($route);
+
+        // Aggiorno o inserisco posizione corrente
+        $check = pg_query_params($conn,
+            "SELECT 1 FROM boats_current_position WHERE targa_barca = $1",
+            [$targa]
+        );
+
+        if (pg_num_rows($check) > 0) {
+            $update = pg_query_params($conn,
+                "UPDATE boats_current_position 
+                 SET lat = $2, lon = $3, ts = $4, id_rotta = $5 
+                 WHERE targa_barca = $1",
+                [$targa, $newLat, $newLon, $now, $next_rotta]
+            );
+            if ($update) {
+                echo "[" . date('H:i:s') . "] [$targa] Aggiornata posizione: $newLat, $newLon (id_rotta $next_rotta)\n";
+            } else {
+                echo "[" . date('H:i:s') . "] [$targa] Errore UPDATE posizione corrente\n";
+            }
         } else {
-            echo "[" . date('H:i:s') . "] [$targa] Errore\n";
+            $insert = pg_query_params($conn,
+                "INSERT INTO boats_current_position (targa_barca, lat, lon, ts, id_rotta) 
+                 VALUES ($1, $2, $3, $4, $5)",
+                [$targa, $newLat, $newLon, $now, $next_rotta]
+            );
+            if ($insert) {
+                echo "[" . date('H:i:s') . "] [$targa] Inserita posizione iniziale (faro): $newLat, $newLon\n";
+            } else {
+                echo "[" . date('H:i:s') . "] [$targa] Errore INSERT posizione corrente\n";
+            }
         }
     }
 

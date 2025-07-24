@@ -2,121 +2,190 @@
 require __DIR__ . '/../connessione.php';
 
 $targa = $_GET['targa'] ?? '';
-$targa = pg_escape_string($conn, $targa);
+$targa = trim($targa);
 
-// Recupera i dati della barca tramite targa
-$query_barca = "SELECT * FROM boats WHERE targa = '$targa'";
-$res_barca = pg_query($conn, $query_barca);
-$barca = pg_fetch_assoc($res_barca);
-
-if (!$barca) {
-    echo "<h2>Errore: Barca non trovata.</h2>";
-    exit;
+if ($targa === '') {
+    die('Errore: targa non specificata');
 }
 
-$nome_barca = $barca['nome'];
+// Prendo il nome barca
+$query_nome = "SELECT nome FROM boats WHERE targa = $1";
+$res_nome = pg_query_params($conn, $query_nome, [$targa]);
 
-// Ultima posizione
-$res_live = pg_query($conn, "
-    SELECT ts, lat, lon 
-    FROM boats_position 
-    WHERE targa_barca = '$targa' 
-      AND ts = (SELECT MAX(ts) FROM boats_position WHERE targa_barca = '$targa')
-");
-$live = pg_fetch_assoc($res_live);
+if (!$res_nome || pg_num_rows($res_nome) === 0) {
+    die('Errore: barca non trovata');
+}
 
-// Storico ultimi 10
-$res_storico = pg_query($conn, "
-   SELECT ts, lat, lon 
-   FROM boats_position 
-   WHERE targa_barca = '$targa' 
-   ORDER BY ts DESC 
-   LIMIT 10
-");
+$row_nome = pg_fetch_assoc($res_nome);
+$nome_barca = $row_nome['nome'];
+
+// Provo posizione live
+$res_live = pg_query_params($conn, "SELECT ts, lat, lon, id_rotta FROM boats_current_position WHERE targa_barca = $1", [$targa]);
+
+$live = false;
+if ($res_live && pg_num_rows($res_live) > 0) {
+    $row_live = pg_fetch_assoc($res_live);
+    if (
+        isset($row_live['lat'], $row_live['lon']) &&
+        is_numeric($row_live['lat']) &&
+        is_numeric($row_live['lon'])
+    ) {
+        $live = $row_live;
+    }
+}
+
+if (!$live) {
+    // fallback sul faro associato
+    $query_faro = "SELECT f.lat, f.lon
+                   FROM boats b
+                   JOIN fari f ON b.id_faro = f.id
+                   WHERE b.targa = $1";
+    $res_faro = pg_query_params($conn, $query_faro, [$targa]);
+
+    if ($res_faro && pg_num_rows($res_faro) > 0) {
+        $row_faro = pg_fetch_assoc($res_faro);
+        if (is_numeric($row_faro['lat']) && is_numeric($row_faro['lon'])) {
+            $live = [
+                'ts' => null,
+                'lat' => floatval($row_faro['lat']),
+                'lon' => floatval($row_faro['lon']),
+                'id_rotta' => 0
+            ];
+        } else {
+            $live = ['ts' => null, 'lat' => null, 'lon' => null, 'id_rotta' => 0];
+        }
+    } else {
+        $live = ['ts' => null, 'lat' => null, 'lon' => null, 'id_rotta' => 0];
+    }
+}
+
+$initialLat = is_numeric($live['lat']) ? floatval($live['lat']) : 0;
+$initialLon = is_numeric($live['lon']) ? floatval($live['lon']) : 0;
 ?>
 
-
 <!DOCTYPE html>
-<html lang="en-US" dir="ltr">
+<html lang="it" dir="ltr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <link rel="stylesheet" href="css/style.css?v=2">
   <link rel="manifest" href="manifest.json">
-  <script type="module" src="js/app.js"></script>
-
+  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" crossorigin=""></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" crossorigin=""/>
   <title>Tracker <?= htmlspecialchars($nome_barca) ?></title>
 
+  <style>
+    #map { height: 500px; margin: 20px 0; }
+  </style>
 </head>
 
-<body>  
+<body>
   <div class="NomeBarca">
-  <h1>TRACKER <?= htmlspecialchars($nome_barca) ?></h1>
-</div>
+    <h1>TRACKER <?= htmlspecialchars($nome_barca) ?></h1>
+  </div>
 
   <div class="sezione">
     <h1>Posizione Live</h1>
     <div class="box-wrapper">
-  <div class="box">
-    <h2><strong>Nome</strong></h2>
-    <h2><?= htmlspecialchars($nome_barca) ?></h2>
+      <div class="box">
+        <h2><strong>Nome</strong></h2>
+        <h2><?= htmlspecialchars($nome_barca) ?></h2>
+      </div>
+      <div class="box">
+        <h2><strong>Latitudine</strong></h2>
+        <h2 id="lat"><?= (is_numeric($live['lat'])) ? htmlspecialchars($live['lat']) : 'N/D' ?></h2>
+      </div>
+      <div class="box">
+        <h2><strong>Longitudine</strong></h2>
+        <h2 id="lon"><?= (is_numeric($live['lon'])) ? htmlspecialchars($live['lon']) : 'N/D' ?></h2>
+      </div>
+    </div>
+
+    <div id="map"></div>
   </div>
- <div class="box">
-  <h2><strong>Latitudine</strong></h2>
-  <h2 id="lat"><?= $live['lat'] ?? 'N/D' ?></h2>
-</div>
-<div class="box">
-  <h2><strong>Longitudine</strong></h2>
-  <h2 id="lon"><?= $live['lon'] ?? 'N/D' ?></h2>
-</div>
 
-</div>
+<script>
+  const targa = <?= json_encode($targa) ?>;
+  let initialLat = <?= json_encode($initialLat) ?>;
+  let initialLon = <?= json_encode($initialLon) ?>;
 
-  </div>
+  if (typeof initialLat !== 'number' || isNaN(initialLat)) initialLat = 0;
+  if (typeof initialLon !== 'number' || isNaN(initialLon)) initialLon = 0;
 
+  const map = L.map('map').setView([initialLat, initialLon], 13);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
 
-  <div class="sezione">
-    <h1>Storico Recente</h1>
-    <div class="storico">
-      <ul id="storico-list">
-        <?php while ($row = pg_fetch_assoc($res_storico)): ?>
-  <li><?= $row['ts'] ?> — <?= $row['lat'] ?>, <?= $row['lon'] ?></li>
-<?php endwhile; ?>
+  let marker = null;
+  let polyline = null;
+  let startPoint = null;
+  let pathPoints = [];
+  let lineaVisibile = false;
 
-      </ul>
-    </div>    
-  </div>
-  <script>
-const targa = <?= json_encode($targa) ?>;
+  function aggiornaDati() {
+    fetch('simulazione/api_posizione_barca.php?targa=' + encodeURIComponent(targa))
+      .then(res => res.json())
+      .then(data => {
+        console.log('Dati live ricevuti:', data);
 
-function aggiornaDati() {
-  fetch('simulazione/api_posizione_barca.php?targa=' + encodeURIComponent(targa))
-    .then(res => res.json())
-    .then(data => {
-      if (data.live) {
-        document.getElementById('lat').textContent = data.live.lat ?? 'N/D';
-        document.getElementById('lon').textContent = data.live.lon ?? 'N/D';
-      }
+        if (data.live && data.live.lat != null && data.live.lon != null) {
+          const currentLat = parseFloat(data.live.lat);
+          const currentLon = parseFloat(data.live.lon);
+          const id_rotta = parseInt(data.live.id_rotta);
 
-      const storicoList = document.getElementById('storico-list');
-      storicoList.innerHTML = '';
-      if (data.storico && data.storico.length) {
-        data.storico.forEach(punto => {
-          const li = document.createElement('li');
-          li.textContent = `${punto.ts} — ${punto.lat}, ${punto.lon}`;
-          storicoList.appendChild(li);
-        });
-      }
-    })
-    .catch(err => console.error('Errore aggiornamento dati:', err));
-}
+          if (isNaN(currentLat) || isNaN(currentLon)) {
+            console.warn('Coordinate non valide');
+            return;
+          }
 
-// Aggiorna subito e poi ogni 10 secondi
-aggiornaDati();
-setInterval(aggiornaDati, 10);
+          document.getElementById('lat').textContent = currentLat;
+          document.getElementById('lon').textContent = currentLon;
+
+          const liveLatLng = [currentLat, currentLon];
+
+          if (marker) {
+            marker.setLatLng(liveLatLng);
+          } else {
+            marker = L.marker(liveLatLng).addTo(map);
+          }
+          map.setView(liveLatLng, 13);
+
+          if (id_rotta === 0) {
+            // Reset linea quando nave torna all'inizio
+            if (polyline) {
+              console.log('Nave tornata a id_rotta 0, resetto la linea');
+              map.removeLayer(polyline);
+              polyline = null;
+            }
+            pathPoints = [];
+            startPoint = liveLatLng; // aggiorno startPoint per prossimi punti
+            lineaVisibile = false;
+          } else {
+            // id_rotta diverso da 0 -> traccia la linea normalmente
+            if (!lineaVisibile) {
+              startPoint = liveLatLng;
+              pathPoints = [liveLatLng];
+              polyline = L.polyline(pathPoints, { color: 'blue' }).addTo(map);
+              lineaVisibile = true;
+            } else {
+              pathPoints.push(liveLatLng);
+              if (polyline) {
+                polyline.setLatLngs(pathPoints);
+              }
+            }
+          }
+        } else {
+          console.warn('Dati live non disponibili o non validi');
+        }
+      })
+      .catch(err => console.error('Errore aggiornamento dati:', err));
+  }
+
+  aggiornaDati();
+  setInterval(aggiornaDati, 3000);
 </script>
 
 </body>
 </html>
-<!-- commento nuovo-->
- 
+
