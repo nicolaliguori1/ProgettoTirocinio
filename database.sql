@@ -80,3 +80,9 @@ INSERT INTO boats (targa, lunghezza, nome, id_user, id_faro) VALUES
 ('SA9012', 15, 'Onda Libera', NULL, 3);  -- Faro del Porto di Salerno
 
 -- prova
+CREATE TABLE IF NOT EXISTS barca_presenza (
+    id SERIAL PRIMARY KEY,
+    targa TEXT NOT NULL,
+    stato TEXT CHECK (stato IN ('dentro', 'fuori')),
+    ts TIMESTAMP NOT NULL DEFAULT NOW()
+);

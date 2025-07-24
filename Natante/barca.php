@@ -112,6 +112,32 @@ $initialLon = is_numeric($live['lon']) ? floatval($live['lon']) : 0;
     </div>
 
     <div id="map"></div>
+    <!-- STORICO PRESENZA -->
+<div class="storico">
+  <h2>Storico Entrata/Uscita Porto</h2>
+  <ul id="storico-list">
+    <li>Caricamento storico...</li>
+  </ul>
+</div>
+
+<style>
+.storico {
+  width: 80%;
+  margin: 20px auto;
+  background: #f9f9f9;
+  padding: 10px;
+  border-radius: 10px;
+}
+.storico ul {
+  list-style: none;
+  padding: 0;
+}
+.storico li {
+  padding: 4px 0;
+  font-family: monospace;
+}
+</style>
+
   </div>
 
 <script>
@@ -190,6 +216,56 @@ function aggiornaDati() {
 
 aggiornaDati();
 setInterval(aggiornaDati, 3000);
+// === Aggiorna stato presenza nel porto dinamicamente ===
+function aggiornaPresenzaPorto() {
+  fetch('verifica_stato.php?targa=' + encodeURIComponent(targa))
+    .then(res => res.json())
+    .then(data => {
+      if (data.stato) {
+        document.getElementById('presfaro').innerHTML =
+          '<h3>Presenza nel porto</h3><h2>' + data.stato + '</h2>';
+      } else {
+        document.getElementById('presfaro').innerHTML =
+          '<h3>Presenza nel porto</h3><h2>Errore</h2>';
+        console.error(data.errore || 'Errore sconosciuto');
+      }
+    })
+    .catch(err => {
+      document.getElementById('presfaro').innerHTML =
+        '<h3>Presenza nel porto</h3><h2>Errore</h2>';
+      console.error('Errore chiamata verifica_stato:', err);
+    });
+}
+
+aggiornaPresenzaPorto();
+setInterval(aggiornaPresenzaPorto, 5000); // aggiorna ogni 5 secondi
+
+// === Aggiorna storico presenza dinamicamente ===
+function aggiornaStoricoPresenza() {
+  fetch('storico_presenza.php?targa=' + encodeURIComponent(targa))
+    .then(res => res.json())
+    .then(data => {
+      const ul = document.getElementById('storico-list');
+      ul.innerHTML = '';
+      if (data.length === 0) {
+        ul.innerHTML = '<li>Nessun dato disponibile.</li>';
+        return;
+      }
+      data.forEach(entry => {
+        const li = document.createElement('li');
+        li.textContent = entry.ts + ' → ' + entry.stato;
+        ul.appendChild(li);
+      });
+    })
+    .catch(err => {
+      console.error('Errore caricamento storico:', err);
+      document.getElementById('storico-list').innerHTML =
+        '<li>Errore nel caricamento dello storico.</li>';
+    });
+}
+
+aggiornaStoricoPresenza();
+setInterval(aggiornaStoricoPresenza, 10000); // aggiorna ogni 10 secondi
 
 </script>
 
