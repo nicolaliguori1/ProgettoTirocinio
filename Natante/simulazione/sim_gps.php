@@ -4,7 +4,7 @@ require __DIR__ . '/../../connessione.php';
 $status_file = __DIR__ . '/sim_status.txt';
 
 $routes = [
-    '1' => [
+    1 => [
         [40.6333, 14.6833],
         [40.6320, 14.6850],
         [40.6300, 14.6900],
@@ -18,7 +18,7 @@ $routes = [
         [40.6220, 14.6900],
         [40.6300, 14.6800]
     ],
-    '2' => [
+    2 => [
         [40.2500, 14.9000],
         [40.2510, 14.9020],
         [40.2520, 14.9050],
@@ -32,7 +32,7 @@ $routes = [
         [40.2460, 14.9050],
         [40.2500, 14.9000]
     ],
-    '3' => [
+    3 => [
         [40.6745, 14.7519],
         [40.6720, 14.7550],
         [40.6700, 14.7600],
@@ -74,7 +74,7 @@ while (true) {
 
     while ($row = pg_fetch_assoc($result)) {
         $targa = $row['targa'];
-        $id_faro = $row['id_faro'];
+        $id_faro = (int)$row['id_faro'];
 
         if (!isset($routes[$id_faro])) {
             echo "[" . date('H:i:s') . "] [$targa] Faro $id_faro senza rotta definita.\n";
@@ -83,26 +83,25 @@ while (true) {
 
         $route = $routes[$id_faro];
 
-        // Applico rumore randomico ai punti tranne il primo (indice 0)
+        // Applico rumore randomico ai punti tranne il primo
         $noisyRoute = $route;
         for ($i = 1; $i < count($route); $i++) {
-            $noiseLat = (mt_rand() / mt_getrandmax() - 0.5) * 0.0002; // +/- 0.0001
+            $noiseLat = (mt_rand() / mt_getrandmax() - 0.5) * 0.0002;
             $noiseLon = (mt_rand() / mt_getrandmax() - 0.5) * 0.0002;
             $noisyRoute[$i][0] = $route[$i][0] + $noiseLat;
             $noisyRoute[$i][1] = $route[$i][1] + $noiseLon;
         }
 
-        // Controllo posizione corrente
+        // Recupero posizione corrente
         $posQuery = pg_query_params($conn,
             "SELECT id_rotta FROM boats_current_position WHERE targa_barca = $1",
             [$targa]
         );
 
+        $id_rotta = 0;
         if ($posQuery && pg_num_rows($posQuery) > 0) {
             $rowPos = pg_fetch_assoc($posQuery);
             $id_rotta = (int)$rowPos['id_rotta'];
-        } else {
-            $id_rotta = 0;
         }
 
         // Coordinate attuali (con rumore)
@@ -159,4 +158,3 @@ while (true) {
     pg_close($conn);
     sleep(3);
 }
-
