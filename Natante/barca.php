@@ -150,6 +150,16 @@ function aggiornaDati() {
         }
         map.setView(liveLatLng, 13);
 
+        if (id_rotta === 0) {
+          if (polyline) {
+            map.removeLayer(polyline);
+            polyline = null;
+          }
+          lineaVisibile = false;
+          pathPoints = [];
+          return; // esci dal blocco se non vuoi disegnare nulla
+        }
+
         // Qui non resettiamo mai la linea, tracciamo sempre
         if (!lineaVisibile) {
           pathPoints = [liveLatLng];
@@ -164,6 +174,7 @@ function aggiornaDati() {
       } else {
         console.warn('Dati live non disponibili o non validi');
       }
+      
     })
     .catch(err => console.error('Errore aggiornamento dati:', err));
 }
