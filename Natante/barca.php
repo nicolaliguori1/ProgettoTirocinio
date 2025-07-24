@@ -174,7 +174,6 @@ function aggiornaDati() {
       } else {
         console.warn('Dati live non disponibili o non validi');
       }
-      
     })
     .catch(err => console.error('Errore aggiornamento dati:', err));
 }
