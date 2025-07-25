@@ -113,11 +113,20 @@ $initialLon = is_numeric($live['lon']) ? floatval($live['lon']) : 0;
 
     <div id="map"></div>
     <!-- STORICO PRESENZA -->
-<div class="storico">
+    <div class="storico">
   <h2>Storico Entrata/Uscita Porto</h2>
-  <ul id="storico-list">
-    <li>Caricamento storico...</li>
-  </ul>
+  <table id="storico-table">
+    <thead>
+      <tr>
+        <th>Giorno</th>
+        <th>Orario</th>
+        <th>Posizione</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td colspan="3">Caricamento storico...</td></tr>
+    </tbody>
+  </table>
 </div>
 
 <style>
@@ -128,15 +137,22 @@ $initialLon = is_numeric($live['lon']) ? floatval($live['lon']) : 0;
   padding: 10px;
   border-radius: 10px;
 }
-.storico ul {
-  list-style: none;
-  padding: 0;
-}
-.storico li {
-  padding: 4px 0;
+.storico table {
+  width: 100%;
+  border-collapse: collapse;
   font-family: monospace;
 }
+.storico th, .storico td {
+  padding: 8px;
+  border: 1px solid #ccc;
+  text-align: left;
+}
+.storico th {
+  background-color: #eee;
+}
 </style>
+
+
 
   </div>
 
@@ -215,7 +231,7 @@ function aggiornaDati() {
 }
 
 aggiornaDati();
-setInterval(aggiornaDati, 3000);
+setInterval(aggiornaDati, 2000);
 // === Aggiorna stato presenza nel porto dinamicamente ===
 function aggiornaPresenzaPorto() {
   fetch('verifica_stato.php?targa=' + encodeURIComponent(targa))
@@ -238,34 +254,52 @@ function aggiornaPresenzaPorto() {
 }
 
 aggiornaPresenzaPorto();
-setInterval(aggiornaPresenzaPorto, 5000); // aggiorna ogni 5 secondi
+setInterval(aggiornaPresenzaPorto, 2000); // aggiorna ogni 5 secondi
 
 // === Aggiorna storico presenza dinamicamente ===
 function aggiornaStoricoPresenza() {
   fetch('storico_presenza.php?targa=' + encodeURIComponent(targa))
     .then(res => res.json())
     .then(data => {
-      const ul = document.getElementById('storico-list');
-      ul.innerHTML = '';
+      const tbody = document.querySelector('#storico-table tbody');
+      tbody.innerHTML = '';
+
       if (data.length === 0) {
-        ul.innerHTML = '<li>Nessun dato disponibile.</li>';
+        tbody.innerHTML = '<tr><td colspan="3">Nessun dato disponibile.</td></tr>';
         return;
       }
+
       data.forEach(entry => {
-        const li = document.createElement('li');
-        li.textContent = entry.ts + ' → ' + entry.stato;
-        ul.appendChild(li);
+        const row = document.createElement('tr');
+
+        const ts = new Date(entry.ts);
+        const giorno = ts.toLocaleDateString('it-IT');
+        const orario = ts.toLocaleTimeString('it-IT');
+
+        const cellGiorno = document.createElement('td');
+        cellGiorno.textContent = giorno;
+        row.appendChild(cellGiorno);
+
+        const cellOrario = document.createElement('td');
+        cellOrario.textContent = orario;
+        row.appendChild(cellOrario);
+
+        const cellPosizione = document.createElement('td');
+        cellPosizione.textContent = entry.stato;
+        row.appendChild(cellPosizione);
+
+        tbody.appendChild(row);
       });
     })
     .catch(err => {
       console.error('Errore caricamento storico:', err);
-      document.getElementById('storico-list').innerHTML =
-        '<li>Errore nel caricamento dello storico.</li>';
+      const tbody = document.querySelector('#storico-table tbody');
+      tbody.innerHTML = '<tr><td colspan="3">Errore nel caricamento dello storico.</td></tr>';
     });
 }
 
 aggiornaStoricoPresenza();
-setInterval(aggiornaStoricoPresenza, 10000); // aggiorna ogni 10 secondi
+setInterval(aggiornaStoricoPresenza, 2000); // aggiorna ogni 10 secondi
 
 </script>
 
