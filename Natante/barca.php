@@ -114,8 +114,9 @@ $initialLon = is_numeric($live['lon']) ? floatval($live['lon']) : 0;
     <div id="map"></div>
     <!-- STORICO PRESENZA -->
     <div class="storico">
-  <h2>Storico Entrata/Uscita Porto</h2>
+  
   <table id="storico-table">
+  <caption>Storico Entrata/Uscita Porto</caption>
     <thead>
       <tr>
         <th>Giorno</th>
@@ -133,23 +134,48 @@ $initialLon = is_numeric($live['lon']) ? floatval($live['lon']) : 0;
 .storico {
   width: 80%;
   margin: 20px auto;
-  background: #f9f9f9;
-  padding: 10px;
-  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  padding: 20px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  color: #00d4ff;
+  overflow-x: auto;
 }
+
 .storico table {
   width: 100%;
   border-collapse: collapse;
   font-family: monospace;
+  background-color: transparent;
+  color: #00d4ff;
 }
+
 .storico th, .storico td {
-  padding: 8px;
-  border: 1px solid #ccc;
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   text-align: left;
+  background-color: rgba(255, 255, 255, 0.05);
 }
+
 .storico th {
-  background-color: #eee;
+  background-color: rgba(255, 255, 255, 0.1);
+  font-weight: bold;
+  color: #00d4ff;
 }
+
+.storico caption {
+  caption-side: top;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #00d4ff;
+  text-align: center;
+  margin-bottom: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+
 </style>
 
 
