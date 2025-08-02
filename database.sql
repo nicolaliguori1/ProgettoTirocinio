@@ -21,7 +21,7 @@ CREATE TABLE fari_position (
   id_faro INT NOT NULL,
   lat DOUBLE PRECISION NOT NULL,
   lon DOUBLE PRECISION NOT NULL,
-  ts TIMESTAMP NOT NULL DEFAULT NOW(),
+  ts TIMESTAMP(6) NOT NULL DEFAULT NOW(),
   FOREIGN KEY (id_faro) REFERENCES fari(id)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
@@ -44,7 +44,7 @@ CREATE TABLE boats (
 );
 
 CREATE TABLE boats_position (
-  ts TIMESTAMP DEFAULT NOW(),
+  ts TIMESTAMP(6) DEFAULT NOW(),
   targa_barca VARCHAR(100) NOT NULL,
   lat DOUBLE PRECISION NOT NULL,
   lon DOUBLE PRECISION NOT NULL,
@@ -58,7 +58,7 @@ CREATE TABLE boats_current_position (
   targa_barca VARCHAR(100) PRIMARY KEY,
   lat DOUBLE PRECISION NOT NULL,
   lon DOUBLE PRECISION NOT NULL,
-  ts TIMESTAMP NOT NULL,
+  ts TIMESTAMP(6) NOT NULL,
   id_rotta INT DEFAULT 0,
   FOREIGN KEY (targa_barca) REFERENCES boats(targa)
     ON DELETE CASCADE
@@ -79,10 +79,3 @@ INSERT INTO boats (targa, lunghezza, nome, id_user, id_faro) VALUES
 ('SA5678', 9, 'Stella Marina', NULL, 2),  -- Faro di Punta Licosa
 ('SA9012', 15, 'Onda Libera', NULL, 3);  -- Faro del Porto di Salerno
 
--- prova
-CREATE TABLE IF NOT EXISTS barca_presenza (
-    id SERIAL PRIMARY KEY,
-    targa TEXT NOT NULL,
-    stato TEXT CHECK (stato IN ('dentro', 'fuori')),
-    ts TIMESTAMP NOT NULL DEFAULT NOW()
-);

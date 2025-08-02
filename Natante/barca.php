@@ -61,6 +61,8 @@ if (!$live) {
 
 $initialLat = is_numeric($live['lat']) ? floatval($live['lat']) : 0;
 $initialLon = is_numeric($live['lon']) ? floatval($live['lon']) : 0;
+
+
 ?>
 
 <!DOCTYPE html>
@@ -87,6 +89,10 @@ $initialLon = is_numeric($live['lon']) ? floatval($live['lon']) : 0;
 </head>
 
 <body>
+  <div class="pulsante-indietro">
+  <a href="http://localhost/tirocinio/ProgettoTirocinio/Natante/">Torna alla Home</a>
+</div>
+
   <div class="NomeBarca">
     <h1>TRACKER <?= htmlspecialchars($nome_barca) ?></h1>
   </div>
@@ -175,6 +181,28 @@ $initialLon = is_numeric($live['lon']) ? floatval($live['lon']) : 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+.pulsante-indietro {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.pulsante-indietro a {
+  display: inline-block;
+  padding: 12px 24px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #fff;
+  background-color: #0056b3;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.pulsante-indietro a:hover {
+  background-color: #0056b3;
+}
+
 
 </style>
 
@@ -190,142 +218,159 @@ let initialLon = <?= json_encode($initialLon) ?>;
 if (typeof initialLat !== 'number' || isNaN(initialLat)) initialLat = 0;
 if (typeof initialLon !== 'number' || isNaN(initialLon)) initialLon = 0;
 
-const map = L.map('map').setView([initialLat, initialLon], 13);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  attribution: '&copy; OpenStreetMap contributors'
-}).addTo(map);
+const mapElement = document.getElementById('map');
 
-let marker = null;
-let polyline = null;
-let pathPoints = [];
-let lineaVisibile = false;
+if (mapElement) {
+  const map = L.map('map').setView([initialLat, initialLon], 13);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
 
-function aggiornaDati() {
-  fetch('simulazione/api_posizione_barca.php?targa=' + encodeURIComponent(targa))
-    .then(res => res.json())
-    .then(data => {
-      console.log('Dati live ricevuti:', data);
+  let marker = null;
+  let polyline = null;
+  let pathPoints = [];
+  let lineaVisibile = false;
 
-      if (data.live && data.live.lat != null && data.live.lon != null) {
-        const currentLat = parseFloat(data.live.lat);
-        const currentLon = parseFloat(data.live.lon);
-        const id_rotta = parseInt(data.live.id_rotta);
+  function aggiornaDati() {
+    fetch('simulazione/api_posizione_barca.php?targa=' + encodeURIComponent(targa))
+      .then(res => res.json())
+      .then(data => {
+        console.log('Dati live ricevuti:', data);
 
-        if (isNaN(currentLat) || isNaN(currentLon)) {
-          console.warn('Coordinate non valide');
+        if (data.live && data.live.lat != null && data.live.lon != null) {
+          const currentLat = parseFloat(data.live.lat);
+          const currentLon = parseFloat(data.live.lon);
+          const id_rotta = parseInt(data.live.id_rotta);
+
+          if (isNaN(currentLat) || isNaN(currentLon)) {
+            console.warn('Coordinate non valide');
+            return;
+          }
+
+          document.getElementById('lat').textContent = currentLat;
+          document.getElementById('lon').textContent = currentLon;
+
+          const liveLatLng = [currentLat, currentLon];
+
+          if (marker) {
+            marker.setLatLng(liveLatLng);
+          } else {
+            marker = L.marker(liveLatLng).addTo(map);
+          }
+          map.setView(liveLatLng, 13);
+
+          // Reset linea se barca è nel porto
+          if (data.stato && data.stato.trim().toLowerCase() === "nel porto") {
+            if (polyline) {
+              map.removeLayer(polyline);
+              polyline = null;
+            }
+            lineaVisibile = false;
+            pathPoints = [];
+            return;
+          }
+
+          if (!lineaVisibile) {
+            pathPoints = [liveLatLng];
+            polyline = L.polyline(pathPoints, { color: 'blue' }).addTo(map);
+            lineaVisibile = true;
+          } else {
+            pathPoints.push(liveLatLng);
+            if (polyline) {
+              polyline.setLatLngs(pathPoints);
+            }
+          }
+        } else {
+          console.warn('Dati live non disponibili o non validi');
+        }
+      })
+      .catch(err => console.error('Errore aggiornamento dati:', err));
+  }
+
+  function aggiornaPresenzaPorto() {
+    fetch('simulazione/api_posizione_barca.php?targa=' + encodeURIComponent(targa))
+      .then(res => res.json())
+      .then(data => {
+        if (data.stato) {
+          document.getElementById('presfaro').innerHTML =
+            '<h3>Presenza nel porto</h3><h2>' + data.stato + '</h2>';
+        } else {
+          document.getElementById('presfaro').innerHTML =
+            '<h3>Presenza nel porto</h3><h2>Errore</h2>';
+          console.error(data.errore || 'Errore sconosciuto');
+        }
+      })
+      .catch(err => {
+        document.getElementById('presfaro').innerHTML =
+          '<h3>Presenza nel porto</h3><h2>Errore</h2>';
+        console.error('Errore chiamata api_posizione_barca:', err);
+      });
+  }
+
+  function aggiornaStoricoPresenza() {
+    fetch('simulazione/api_posizione_barca.php?targa=' + encodeURIComponent(targa))
+      .then(res => res.json())
+      .then(data => {
+        const tbody = document.querySelector('#storico-table tbody');
+        tbody.innerHTML = '';
+
+        if (!data.storico || data.storico.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="3">Nessun dato disponibile.</td></tr>';
           return;
         }
 
-        document.getElementById('lat').textContent = currentLat;
-        document.getElementById('lon').textContent = currentLon;
+        const ultime10 = data.storico.slice(0, 10);
 
-        const liveLatLng = [currentLat, currentLon];
+        ultime10.forEach(entry => {
+          const row = document.createElement('tr');
 
-        if (marker) {
-          marker.setLatLng(liveLatLng);
-        } else {
-          marker = L.marker(liveLatLng).addTo(map);
-        }
-        map.setView(liveLatLng, 13);
+          const ts = new Date(entry.ts);
+          const giorno = ts.toLocaleDateString('it-IT');
+          const orario = ts.toLocaleTimeString('it-IT');
 
-        if (id_rotta === 0) {
-          if (polyline) {
-            map.removeLayer(polyline);
-            polyline = null;
+          const cellGiorno = document.createElement('td');
+          cellGiorno.textContent = giorno;
+          row.appendChild(cellGiorno);
+
+          const cellOrario = document.createElement('td');
+          cellOrario.textContent = orario;
+          row.appendChild(cellOrario);
+
+          const cellPosizione = document.createElement('td');
+          cellPosizione.textContent = `Lat: ${entry.lat.toFixed(5)}, Lon: ${entry.lon.toFixed(5)}`;
+          row.appendChild(cellPosizione);
+
+          // Inserisci la riga in cima alla tabella
+          if (tbody.firstChild) {
+            tbody.insertBefore(row, tbody.firstChild);
+          } else {
+            tbody.appendChild(row);
           }
-          lineaVisibile = false;
-          pathPoints = [];
-          return; // esci dal blocco se non vuoi disegnare nulla
-        }
-
-        // Qui non resettiamo mai la linea, tracciamo sempre
-        if (!lineaVisibile) {
-          pathPoints = [liveLatLng];
-          polyline = L.polyline(pathPoints, { color: 'blue' }).addTo(map);
-          lineaVisibile = true;
-        } else {
-          pathPoints.push(liveLatLng);
-          if (polyline) {
-            polyline.setLatLngs(pathPoints);
-          }
-        }
-      } else {
-        console.warn('Dati live non disponibili o non validi');
-      }
-    })
-    .catch(err => console.error('Errore aggiornamento dati:', err));
-}
-
-aggiornaDati();
-setInterval(aggiornaDati, 2000);
-// === Aggiorna stato presenza nel porto dinamicamente ===
-function aggiornaPresenzaPorto() {
-  fetch('verifica_stato.php?targa=' + encodeURIComponent(targa))
-    .then(res => res.json())
-    .then(data => {
-      if (data.stato) {
-        document.getElementById('presfaro').innerHTML =
-          '<h3>Presenza nel porto</h3><h2>' + data.stato + '</h2>';
-      } else {
-        document.getElementById('presfaro').innerHTML =
-          '<h3>Presenza nel porto</h3><h2>Errore</h2>';
-        console.error(data.errore || 'Errore sconosciuto');
-      }
-    })
-    .catch(err => {
-      document.getElementById('presfaro').innerHTML =
-        '<h3>Presenza nel porto</h3><h2>Errore</h2>';
-      console.error('Errore chiamata verifica_stato:', err);
-    });
-}
-
-aggiornaPresenzaPorto();
-setInterval(aggiornaPresenzaPorto, 2000); // aggiorna ogni 5 secondi
-
-// === Aggiorna storico presenza dinamicamente ===
-function aggiornaStoricoPresenza() {
-  fetch('storico_presenza.php?targa=' + encodeURIComponent(targa))
-    .then(res => res.json())
-    .then(data => {
-      const tbody = document.querySelector('#storico-table tbody');
-      tbody.innerHTML = '';
-
-      if (data.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="3">Nessun dato disponibile.</td></tr>';
-        return;
-      }
-
-      data.forEach(entry => {
-        const row = document.createElement('tr');
-
-        const ts = new Date(entry.ts);
-        const giorno = ts.toLocaleDateString('it-IT');
-        const orario = ts.toLocaleTimeString('it-IT');
-
-        const cellGiorno = document.createElement('td');
-        cellGiorno.textContent = giorno;
-        row.appendChild(cellGiorno);
-
-        const cellOrario = document.createElement('td');
-        cellOrario.textContent = orario;
-        row.appendChild(cellOrario);
-
-        const cellPosizione = document.createElement('td');
-        cellPosizione.textContent = entry.stato;
-        row.appendChild(cellPosizione);
-
-        tbody.appendChild(row);
+        });
+      })
+      .catch(err => {
+        console.error('Errore caricamento storico:', err);
+        const tbody = document.querySelector('#storico-table tbody');
+        tbody.innerHTML = '<tr><td colspan="3">Errore nel caricamento dello storico.</td></tr>';
       });
-    })
-    .catch(err => {
-      console.error('Errore caricamento storico:', err);
-      const tbody = document.querySelector('#storico-table tbody');
-      tbody.innerHTML = '<tr><td colspan="3">Errore nel caricamento dello storico.</td></tr>';
-    });
-}
+  }
 
-aggiornaStoricoPresenza();
-setInterval(aggiornaStoricoPresenza, 2000); // aggiorna ogni 10 secondi
+  // Avvio i timer e salvo gli ID per poterli stoppare
+  aggiornaDati();
+  aggiornaPresenzaPorto();
+  aggiornaStoricoPresenza();
+
+  const timerDati = setInterval(aggiornaDati, 2000);
+  const timerPresenza = setInterval(aggiornaPresenzaPorto, 2000);
+  const timerStorico = setInterval(aggiornaStoricoPresenza, 2000);
+
+  // Pulisci i timer quando esci o ricarichi la pagina
+  window.addEventListener('beforeunload', () => {
+    clearInterval(timerDati);
+    clearInterval(timerPresenza);
+    clearInterval(timerStorico);
+  });
+}
 
 </script>
 
