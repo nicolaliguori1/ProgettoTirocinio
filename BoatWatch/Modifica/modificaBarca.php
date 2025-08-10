@@ -71,10 +71,11 @@ if ($result) {
     <link rel="stylesheet" href="../Add/add.css?v=2">
 </head>
 <body>
-        <?php
+<div class="container">
+    <form method="POST" action="">
+    <?php
         include "../header.php"
         ?>
-    <form method="POST" action="">
     <h2>Modifica Barca</h2>
         <label>Nome</label>
         <input type="text" name="nome" value="<?= htmlspecialchars($boat["nome"]) ?>" required>
@@ -99,5 +100,6 @@ if ($result) {
 
         <input type="submit" value="Salva modifiche">
     </form>
+</div>
 </body>
 </html>
