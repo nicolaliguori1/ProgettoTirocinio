@@ -31,6 +31,9 @@ if ($result) {
 </head>
 <body>
     <div class="container">
+        <?php
+        include "../header.php"
+        ?>
         <h1>Elenco Fari</h1>
         <button onclick="window.location.href='../Add/AddFaro.php'">➕ Aggiungi Faro</button>
 

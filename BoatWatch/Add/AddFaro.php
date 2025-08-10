@@ -69,8 +69,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 </script>
 <?php endif; ?>
-
+<div class="container">
+        
     <form method="POST" action="">
+    <?php
+        include "../header.php"
+        ?>
     <h2>Aggiungi un Nuovo Faro</h2>
         <label>Nome</label>
         <input type="text" name="nome" required>
@@ -85,5 +89,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <input type="submit" value="Aggiungi Faro">
 </div>
     </form>
+</div>
 </body>
 </html>

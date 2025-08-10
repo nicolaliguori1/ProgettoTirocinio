@@ -2,34 +2,49 @@
 session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    include __DIR__ . '/../../connessione.php';
-    $email = $_POST['email'] ?? '';
+    include_once __DIR__ . '/../connessione.php';
+
+    $email    = $_POST['email']    ?? '';
     $password = $_POST['password'] ?? '';
 
-    if (!empty($email) && !empty($password)) {
-        $conn = pg_connect($connection_string) or die('Impossibile connettersi al database.');
+    if ($email !== '' && $password !== '') {
 
-        $query = "SELECT * FROM users WHERE email = $1";
-        $prep = pg_prepare($conn, "login_query", $query);
+        $conn = pg_connect($connection_string);
+        if (!$conn) {
+            http_response_code(500); 
+            exit();
+        }
+
+        $query = "SELECT id, nome_utente, email, pw FROM users WHERE email = $1 LIMIT 1";
+        if (!pg_prepare($conn, "login_query", $query)) {
+            http_response_code(500);
+            exit();
+        }
+
         $result = pg_execute($conn, "login_query", [$email]);
+        if ($result === false) {
+            http_response_code(500);
+            exit();
+        }
 
-        $data = pg_fetch_array($result, 0, PGSQL_ASSOC);
+        $data = pg_fetch_assoc($result);
 
         if ($data && password_verify($password, $data['pw'])) {
-            $_SESSION['nome'] = $data['nome_utente']; 
+            $_SESSION['nome']  = $data['nome_utente'];
             $_SESSION['email'] = $data['email'];
-            $_SESSION['id'] = $data['id'];
-            http_response_code(200); // Successo
+            $_SESSION['id']    = $data['id'];
+            http_response_code(200);
         } else {
-            http_response_code(401); // Credenziali errate
+            http_response_code(401); // credenziali errate
         }
     } else {
-        http_response_code(400); // Campi mancanti
+        http_response_code(400); // campi mancanti
     }
 
     exit();
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="it">
@@ -53,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </form>
             <div id="message" class="message"></div>
             <div class="register-link">
-                Non hai un account? <a href="../Registrazione/registrazione.php">Registrati</a>
+                Non hai un account? <a href="registrazione.php">Registrati</a>
             </div>
         </div>
     </div>
@@ -67,12 +82,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             const messageDiv = document.getElementById('message');
 
             const xhttp = new XMLHttpRequest();
-            xhttp.open('POST', 'login.php', true);
+            xhttp.open('POST', 'index.php', true);
             xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
             xhttp.onreadystatechange = function () {
                 if (this.readyState === 4) {
                     if (this.status === 200) {
-                        window.location.href = '../dashboard.php'; 
+                        window.location.href = 'Dashboard/dashboard.php'; 
                     } else if (this.status === 401) {
                         messageDiv.textContent = 'E-mail o password errati!';
                         messageDiv.className = 'message error';

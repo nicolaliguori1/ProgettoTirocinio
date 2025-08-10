@@ -46,7 +46,9 @@ if (!$faro) {
  
 </head>
 <body>
-    
+        <?php
+        include "../header.php"
+        ?>
     <form method="POST" action="">
     <h2>Modifica Faro</h2>
         <label>Nome</label>

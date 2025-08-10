@@ -1,19 +1,14 @@
-/* Reset base */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
     color: #fff;
     min-height: 100vh;
     padding: 20px;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-/* Container per il contenuto principale */
 .container {
     background-color: rgba(255, 255, 255, 0.05);
     padding: 40px;
@@ -24,7 +19,6 @@ body {
     margin: 0 auto;
 }
 
-/* Header in alto */
 h1 {
     font-size: 2.5em;
     margin-bottom: 30px;
@@ -33,7 +27,7 @@ h1 {
 }
 
 /* Bottone aggiungi */
-button {
+.add{
     padding: 12px 20px;
     font-size: 1em;
     background: #00d4ff;
@@ -48,7 +42,7 @@ button {
     margin-right: auto;
 }
 
-button:hover {
+.add:hover {
     background: #00aacc;
 }
 
@@ -101,3 +95,5 @@ a:hover {
     font-size: 1.2em;
     color: #ccc;
 }
+
+

@@ -3,7 +3,7 @@ session_start();
 include './connessione.php';
 
 if (!isset($_SESSION['id'])) {
-    header("Location: Login/login.php");
+    header("Location: ../login.php");
     exit();
 }
 
@@ -20,7 +20,7 @@ $utente = $_SESSION['nome'] ?? "Utente";
 <body>
 <div class="Dashboard">
     <div class="Logo">
-        <img src="logo.png" alt="Logo" class="logo-img">
+        <img src="../logo.png" alt="Logo" class="logo-img">
     </div>
 
     <div class="welcome">
@@ -29,12 +29,15 @@ $utente = $_SESSION['nome'] ?? "Utente";
 
     <div class="Opzioni">
         <div class="myboat">
-            <button class="custom-button" onclick="location.href='Elenco/elencoBarche.php'">Barche</button>
+            <button class="custom-button" onclick="location.href='../Elenco/elencoBarche.php'">Barche</button>
         </div>
         <div class="myport">
-            <button class="custom-button" onclick="location.href='Elenco/elencoFari.php'">Fari</button>
+            <button class="custom-button" onclick="location.href='../Elenco/elencoFari.php'">Fari</button>
         </div>
     </div>
+    <?php
+    include '../logoutbutton.php';
+    ?>
 </div>
 </body>
 </html>

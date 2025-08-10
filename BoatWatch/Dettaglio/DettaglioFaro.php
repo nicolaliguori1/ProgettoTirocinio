@@ -43,6 +43,9 @@ if (isset($_GET['id'])) {
 </head>
 <body>
     <div class="container">
+        <?php
+        include "../header.php"
+        ?>
         <?php if ($faro): ?>
             <h1>Dettagli Faro: <?= htmlspecialchars($faro['nome']) ?></h1>
             <p><strong>Latitudine:</strong> <?= htmlspecialchars($faro['lat']) ?></p>

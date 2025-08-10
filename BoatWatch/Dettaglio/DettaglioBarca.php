@@ -31,6 +31,9 @@ if (isset($_GET['targa'])) {
 </head>
 <body>
     <div class="container">
+        <?php
+        include "../header.php"
+        ?>
         <?php if ($barca): ?>
             <h1 class="titolo">Dettagli Barca: <?= htmlspecialchars($barca['nome']) ?></h1>
             <p><strong>Targa:</strong> <?= htmlspecialchars($barca['targa']) ?></p>

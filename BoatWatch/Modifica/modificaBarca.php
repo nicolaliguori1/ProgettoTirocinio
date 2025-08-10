@@ -71,6 +71,9 @@ if ($result) {
     <link rel="stylesheet" href="../Add/add.css?v=2">
 </head>
 <body>
+        <?php
+        include "../header.php"
+        ?>
     <form method="POST" action="">
     <h2>Modifica Barca</h2>
         <label>Nome</label>

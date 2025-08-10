@@ -28,13 +28,16 @@ if ($result) {
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="elenco.css?v=2">
+    <link rel="stylesheet" href="elenco.css?v=6">
     <title>Elenco Barche</title>
 </head>
 <body>
     <div class="container">
+        <?php
+        include "../header.php"
+        ?>
         <h1>Elenco Barche</h1>
-        <button onclick="window.location.href='../Add/AddBarca.php'">➕ Aggiungi Barca</button>
+        <button class="add" onclick="window.location.href='../Add/AddBarca.php'">➕ Aggiungi Barca</button>
 
         <?php if (count($barche) > 0): ?>
             <table>

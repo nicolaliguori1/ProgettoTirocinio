@@ -78,8 +78,12 @@ if ($result) {
     }
 </script>
 <?php endif; ?>
-
+        <div class="container">
+        
 <form method="post">
+<?php
+        include "../header.php"
+        ?>
     <h2>Aggiungi Barca</h2>
 
     <label for="nome">Nome</label>
@@ -105,5 +109,6 @@ if ($result) {
     <input type="submit" value="Aggiungi">
         </div>
 </form>
+</div>
 </body>
 </html>
