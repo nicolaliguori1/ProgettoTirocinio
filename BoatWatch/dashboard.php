@@ -1,5 +1,5 @@
 <?php
-session_start();
+session_start(); 
 include './connessione.php';
 
 if (!isset($_SESSION['id'])) {
@@ -7,7 +7,7 @@ if (!isset($_SESSION['id'])) {
     exit();
 }
 
-$utente= $_SESSION['nome'] ?? "Utente";
+$utente = $_SESSION['nome'] ?? "Utente";
 ?>
 
 <!DOCTYPE html>

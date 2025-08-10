@@ -1,35 +1,36 @@
 <?php
-    session_start();
+session_start();
 
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        include __DIR__ . '/../../connessione.php';
-        $email = $_POST['email'] ?? '';
-        $password = $_POST['password'] ?? '';
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    include __DIR__ . '/../../connessione.php';
+    $email = $_POST['email'] ?? '';
+    $password = $_POST['password'] ?? '';
 
-        if (!empty($email) && !empty($password)) {
-            $conn = pg_connect($connection_string) or die('Impossibile connettersi al database.');
+    if (!empty($email) && !empty($password)) {
+        $conn = pg_connect($connection_string) or die('Impossibile connettersi al database.');
 
-            $query = "SELECT * FROM users WHERE email = $1";
-            $prep = pg_prepare($conn, "login_query", $query);
-            $result = pg_execute($conn, "login_query", [$email]);
+        $query = "SELECT * FROM users WHERE email = $1";
+        $prep = pg_prepare($conn, "login_query", $query);
+        $result = pg_execute($conn, "login_query", [$email]);
 
-            $data = pg_fetch_array($result, 0, PGSQL_ASSOC);
+        $data = pg_fetch_array($result, 0, PGSQL_ASSOC);
 
-            if ($data && password_verify($password, $data['pw'])) {
-                $_SESSION['nome'] = $data['nome_utente']; // Cambiato da nome → nome_utente
-                $_SESSION['email'] = $data['email'];
-                $_SESSION['id'] = $data['id'];
-                http_response_code(200); // Successo
-            } else {
-                http_response_code(401); // Credenziali errate
-            }
+        if ($data && password_verify($password, $data['pw'])) {
+            $_SESSION['nome'] = $data['nome_utente']; 
+            $_SESSION['email'] = $data['email'];
+            $_SESSION['id'] = $data['id'];
+            http_response_code(200); // Successo
         } else {
-            http_response_code(400); // Campi mancanti
+            http_response_code(401); // Credenziali errate
         }
-
-        exit();
+    } else {
+        http_response_code(400); // Campi mancanti
     }
+
+    exit();
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="it">
 
@@ -42,7 +43,6 @@
 
 <body>
 
-
     <div class="page-wrapper">
         <div class="form-container2">
             <h3>Accedi</h3>
@@ -53,11 +53,10 @@
             </form>
             <div id="message" class="message"></div>
             <div class="register-link">
-            Non hai un account? <a href="../Registrazione/registrazione.php">Registrati</a>
+                Non hai un account? <a href="../Registrazione/registrazione.php">Registrati</a>
             </div>
         </div>
     </div>
-
 
     <script>
         document.getElementById('login-form').addEventListener('submit', function (event) {
@@ -73,7 +72,7 @@
             xhttp.onreadystatechange = function () {
                 if (this.readyState === 4) {
                     if (this.status === 200) {
-                        window.location.href = '../dashboard.php';
+                        window.location.href = '../dashboard.php'; 
                     } else if (this.status === 401) {
                         messageDiv.textContent = 'E-mail o password errati!';
                         messageDiv.className = 'message error';
@@ -94,4 +93,3 @@
 </body>
 
 </html>
-
