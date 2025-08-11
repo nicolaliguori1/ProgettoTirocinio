@@ -58,88 +58,70 @@
     </div>
 
 <script>
-  // Targa dal PHP
   const targa = <?= json_encode($targa) ?>;
 
-  // Stato precedente ed ultimo timestamp evento per evitare duplicati
-  let lastStato = null;
-  let lastEventTs = null;
-
-  function formatTs(tsStr) {
-    const ts = tsStr ? new Date(tsStr) : new Date();
-    const ok = !isNaN(ts);
-    return {
-      giorno: ok ? ts.toLocaleDateString('it-IT') : '-',
-      orario: ok ? ts.toLocaleTimeString('it-IT') : '-',
-      rawISO: ok ? ts.toISOString() : null
-    };
-  }
-
-  function aggiungiRigaEvento(giorno, orario, tipo) {
+  function renderEventi(eventi) {
     const tbody = document.querySelector('#storico-table tbody');
-    const row = document.createElement('tr');
+    tbody.innerHTML = '';
 
-    const tdG = document.createElement('td'); tdG.textContent = giorno;  row.appendChild(tdG);
-    const tdO = document.createElement('td'); tdO.textContent = orario;  row.appendChild(tdO);
-    const tdE = document.createElement('td'); tdE.textContent = tipo;    row.appendChild(tdE);
+    if (!eventi || eventi.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="3">Nessun evento di entrata/uscita.</td></tr>';
+      return;
+    }
 
-    // Più recenti in alto
-    if (tbody.firstChild) tbody.insertBefore(row, tbody.firstChild);
-    else tbody.appendChild(row);
+    // Mostra dal più recente al meno recente (in alto i nuovi)
+    const sorted = [...eventi].sort((a, b) => new Date(b.ts) - new Date(a.ts)).slice(0, 10);
+
+    sorted.forEach(ev => {
+      const ts = new Date(ev.ts);
+      const giorno = isNaN(ts) ? '-' : ts.toLocaleDateString('it-IT');
+      const orario = isNaN(ts) ? '-' : ts.toLocaleTimeString('it-IT');
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${giorno}</td>
+        <td>${orario}</td>
+        <td>${ev.tipo}</td>
+      `;
+      tbody.appendChild(tr);
+    });
   }
 
-  function aggiornaEntrateUscite() {
-    fetch('../../Natante/simulazione/api_posizione_barca.php?targa=' + encodeURIComponent(targa))
-      .then(res => res.json())
-      .then(data => {
-        const tbody = document.querySelector('#storico-table tbody');
-
-        if (!data || data.error) {
-          console.error('API error:', data?.error || 'Errore sconosciuto');
-          tbody.innerHTML = '<tr><td colspan="3">Errore nel caricamento.</td></tr>';
-          return;
-        }
-
-        // Rimuovi placeholder alla prima risposta valida
-        if (tbody.children.length === 1 && tbody.children[0].children[0]?.colSpan === 3) {
-          tbody.innerHTML = '';
-        }
-
-        const stato = (data.stato || '').trim();               // "Nel porto" | "Fuori dal porto"
-        const tsStr = data.live?.ts ?? null;                    // timestamp associato alla posizione live
-        const { giorno, orario, rawISO } = formatTs(tsStr);
-
-        // Se c'è una transizione di stato, registriamo l'evento
-        if (lastStato !== null && stato && stato !== lastStato) {
-          const tipo = (stato === 'Nel porto') ? 'Entrata' : 'Uscita';
-
-          // Evita duplicati se arriva più volte lo stesso ts
-          const eventKey = rawISO || tsStr || null;
-          if (!lastEventTs || lastEventTs !== eventKey) {
-            aggiungiRigaEvento(giorno, orario, tipo);
-            lastEventTs = eventKey;
-          }
-        }
-
-        // Aggiorna lo stato precedente
-        if (stato) lastStato = stato;
-
-        // Se ancora nessuna riga, mostra placeholder
-        if (!tbody.firstChild) {
-          tbody.innerHTML = '<tr><td colspan="3">Nessun evento di entrata/uscita.</td></tr>';
-        }
-      })
-      .catch(err => {
-        console.error('Errore:', err);
-        const tbody = document.querySelector('#storico-table tbody');
-        tbody.innerHTML = '<tr><td colspan="3">Errore nel caricamento.</td></tr>';
-      });
+  function buildApiUrl() {
+    const u = new URL('../../Natante/simulazione/api_posizione_barca.php', window.location.href);
+    u.searchParams.set('targa', targa || '');
+    u.searchParams.set('_', Date.now().toString()); // anti-cache
+    return u.toString();
   }
 
-  // Avvio e refresh ogni 2s
-  aggiornaEntrateUscite();
-  const timer = setInterval(aggiornaEntrateUscite, 2000);
-  window.addEventListener('beforeunload', () => clearInterval(timer));
+  async function aggiornaStoricoEventi() {
+    try {
+      if (!targa) {
+        renderEventi([]);
+        return;
+      }
+      const res = await fetch(buildApiUrl(), { cache: 'no-store' });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+
+      if (data?.error) {
+        console.error('API error:', data.error);
+        renderEventi([]);
+        return;
+      }
+
+      renderEventi(Array.isArray(data.eventi) ? data.eventi : []);
+    } catch (e) {
+      console.error('Errore caricamento eventi:', e);
+      renderEventi([]);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    aggiornaStoricoEventi();                       // mostra SUBITO gli ultimi 10 eventi
+    const timer = setInterval(aggiornaStoricoEventi, 2000); // e aggiorna ogni 2s
+    window.addEventListener('beforeunload', () => clearInterval(timer));
+  });
 </script>
 </body>
 </html>

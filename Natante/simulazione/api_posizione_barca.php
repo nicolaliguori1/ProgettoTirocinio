@@ -33,24 +33,21 @@ $res_live = pg_query_params($conn, "
 ", [$targa]);
 
 $live = null;
-if ($res_live) {
-    if (pg_num_rows($res_live) > 0) {
-        $row = pg_fetch_assoc($res_live);
+if ($res_live && pg_num_rows($res_live) > 0) {
+    $row = pg_fetch_assoc($res_live);
 
-        // Controllo validità dati numerici
-        $lat = isset($row['lat']) && is_numeric($row['lat']) ? floatval($row['lat']) : null;
-        $lon = isset($row['lon']) && is_numeric($row['lon']) ? floatval($row['lon']) : null;
-        $id_rotta = isset($row['id_rotta']) && is_numeric($row['id_rotta']) ? (int)$row['id_rotta'] : null;
-        $ts = $row['ts'] ?? null;
+    $lat = isset($row['lat']) && is_numeric($row['lat']) ? floatval($row['lat']) : null;
+    $lon = isset($row['lon']) && is_numeric($row['lon']) ? floatval($row['lon']) : null;
+    $id_rotta = isset($row['id_rotta']) && is_numeric($row['id_rotta']) ? (int)$row['id_rotta'] : null;
+    $ts = $row['ts'] ?? null;
 
-        if ($lat !== null && $lon !== null) {
-            $live = [
-                'ts' => $ts,
-                'lat' => $lat,
-                'lon' => $lon,
-                'id_rotta' => $id_rotta !== null ? $id_rotta : 0
-            ];
-        }
+    if ($lat !== null && $lon !== null) {
+        $live = [
+            'ts' => $ts,
+            'lat' => $lat,
+            'lon' => $lon,
+            'id_rotta' => $id_rotta !== null ? $id_rotta : 0
+        ];
     }
 }
 
@@ -80,7 +77,7 @@ if (!$live) {
     }
 }
 
-// STORICO (ultime 10 posizioni, ordinate dal più vecchio al più recente)
+// STORICO posizioni (se ti serve ancora altrove; non necessario per gli eventi)
 $res_storico = pg_query_params($conn, "
     SELECT ts, lat, lon 
     FROM boats_position 
@@ -100,13 +97,9 @@ if ($res_storico) {
             ];
         }
     }
-
-    // Riordina per timestamp crescente (dal più vecchio al più recente)
-    usort($storico, function ($a, $b) {
-        return strtotime($a['ts']) <=> strtotime($b['ts']);
-    });
+    // opzionale: riordina crescente
+    usort($storico, fn($a, $b) => strtotime($a['ts']) <=> strtotime($b['ts']));
 }
-
 
 // Se live ancora null, ritorna errore più chiaro
 if (!$live) {
@@ -116,10 +109,7 @@ if (!$live) {
     exit;
 }
 
-// Calcolo stato (nel porto/fuori) basato sulla distanza dalla posizione del faro
-// Se live è fallback faro, è sicuramente 'Nel porto', altrimenti calcoliamo la distanza
-
-// Prendo posizione faro
+// Posizione faro (necessaria per stato/eventi)
 $res_faro_pos = pg_query_params($conn, "
     SELECT f.lat, f.lon
     FROM boats b
@@ -131,23 +121,72 @@ $res_faro_pos = pg_query_params($conn, "
 $stato = 'Sconosciuto';
 $soglia = 50; // metri
 
+$lat_faro = null;
+$lon_faro = null;
+
 if ($res_faro_pos && pg_num_rows($res_faro_pos) > 0) {
     $pos_faro = pg_fetch_assoc($res_faro_pos);
-    $lat_faro = floatval($pos_faro['lat']);
-    $lon_faro = floatval($pos_faro['lon']);
+    $lat_faro = isset($pos_faro['lat']) ? floatval($pos_faro['lat']) : null;
+    $lon_faro = isset($pos_faro['lon']) ? floatval($pos_faro['lon']) : null;
 
-    if ($live['ts'] === null) {
-        // live è fallback faro: quindi consideriamo nel porto
-        $stato = 'Nel porto';
-    } else {
-        $distanza = distanzaHaversine($live['lat'], $live['lon'], $lat_faro, $lon_faro);
-        $stato = ($distanza <= $soglia) ? 'Nel porto' : 'Fuori dal porto';
+    if ($lat_faro !== null && $lon_faro !== null) {
+        if ($live['ts'] === null) {
+            $stato = 'Nel porto';
+        } else {
+            $distanza = distanzaHaversine($live['lat'], $live['lon'], $lat_faro, $lon_faro);
+            $stato = ($distanza <= $soglia) ? 'Nel porto' : 'Fuori dal porto';
+        }
+    }
+}
+
+// --- Calcolo eventi Entrata/Uscita dallo storico posizioni ---
+$eventi = [];
+if ($lat_faro !== null && $lon_faro !== null) {
+    // Prendi abbastanza campioni per cogliere le transizioni (a piacere)
+    $res_storico_raw = pg_query_params($conn, "
+        SELECT ts, lat, lon
+        FROM (
+            SELECT ts, lat, lon
+            FROM boats_position
+            WHERE targa_barca = $1
+            ORDER BY ts DESC
+            LIMIT 500
+        ) s
+        ORDER BY ts ASC
+    ", [$targa]);
+
+    $prevStato = null;
+    if ($res_storico_raw && pg_num_rows($res_storico_raw) > 0) {
+        while ($r = pg_fetch_assoc($res_storico_raw)) {
+            if (!is_numeric($r['lat']) || !is_numeric($r['lon'])) continue;
+
+            $latP = (float)$r['lat'];
+            $lonP = (float)$r['lon'];
+
+            $dist = distanzaHaversine($latP, $lonP, $lat_faro, $lon_faro);
+            $statoP = ($dist <= $soglia) ? 'Nel porto' : 'Fuori dal porto';
+
+            if ($prevStato !== null && $statoP !== $prevStato) {
+                $tipo = ($statoP === 'Nel porto') ? 'Entrata' : 'Uscita';
+                $eventi[] = [
+                    'ts'   => $r['ts'],
+                    'tipo' => $tipo
+                ];
+            }
+            $prevStato = $statoP;
+        }
+
+        // Tieni gli ultimi 10 più recenti e (opzionale) rimettili in ordine crescente
+        usort($eventi, fn($a, $b) => strtotime($b['ts']) <=> strtotime($a['ts']));
+        $eventi = array_slice($eventi, 0, 10);
+        usort($eventi, fn($a, $b) => strtotime($a['ts']) <=> strtotime($b['ts']));
     }
 }
 
 echo json_encode([
-    'live' => $live,
-    'storico' => $storico,
-    'stato' => $stato,
+    'live'    => $live,
+    'storico' => $storico, // opzionale
+    'stato'   => $stato,
+    'eventi'  => $eventi,  // <-- ultimi 10 eventi pronti
 ]);
 exit;
