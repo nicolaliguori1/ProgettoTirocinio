@@ -90,35 +90,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="container">
         <div class="blocco-registrazione">
         <h2 style="color: #00d4ff; text-align: center; font-size: 26px; font-weight: bold; margin-top: 40px; margin-bottom: 20px;">Registrazione</h2>
+        
         <form id="form" method="post" class="registrazione" action="" onsubmit="return controllaForm()">
 
-                <p><label>
-                    <input maxlength="20" type="text" name="nome_utente" placeholder="Nome utente" value="<?= htmlspecialchars($nome_utente); ?>" required>
-                </label></p>
+    <p><label>
+        <input maxlength="20" type="text" name="nome_utente" placeholder="Nome utente" value="<?= htmlspecialchars($nome_utente); ?>" required>
+    </label></p>
 
-                <p><label>
-                    <input id="email" name="email" type="email" placeholder="Email" value="<?= htmlspecialchars($email); ?>" required oninput="nascondiErroreEmail()">
-                </label></p>
+    <p><label>
+        <input id="email" name="email" type="email" placeholder="Email" value="<?= htmlspecialchars($email); ?>" required oninput="nascondiErroreEmail()">
+    </label></p>
 
-                <p class="errore" id="errore-email" style="<?= !$email_valid ? 'display:block' : '' ?>"><?= $errore_email; ?></p>
+    <p class="errore" id="errore-email" style="<?= !$email_valid ? 'display:block' : '' ?>"><?= $errore_email; ?></p>
 
-                <p><label>
-                    <input id="password" type="password" maxlength="20" name="password" minlength="6" placeholder="Password" required>
-                </label></p>
+    <p><label>
+        <input id="password" type="password" maxlength="20" name="password" minlength="6" placeholder="Password" required>
+    </label></p>
 
-                <p><label>
-                    <input id="conferma-password" type="password" maxlength="20" name="conferma-password" minlength="6" placeholder="Conferma Password" required oninput="nascondiErrore('errore-conferma-password')">
-                </label></p>
+    <p><label>
+        <input id="conferma-password" type="password" maxlength="20" name="conferma-password" minlength="6" placeholder="Conferma Password" required oninput="nascondiErrore('errore-conferma-password')">
+    </label></p>
 
-                <p class="errore" id="errore-conferma-password" style="<?= $errore_conferma_password ? 'display:block' : '' ?>"><?= $errore_conferma_password; ?></p>
+    <p class="errore" id="errore-conferma-password" style="<?= $errore_conferma_password ? 'display:block' : '' ?>"><?= $errore_conferma_password; ?></p>
 
-                <p style="color: #ccc;">Dai il tuo consenso per il trattamento di dati: 
-                    <input type="checkbox" required> 
-                    <a href="https://protezionedatipersonali.it/informativa" style="font-size: smaller;">Informazioni sulla privacy</a>
-                </p>
+    <p style="color: #ccc;">Dai il tuo consenso per il trattamento di dati: 
+        <input type="checkbox" required> 
+        <a href="https://protezionedatipersonali.it/informativa" style="font-size: smaller;">Informazioni sulla privacy</a>
+    </p>
 
-                <input type="submit" name="bottone" value="Registrati">
-            </form>
+    <input type="submit" name="bottone" value="Registrati">
+
+    <p style="margin-top: 15px; font-size: 0.9em; color: #ccc;">
+        Hai già un account?
+        <a href="index.php" style="color: #00d4ff; text-decoration: none;">
+            Clicca qui per accedere
+        </a>
+    </p>
+
+</form>
+
         </div>
     </div>
 
