@@ -43,7 +43,8 @@ if (!$faro) {
     <meta charset="UTF-8">
     <title>Modifica Faro</title>
     <link rel="stylesheet" href="modifica.css?v=3">
- 
+    <link rel="stylesheet" href="../alert.css?v=3">
+    
 </head>
 <body>
 <div class="container">

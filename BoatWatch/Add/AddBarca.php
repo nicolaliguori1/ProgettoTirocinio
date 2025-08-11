@@ -60,7 +60,7 @@ if ($result) {
 <head>
     <meta charset="UTF-8">
     <title>Aggiungi Barca</title>
-    <link rel="stylesheet" href="../Add/add.css?v=2">
+    <link rel="stylesheet" href="../Add/add.css?v=3">
     <link rel="stylesheet" href="../alert.css?v=2">
 
 </head>
@@ -106,7 +106,10 @@ if ($result) {
     </select>
 
     <div style="margin-top: 30px;">
-    <input type="submit" value="Aggiungi">
+    <div class="conferma">
+            <input type="submit" value="Aggiungi barca">
+            <a href="../Elenco/elencoFari.php" class="btn-back">Torna all'elenco</a>
+        </div>
         </div>
 </form>
 </div>
