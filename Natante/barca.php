@@ -70,27 +70,16 @@ $initialLon = is_numeric($live['lon']) ? floatval($live['lon']) : 0;
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <link rel="stylesheet" href="css/style.css?v=2">
+  <link rel="stylesheet" href="css/style.css?v=3">
   <link rel="manifest" href="manifest.json">
   <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" crossorigin=""></script>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" crossorigin=""/>
   <title>Tracker <?= htmlspecialchars($nome_barca) ?></title>
-
-  <style>
-  #map {
-  height: 300px;
-  width: 80%;
-  margin: 40px auto;
-  border-radius: 15px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-  border: 1px solid #ccc;
-}
-  </style>
 </head>
 
 <body>
   <div class="pulsante-indietro">
-  <a href="http://localhost/tirocinio/ProgettoTirocinio/Natante/">Torna alla Home</a>
+  <a href="http://localhost/tirocinio/ProgettoTirocinio/Natante/">Indietro</a>
 </div>
 
   <div class="NomeBarca">
@@ -135,79 +124,6 @@ $initialLon = is_numeric($live['lon']) ? floatval($live['lon']) : 0;
     </tbody>
   </table>
 </div>
-
-<style>
-.storico {
-  width: 80%;
-  margin: 20px auto;
-  background-color: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(20px);
-  padding: 20px;
-  border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-  color: #00d4ff;
-  overflow-x: auto;
-}
-
-.storico table {
-  width: 100%;
-  border-collapse: collapse;
-  font-family: monospace;
-  background-color: transparent;
-  color: #00d4ff;
-}
-
-.storico th, .storico td {
-  padding: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  text-align: left;
-  background-color: rgba(255, 255, 255, 0.05);
-}
-
-.storico th {
-  background-color: rgba(255, 255, 255, 0.1);
-  font-weight: bold;
-  color: #00d4ff;
-}
-
-.storico caption {
-  caption-side: top;
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: #00d4ff;
-  text-align: center;
-  margin-bottom: 20px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.pulsante-indietro {
-  text-align: center;
-  margin: 20px 0;
-}
-
-.pulsante-indietro a {
-  display: inline-block;
-  padding: 12px 24px;
-  font-size: 1.1rem;
-  font-weight: bold;
-  color: #fff;
-  background-color: #0056b3;
-  text-decoration: none;
-  border-radius: 8px;
-  transition: background-color 0.3s ease;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-.pulsante-indietro a:hover {
-  background-color: #0056b3;
-}
-
-
-</style>
-
-
-
   </div>
 
 <script>

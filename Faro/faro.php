@@ -98,7 +98,7 @@ if ($last_pos && $last_pos['ts']) {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <link rel="stylesheet" href="css/style.css?v=2">
+  <link rel="stylesheet" href="css/style.css?v=3">
   <link rel="manifest" href="manifest.json">
 
   <!-- Leaflet CSS/JS -->
@@ -111,6 +111,9 @@ if ($last_pos && $last_pos['ts']) {
   </style>
 </head>
 <body>  
+  <div class="pulsante-indietro">
+  <a href="http://localhost/tirocinio/ProgettoTirocinio/Faro/">Indietro</a>
+</div>
   <div class="NomeFaro">
     <h1><?= htmlspecialchars(strtoupper($nome_faro)) ?></h1>
   </div>

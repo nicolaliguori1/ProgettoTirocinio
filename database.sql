@@ -70,7 +70,7 @@ CREATE TABLE boats_current_position (
 INSERT INTO fari (nome, lat, lon) VALUES
 ('Faro di Capo d’Orso', 40.6333, 14.6833),
 ('Faro di Punta Licosa', 40.2500, 14.9000),
-('Faro del Porto di Salerno (Molo Manfredi)', 40.6745, 14.7519);
+('Molo Manfredi', 40.6745, 14.7519);
 
 
 -- barche
