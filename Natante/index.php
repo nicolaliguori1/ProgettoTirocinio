@@ -6,29 +6,63 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="css/style1.css">
+  <link rel="stylesheet" href="../BoatWatch/alert.css"> 
   <script>
-    async function cercaBarca() {
-      const input = document.getElementById('codiceBarca').value.trim();
+    function showPopup(message) {
+      const overlay = document.getElementById('popup-overlay');
+      const text = document.getElementById('popup-text');
+      const closeBtn = document.getElementById('popup-close');
 
-      if (input === '') {
-        alert("Inserisci una targa valida.");
+      text.textContent = message;
+      overlay.style.display = 'flex';
+      closeBtn.focus();
+    }
+
+    function hidePopup() {
+      document.getElementById('popup-overlay').style.display = 'none';
+    }
+
+    async function cercaBarca() {
+      const inputEl = document.getElementById('codiceBarca');
+      const value = inputEl.value.trim();
+
+      if (value === '') {
+        showPopup('Inserisci una targa valida.');
         return;
       }
 
       try {
-        const res = await fetch(`api_boat_info.php?targa=` + encodeURIComponent(input));
+        const res = await fetch('api_boat_info.php?targa=' + encodeURIComponent(value), { cache: 'no-store' });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
         const data = await res.json();
 
-        if (data.trovata) {
-          window.location.href = 'barca.php?targa=' + encodeURIComponent(input);
+        if (data && data.trovata) {
+          window.location.href = 'barca.php?targa=' + encodeURIComponent(value);
         } else {
-          alert("Barca non trovata.");
+          showPopup('Barca non trovata.');
         }
-      } catch (error) {
-        console.error("Errore nella ricerca:", error);
-        alert("Errore nella connessione al server.");
+      } catch (err) {
+        console.error('Errore nella ricerca:', err);
+        showPopup('Errore nella connessione al server.');
       }
     }
+
+    // Avvia ricerca con Enter
+    document.addEventListener('DOMContentLoaded', () => {
+      const input = document.getElementById('codiceBarca');
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') cercaBarca();
+      });
+
+      // Chiusure popup
+      document.getElementById('popup-close').addEventListener('click', hidePopup);
+      document.getElementById('popup-overlay').addEventListener('click', (e) => {
+        if (e.target.id === 'popup-overlay') hidePopup(); // chiudi cliccando fuori
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') hidePopup();
+      });
+    });
   </script>
 </head>
 
@@ -37,8 +71,16 @@
     <h1>Benvenuto nel Boat Tracker</h1>
     <p>Inserisci la targa della barca per visualizzare i dettagli.</p>
 
-    <input type="text" id="codiceBarca" placeholder="Es: ITA-001">
+    <input type="text" id="codiceBarca" placeholder="Es: ITA-001" autocomplete="off">
     <button onclick="cercaBarca()">Cerca</button>
+  </div>
+
+  <!-- Popup overlay + box (usa le classi del tuo alert.css) -->
+  <div id="popup-overlay" class="popup-overlay" style="display:none;">
+    <div class="popup" role="alertdialog" aria-modal="true" aria-labelledby="popup-text">
+      <p id="popup-text">Messaggio</p>
+      <button id="popup-close" type="button">OK</button>
+    </div>
   </div>
 </body>
 </html>
