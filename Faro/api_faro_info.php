@@ -1,5 +1,6 @@
 <?php
 require __DIR__ . '/../connessione.php';
+header('Content-Type: application/json');
 
 if (!$conn) {
     echo json_encode(['trovato' => false]);

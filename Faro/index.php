@@ -22,7 +22,7 @@
       }
 
       try {
-        const res = await fetch(`faro_info.php?id=` + encodeURIComponent(input));
+        const res = await fetch(`api_faro_info.php?id=` + encodeURIComponent(input));
         const data = await res.json();
 
         if (data.trovato) {
