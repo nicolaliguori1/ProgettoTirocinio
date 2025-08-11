@@ -38,21 +38,20 @@ if (isset($_GET['id'])) {
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-     <link rel="stylesheet" href="dettaglio.css?v=2">
+    <link rel="stylesheet" href="dettaglio.css?v=2">
     <title>Dettaglio Faro</title>
 </head>
 <body>
     <div class="container">
-        <?php
-        include "../header.php"
-        ?>
+        <?php include "../header.php" ?>
+
         <?php if ($faro): ?>
             <h1>Dettagli Faro: <?= htmlspecialchars($faro['nome']) ?></h1>
             <p><strong>Latitudine:</strong> <?= htmlspecialchars($faro['lat']) ?></p>
             <p><strong>Longitudine:</strong> <?= htmlspecialchars($faro['lon']) ?></p>
             <p><strong>Id:</strong> <?= htmlspecialchars($faro['id']) ?></p>
-            <h2>Barche associate al faro</h2>
 
+            <h2>Barche associate al faro</h2>
             <?php if (count($barche) > 0): ?>
                 <ul>
                     <?php foreach ($barche as $barca): ?>
@@ -68,6 +67,16 @@ if (isset($_GET['id'])) {
         <?php else: ?>
             <p>Faro non trovato o ID non specificato.</p>
         <?php endif; ?>
+
+        <!-- Pulsante Indietro -->
+        <div style="margin-top: 20px; text-align: center;">
+            <a href="../Elenco/elencoFari.php" 
+               style="display: inline-block; padding: 10px 20px; background-color: #00d4ff; 
+                      color: #000; text-decoration: none; border-radius: 10px; 
+                      font-weight: bold; transition: background 0.3s ease;">
+                ⬅ Torna all'elenco fari
+            </a>
+        </div>
     </div>
 </body>
 </html>

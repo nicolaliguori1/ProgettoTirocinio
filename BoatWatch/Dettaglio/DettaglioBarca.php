@@ -55,6 +55,16 @@
                 </tbody>
             </table>
         </div>
+
+        <!-- Pulsante Indietro -->
+        <div style="margin-top: 20px; text-align: center;">
+            <a href="../Elenco/elencoBarche.php" 
+               style="display: inline-block; padding: 10px 20px; background-color: #00d4ff; 
+                      color: #000; text-decoration: none; border-radius: 10px; 
+                      font-weight: bold; transition: background 0.3s ease;">
+                ⬅ Torna all'elenco barche
+            </a>
+        </div>
     </div>
 
 <script>
@@ -69,7 +79,7 @@
       return;
     }
 
-    // Mostra dal più recente al meno recente (in alto i nuovi)
+    // Mostra dal più recente al meno recente
     const sorted = [...eventi].sort((a, b) => new Date(b.ts) - new Date(a.ts)).slice(0, 10);
 
     sorted.forEach(ev => {
@@ -118,8 +128,8 @@
   }
 
   document.addEventListener('DOMContentLoaded', () => {
-    aggiornaStoricoEventi();                       // mostra SUBITO gli ultimi 10 eventi
-    const timer = setInterval(aggiornaStoricoEventi, 2000); // e aggiorna ogni 2s
+    aggiornaStoricoEventi();
+    const timer = setInterval(aggiornaStoricoEventi, 2000);
     window.addEventListener('beforeunload', () => clearInterval(timer));
   });
 </script>
