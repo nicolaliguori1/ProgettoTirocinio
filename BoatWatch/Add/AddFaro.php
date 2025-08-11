@@ -41,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="../Add/add.css?v=3">
+    <link rel="stylesheet" href="../Add/add.css?v=2">
     <link rel="stylesheet" href="../alert.css?v=2">
     <title>Aggiungi Nuovo Faro</title>
 </head>
@@ -74,11 +74,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <input type="number" step="any" name="longitudine" required>
 
         <div style="margin-top: 30px;">
-        <div class="conferma">
-            <input type="submit" value="Aggiungi faro">
-            <a href="../Elenco/elencoFari.php" class="btn-back">Torna all'elenco</a>
+            <input type="submit" value="Aggiungi Faro">
         </div>
-</div>
     </form>
 </div>
 </body>

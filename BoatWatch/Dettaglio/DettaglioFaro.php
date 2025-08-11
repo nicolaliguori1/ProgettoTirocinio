@@ -38,7 +38,7 @@ if (isset($_GET['id'])) {
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="dettaglio.css?v=3">
+    <link rel="stylesheet" href="dettaglio.css?v=2">
     <title>Dettaglio Faro</title>
 </head>
 <body>
@@ -51,7 +51,6 @@ if (isset($_GET['id'])) {
             <p><strong>Longitudine:</strong> <?= htmlspecialchars($faro['lon']) ?></p>
             <p><strong>Id:</strong> <?= htmlspecialchars($faro['id']) ?></p>
 
-            <div class="barche">
             <h2>Barche associate al faro</h2>
             <?php if (count($barche) > 0): ?>
                 <ul>
@@ -68,12 +67,14 @@ if (isset($_GET['id'])) {
         <?php else: ?>
             <p>Faro non trovato o ID non specificato.</p>
         <?php endif; ?>
-        </div>
 
         <!-- Pulsante Indietro -->
-        <div class="back">
-            <a href="../Elenco/elencoFari.php" class="btn-back">
-                Torna all'elenco fari
+        <div style="margin-top: 20px; text-align: center;">
+            <a href="../Elenco/elencoFari.php" 
+               style="display: inline-block; padding: 10px 20px; background-color: #00d4ff; 
+                      color: #000; text-decoration: none; border-radius: 10px; 
+                      font-weight: bold; transition: background 0.3s ease;">
+                ⬅ Torna all'elenco fari
             </a>
         </div>
     </div>
