@@ -54,7 +54,7 @@ if ($result) {
                             <td><?= htmlspecialchars($faro['lat']) ?></td>
                             <td><?= htmlspecialchars($faro['lon']) ?></td>
                             <td>
-                                <a href="../Modifica/modificaFaro.php?id=<?= $faro['id'] ?>">✏️ Modifica</a>
+                                <a href="../Modifica/modificaFaro.php?id=<?= $faro['id'] ?>">Modifica</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>

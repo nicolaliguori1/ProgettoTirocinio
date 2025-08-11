@@ -21,7 +21,7 @@
     border-radius: 20px;
     backdrop-filter: blur(10px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-    max-width: 500px;
+    max-width: 700px;
     width: 100%;
     text-align: left;
   }
@@ -37,9 +37,53 @@
     font-size: 1em;
     color: #ccc;
     margin-bottom: 15px;
+    margin-left: 30px;
   }
   
   strong {
     color: #ccc;
   }
   
+  .storico {
+    width: 90%;
+    margin: 50px auto 20px auto;
+    background-color: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    padding: 20px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    color: #00d4ff;
+    overflow-x: auto;
+  }
+  
+  .storico table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: monospace;
+    background-color: transparent;
+    color: #00d4ff;
+  }
+  
+  .storico th, .storico td {
+    padding: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    text-align: left;
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+  
+  .storico th {
+    background-color: rgba(255, 255, 255, 0.1);
+    font-weight: bold;
+    color: #00d4ff;
+  }
+  
+  .storico caption {
+    caption-side: top;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #00d4ff;
+    text-align: center;
+    margin-bottom: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }

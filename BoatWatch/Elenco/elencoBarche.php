@@ -58,7 +58,7 @@ if ($result) {
 </td>
                             <td><?= htmlspecialchars($barca['targa']) ?></td>
                             <td>
-                                <a href="../Modifica/modificaBarca.php?targa=<?= urlencode($barca['targa']) ?>">✏ Modifica</a>
+                                <a href="../Modifica/modificaBarca.php?targa=<?= urlencode($barca['targa']) ?>">Modifica</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
