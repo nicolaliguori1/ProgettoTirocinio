@@ -8,24 +8,6 @@ if (!isset($_GET["id"])) {
 
 $id_faro = intval($_GET["id"]);
 
-// Se il form è stato inviato
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $nome = $_POST["nome"];
-    $lat = floatval($_POST["latitudine"]);
-    $lon = floatval($_POST["longitudine"]);
-
-    $sql = "UPDATE fari SET nome = $1, lat = $2, lon = $3 WHERE id = $4";
-    pg_prepare($conn, "update_faro", $sql);
-    $result = pg_execute($conn, "update_faro", [$nome, $lat, $lon, $id_faro]);
-
-    if ($result) {
-        header("Location: ../Elenco/elencoFari.php");
-        exit();
-    } else {
-        die("Errore aggiornamento faro: " . pg_last_error($conn));
-    }
-}
-
 // Recupera dati attuali del faro
 $sql = "SELECT * FROM fari WHERE id = $1";
 pg_prepare($conn, "get_faro", $sql);
@@ -35,6 +17,36 @@ $faro = pg_fetch_assoc($res);
 if (!$faro) {
     die("Faro non trovato.");
 }
+
+// Se il form è stato inviato
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $nome = trim($_POST["nome"]);
+    $lat = floatval($_POST["latitudine"]);
+    $lon = floatval($_POST["longitudine"]);
+
+    // Controllo nome duplicato (escluso questo faro)
+    $check_nome = pg_query_params($conn, "SELECT 1 FROM fari WHERE nome = $1 AND id <> $2", array($nome, $id_faro));
+
+    // Controllo coordinate duplicate (escluso questo faro)
+    $check_coord = pg_query_params($conn, "SELECT 1 FROM fari WHERE lat = $1 AND lon = $2 AND id <> $3", array($lat, $lon, $id_faro));
+
+    if (pg_num_rows($check_nome) > 0) {
+        $errorMessage = "Esiste già un faro con questo nome.";
+    } elseif (pg_num_rows($check_coord) > 0) {
+        $errorMessage = "Esiste già un faro con queste coordinate.";
+    } else {
+        $sql = "UPDATE fari SET nome = $1, lat = $2, lon = $3 WHERE id = $4";
+        pg_prepare($conn, "update_faro", $sql);
+        $result = pg_execute($conn, "update_faro", [$nome, $lat, $lon, $id_faro]);
+
+        if ($result) {
+            header("Location: ../Elenco/elencoFari.php");
+            exit();
+        } else {
+            die("Errore aggiornamento faro: " . pg_last_error($conn));
+        }
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -42,16 +54,29 @@ if (!$faro) {
 <head>
     <meta charset="UTF-8">
     <title>Modifica Faro</title>
-    <link rel="stylesheet" href="modifica.css?v=3">
- 
+    <link rel="stylesheet" href="modifica.css?v=2">
 </head>
 <body>
+
+<?php if (!empty($errorMessage)): ?>
+<div class="popup-overlay">
+    <div class="popup">
+        <p><?= htmlspecialchars($errorMessage) ?></p>
+        <button onclick="closePopup()">OK</button>
+    </div>
+</div>
+<script>
+    function closePopup() {
+        document.querySelector('.popup-overlay').style.display = 'none';
+    }
+</script>
+<?php endif; ?>
+
 <div class="container">
     <form method="POST" action="">
-    <?php
-        include "../header.php"
-        ?>
-    <h2>Modifica Faro</h2>
+        <?php include "../header.php" ?>
+        <h2>Modifica Faro</h2>
+
         <label>Nome</label>
         <input type="text" name="nome" value="<?= htmlspecialchars($faro["nome"]) ?>" required>
 
@@ -61,10 +86,7 @@ if (!$faro) {
         <label>Longitudine</label>
         <input type="number" step="any" name="longitudine" value="<?= htmlspecialchars($faro["lon"]) ?>" required>
 
-        <div class="conferma">
-            <input type="submit" value="Salva modifiche">
-            <a href="../Elenco/elencoFari.php" class="btn-back">Torna all'elenco</a>
-        </div>
+        <input type="submit" value="Salva modifiche">
     </form>
 </div>
 </body>

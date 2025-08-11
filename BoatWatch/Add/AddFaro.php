@@ -6,30 +6,20 @@ error_reporting(E_ALL);
 include __DIR__ . '/../../connessione.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $nome = $_POST["nome"];
+    $nome = trim($_POST["nome"]);
     $lat = floatval($_POST["latitudine"]);
     $lon = floatval($_POST["longitudine"]);
-    $tolleranza = 0.01; // 0.01 ~ 1.1 km (approx)
 
-    // Query con confronto tolleranza
-    $check_query = "
-        SELECT 1 FROM fari 
-        WHERE ABS(lat - $1) < $3 
-          AND ABS(lon - $2) < $3
-        LIMIT 1
-    ";
-    $check_pos = "check_faro";
+    // Controllo se esiste già un faro con lo stesso nome
+    $check_nome = pg_query_params($conn, "SELECT 1 FROM fari WHERE nome = $1", array($nome));
 
-    // Prepara ed esegui query
-    pg_prepare($conn, $check_pos, $check_query);
-    $check_result = pg_execute($conn, $check_pos, array($lat, $lon, $tolleranza));
-    
-    $check_faro = pg_query_params($conn, "SELECT 1 FROM fari WHERE  nome= $1", array($nome));
-    
-    if (pg_num_rows($check_faro) > 0) {
+    // Controllo se esiste già un faro con stesse coordinate
+    $check_coord = pg_query_params($conn, "SELECT 1 FROM fari WHERE lat = $1 AND lon = $2", array($lat, $lon));
+
+    if (pg_num_rows($check_nome) > 0) {
         $errorMessage = "Esiste già un faro con questo nome.";
-    }else if(pg_num_rows($check_result) > 0) {
-        $errorMessage = "Faro con coordinate simili già esistente.";
+    } elseif (pg_num_rows($check_coord) > 0) {
+        $errorMessage = "Esiste già un faro con queste coordinate.";
     } else {
         $query = "INSERT INTO fari (nome, lat, lon) VALUES ($1, $2, $3)";
         $prep_name = "insert_faro";
@@ -70,24 +60,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </script>
 <?php endif; ?>
 <div class="container">
-        
     <form method="POST" action="">
-    <?php
-        include "../header.php"
-        ?>
-    <h2>Aggiungi un Nuovo Faro</h2>
+        <?php include "../header.php" ?>
+        <h2>Aggiungi un Nuovo Faro</h2>
+
         <label>Nome</label>
         <input type="text" name="nome" required>
 
         <label>Latitudine</label>
-        <input type="number" step="any" name="latitudine" value="<?= htmlspecialchars($faro["lat"]) ?>" required>
-        <div style="margin-top: 20px;">
+        <input type="number" step="any" name="latitudine" required>
+
         <label>Longitudine</label>
-</div>
-        <input type="number" step="any" name="longitudine" value="<?= htmlspecialchars($faro["lon"]) ?>" required>
+        <input type="number" step="any" name="longitudine" required>
+
         <div style="margin-top: 30px;">
-        <input type="submit" value="Aggiungi Faro">
-</div>
+            <input type="submit" value="Aggiungi Faro">
+        </div>
     </form>
 </div>
 </body>
