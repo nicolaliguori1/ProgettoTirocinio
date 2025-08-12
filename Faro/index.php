@@ -75,7 +75,6 @@
     <button onclick="cercaFaro()">Cerca</button>
   </div>
 
-  <!-- Popup overlay + box -->
   <div id="popup-overlay" class="popup-overlay" style="display:none;">
     <div class="popup" role="alertdialog" aria-modal="true" aria-labelledby="popup-text">
       <p id="popup-text">Messaggio</p>
