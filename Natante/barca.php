@@ -90,10 +90,6 @@ $initialLon = is_numeric($live['lon']) ? floatval($live['lon']) : 0;
     <h1>Posizione Live</h1>
     <div class="box-wrapper">
       <div class="box">
-        <h2><strong>Nome</strong></h2>
-        <h2><?= htmlspecialchars($nome_barca) ?></h2>
-      </div>
-      <div class="box">
         <h2><strong>Latitudine</strong></h2>
         <h2 id="lat"><?= (is_numeric($live['lat'])) ? htmlspecialchars($live['lat']) : 'N/D' ?></h2>
       </div>
