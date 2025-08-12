@@ -60,12 +60,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $errore_generico = "Errore durante la registrazione: " . pg_last_error($conn);
             } else {
                 $row = pg_fetch_assoc($insert_result);
-                // Imposta la sessione
                 $_SESSION['id']          = $row['id'] ?? null;
                 $_SESSION['nome_utente'] = $row['nome_utente'] ?? $nome_utente;
                 $_SESSION['email']       = $row['email'] ?? $email;
 
-                // Redirect dopo successo
                 header("Location: index.php");
                 exit();
             }
@@ -80,8 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrazione</title>
     <link rel="stylesheet" href="registrazione.css">
-    <!-- Stili del popup -->
-    <link rel="stylesheet" href="alert.css">
+    <link rel="stylesheet" href="alert.css"> <!-- tuo file popup-overlay/popup -->
     <style>
         .registrazione { text-align: center; }
         .errore { color: red; font-size: 0.9em; margin-top: 5px; display: none; }
@@ -90,175 +87,143 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 
 <body>
-
-    <!-- Popup di alert: usa gli stili definiti in alert.css (classe .alert, ecc.) -->
-    <div id="alert-popup" class="alert" style="display:none;" role="alert" aria-live="assertive">
-        <span id="alert-message"></span>
-        <button id="alert-close" type="button" aria-label="Chiudi">&times;</button>
-    </div>
-
     <div class="container">
         <div class="blocco-registrazione">
-        <h2 style="color: #00d4ff; text-align: center; font-size: 26px; font-weight: bold; margin-top: 40px; margin-bottom: 20px;">Registrazione</h2>
-        
-        <form id="form" method="post" class="registrazione" action="" onsubmit="return controllaForm()">
+            <h2 style="color: #00d4ff; text-align: center; font-size: 26px; font-weight: bold; margin-top: 40px; margin-bottom: 20px;">Registrazione</h2>
+            
+            <form id="form" method="post" class="registrazione" action="" onsubmit="return controllaForm()">
 
-    <p><label>
-        <input maxlength="20" type="text" name="nome_utente" placeholder="Nome utente" value="<?= htmlspecialchars($nome_utente); ?>" required>
-    </label></p>
+                <p><label>
+                    <input maxlength="20" type="text" name="nome_utente" placeholder="Nome utente" value="<?= htmlspecialchars($nome_utente); ?>" required>
+                </label></p>
 
-    <p><label>
-        <input id="email" name="email" type="email" placeholder="Email" value="<?= htmlspecialchars($email); ?>" required oninput="nascondiErroreEmail()">
-    </label></p>
+                <p><label>
+                    <input id="email" name="email" type="email" placeholder="Email" value="<?= htmlspecialchars($email); ?>" required oninput="nascondiErroreEmail()">
+                </label></p>
 
-    <p class="errore" id="errore-email" style="<?= !$email_valid ? 'display:block' : '' ?>"><?= $errore_email; ?></p>
+                <p class="errore" id="errore-email" style="<?= !$email_valid ? 'display:block' : '' ?>"><?= htmlspecialchars($errore_email); ?></p>
 
-    <p><label>
-        <input id="password" type="password" maxlength="20" name="password" minlength="6" placeholder="Password" required>
-    </label></p>
+                <p><label>
+                    <input id="password" type="password" maxlength="20" name="password" minlength="6" placeholder="Password" required>
+                </label></p>
 
-    <p><label>
-        <input id="conferma-password" type="password" maxlength="20" name="conferma-password" minlength="6" placeholder="Conferma Password" required oninput="nascondiErrore('errore-conferma-password')">
-    </label></p>
+                <p><label>
+                    <input id="conferma-password" type="password" maxlength="20" name="conferma-password" minlength="6" placeholder="Conferma Password" required oninput="nascondiErrore('errore-conferma-password')">
+                </label></p>
 
-    <p class="errore" id="errore-conferma-password" style="<?= $errore_conferma_password ? 'display:block' : '' ?>"><?= $errore_conferma_password; ?></p>
+                <p class="errore" id="errore-conferma-password" style="<?= $errore_conferma_password ? 'display:block' : '' ?>"><?= htmlspecialchars($errore_conferma_password); ?></p>
 
-    <p style="color: #ccc;">Dai il tuo consenso per il trattamento di dati: 
-        <input type="checkbox" required> 
-        <a href="https://protezionedatipersonali.it/informativa" style="font-size: smaller;">Informazioni sulla privacy</a>
-    </p>
+                <p style="color: #ccc;">Dai il tuo consenso per il trattamento di dati: 
+                    <input type="checkbox" required> 
+                    <a href="https://protezionedatipersonali.it/informativa" style="font-size: smaller;">Informazioni sulla privacy</a>
+                </p>
 
-    <input type="submit" name="bottone" value="Registrati">
+                <input type="submit" name="bottone" value="Registrati">
 
-    <p style="margin-top: 15px; font-size: 0.9em; color: #ccc;">
-        Hai già un account?
-        <a href="index.php" style="color: #00d4ff; text-decoration: none;">
-            Clicca qui per accedere
-        </a>
-    </p>
-
-</form>
-
+                <p style="margin-top: 15px; font-size: 0.9em; color: #ccc;">
+                    Hai già un account?
+                    <a href="index.php" style="color: #00d4ff; text-decoration: none;">Clicca qui per accedere</a>
+                </p>
+            </form>
         </div>
     </div>
 
-    <script>
-(function () {
-  const form   = document.getElementById('form');
-  const email  = document.getElementById('email');
-  const pass   = document.getElementById('password');
-  const cpass  = document.getElementById('conferma-password');
+<script>
+// ====== CREAZIONE POPUP IN STILE alert.css ======
+function mostraPopup(messaggio) {
+    const overlay = document.createElement('div');
+    overlay.className = 'popup-overlay';
 
-  const errEmail = document.getElementById('errore-email');
-  const errPass  = document.getElementById('errore-conferma-password');
+    const popup = document.createElement('div');
+    popup.className = 'popup';
 
-  // --- Popup helpers ---
-  const popup = document.getElementById('alert-popup');
-  const popupMsg = document.getElementById('alert-message');
-  const popupClose = document.getElementById('alert-close');
+    const p = document.createElement('p');
+    p.textContent = messaggio;
 
-  function mostraPopup(messaggio) {
-    if (!popup || !popupMsg) return;
-    popupMsg.textContent = messaggio;
-    popup.style.display = 'block';
-    // focus sul bottone chiudi per accessibilità
-    if (popupClose) popupClose.focus();
-  }
+    const btn = document.createElement('button');
+    btn.textContent = 'Chiudi';
+    btn.onclick = () => document.body.removeChild(overlay);
 
-  function chiudiPopup() {
-    if (!popup) return;
-    popup.style.display = 'none';
-    // ritorna il focus al campo conferma password, così l’utente corregge subito
-    if (cpass) cpass.focus();
-  }
+    popup.appendChild(p);
+    popup.appendChild(btn);
+    overlay.appendChild(popup);
+    document.body.appendChild(overlay);
 
-  if (popupClose) {
-    popupClose.addEventListener('click', chiudiPopup);
-  }
-  // chiusura con ESC
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') chiudiPopup();
-  });
+    // Chiudi cliccando fuori
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) document.body.removeChild(overlay);
+    });
 
-  // --- Error helpers ---
-  function showError(el, msg) {
+    // Chiudi con ESC
+    document.addEventListener('keydown', function escClose(ev) {
+        if (ev.key === 'Escape') {
+            if (document.body.contains(overlay)) {
+                document.body.removeChild(overlay);
+                document.removeEventListener('keydown', escClose);
+            }
+        }
+    });
+}
+
+// ====== VALIDAZIONE FORM ======
+const email  = document.getElementById('email');
+const pass   = document.getElementById('password');
+const cpass  = document.getElementById('conferma-password');
+const errEmail = document.getElementById('errore-email');
+const errPass  = document.getElementById('errore-conferma-password');
+
+function showError(el, msg) {
     if (!el) return;
     el.textContent = msg;
-    el.classList.add('show');   // .errore.show { display:block }
-  }
-
-  function hideError(el) {
+    el.classList.add('show');
+}
+function hideError(el) {
     if (!el) return;
     el.textContent = '';
     el.classList.remove('show');
-  }
-
-  // bridge per gli oninput inline già presenti nell'HTML
-  window.nascondiErroreEmail = function () {
-    hideError(errEmail);
-  };
-  window.nascondiErrore = function (id) {
-    const el = document.getElementById(id);
-    hideError(el);
-  };
-
-  function isValidEmail(v) {
-    // semplice ma efficace per il form
+}
+function isValidEmail(v) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
-  }
+}
+function nascondiErroreEmail() {
+    hideError(errEmail);
+}
+function nascondiErrore(id) {
+    hideError(document.getElementById(id));
+}
 
-  // Validazione principale richiamata dall’onsubmit
-  window.controllaForm = function controllaForm() {
+function controllaForm() {
     let ok = true;
 
-    // Email
-    const e = email.value.trim();
-    if (!isValidEmail(e)) {
-      showError(errEmail, 'Formato email non valido.');
-      ok = false;
-    } else if (errEmail && errEmail.textContent.trim() && errEmail.textContent.includes("già stata utilizzata")) {
-      // se il server ha già segnalato email duplicata, lascio il messaggio e blocco l’invio
-      errEmail.classList.add('show');
-      ok = false;
-    } else {
-      hideError(errEmail);
+    if (!isValidEmail(email.value.trim())) {
+        showError(errEmail, 'Formato email non valido.');
+        mostraPopup('Formato email non valido.');
+        ok = false;
     }
 
-    // Password
-    const p  = pass.value;
-    const cp = cpass.value;
-
-    if (p.length < 6) {
-      showError(errPass, 'La password deve avere almeno 6 caratteri.');
-      ok = false;
-    } else if (p !== cp) {
-      // >>> QUI: blocco e popup se le password sono diverse <<<
-      showError(errPass, 'Le password non coincidono.');
-      mostraPopup('Le password non coincidono.');
-      ok = false;
-    } else {
-      hideError(errPass);
+    if (pass.value.length < 6) {
+        showError(errPass, 'La password deve avere almeno 6 caratteri.');
+        mostraPopup('La password deve avere almeno 6 caratteri.');
+        ok = false;
+    } else if (pass.value !== cpass.value) {
+        showError(errPass, 'Le password non coincidono.');
+        mostraPopup('Le password non coincidono.');
+        ok = false;
     }
 
-    return ok; // true = invia, false = blocca
-  };
+    return ok;
+}
 
-  // Feedback “live” mentre l’utente digita
-  email.addEventListener('input', () => {
-    if (isValidEmail(email.value.trim())) hideError(errEmail);
-    else showError(errEmail, 'Formato email non valido.');
-  });
-
-  pass.addEventListener('input', () => {
-    if (pass.value.length >= 6 && pass.value === cpass.value) hideError(errPass);
-  });
-
-  cpass.addEventListener('input', () => {
-    if (pass.value.length >= 6 && pass.value === cpass.value) hideError(errPass);
-    else if (cpass.value.length > 0) showError(errPass, 'Le password non coincidono.');
-  });
-})();
+// ====== MOSTRA ERRORI SERVER-SIDE CON POPUP ======
+<?php if (!empty($errore_generico)) : ?>
+    mostraPopup(<?= json_encode($errore_generico) ?>);
+<?php endif; ?>
+<?php if (!empty($errore_email)) : ?>
+    mostraPopup(<?= json_encode($errore_email) ?>);
+<?php endif; ?>
+<?php if (!empty($errore_conferma_password)) : ?>
+    mostraPopup(<?= json_encode($errore_conferma_password) ?>);
+<?php endif; ?>
 </script>
-
 </body>
 </html>
