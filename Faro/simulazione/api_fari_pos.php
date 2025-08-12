@@ -11,7 +11,7 @@ if (!ctype_digit($id)) {
 
 $id = (int)$id;
 
-// Prende ultima posizione
+// Prende l'ultima posizione
 $query_last_pos = "
     SELECT lat, lon, ts
     FROM fari_position
@@ -23,7 +23,6 @@ $res_last_pos = pg_query($conn, $query_last_pos);
 $last_pos = pg_fetch_assoc($res_last_pos);
 
 if (!$last_pos) {
-    // Nessun log → restituisco coordinate iniziali
     $query_faro = "SELECT lat, lon FROM fari WHERE id = $id";
     $res_faro = pg_query($conn, $query_faro);
     $faro = pg_fetch_assoc($res_faro);

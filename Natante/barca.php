@@ -70,7 +70,7 @@ $initialLon = is_numeric($live['lon']) ? floatval($live['lon']) : 0;
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <link rel="stylesheet" href="css/style.css?v=3">
+  <link rel="stylesheet" href="css/barca.css">
   <link rel="manifest" href="manifest.json">
   <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" crossorigin=""></script>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" crossorigin=""/>
@@ -79,8 +79,8 @@ $initialLon = is_numeric($live['lon']) ? floatval($live['lon']) : 0;
 
 <body>
   <div class="pulsante-indietro">
-  <a href="index.php">Indietro</a>
-</div>
+    <a href="index.php">Indietro</a>
+  </div>
 
   <div class="NomeBarca">
     <h1>TRACKER <?= htmlspecialchars($nome_barca) ?></h1>
@@ -108,7 +108,7 @@ $initialLon = is_numeric($live['lon']) ? floatval($live['lon']) : 0;
     </div>
 
     <div id="map"></div>
-    
+
     <div class="storico">
   
   <table id="storico-table">
