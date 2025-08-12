@@ -7,7 +7,6 @@ $barche = [];
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
 
-    // Query per i dettagli del faro
     $queryFaro = "
         SELECT f.nome, f.lat, f.lon, f.id
         FROM fari f
@@ -18,7 +17,6 @@ if (isset($_GET['id'])) {
     if ($resultFaro && pg_num_rows($resultFaro) > 0) {
         $faro = pg_fetch_assoc($resultFaro);
 
-        // Query per le barche associate a questo faro
         $queryBarche = "
             SELECT nome, targa, lunghezza
             FROM boats
@@ -68,7 +66,6 @@ if (isset($_GET['id'])) {
             <p>Faro non trovato o ID non specificato.</p>
         <?php endif; ?>
 
-        <!-- Pulsante Indietro -->
         <div style="margin-top: 20px; text-align: center;">
             <a href="../Elenco/elencoFari.php" 
                style="display: inline-block; padding: 10px 20px; background-color: #00d4ff; 

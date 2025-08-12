@@ -56,7 +56,6 @@
             </table>
         </div>
 
-        <!-- Pulsante Indietro -->
         <div style="margin-top: 20px; text-align: center;">
             <a href="../Elenco/elencoBarche.php" 
                style="display: inline-block; padding: 10px 20px; background-color: #00d4ff; 
@@ -79,7 +78,6 @@
       return;
     }
 
-    // Mostra dal più recente al meno recente
     const sorted = [...eventi].sort((a, b) => new Date(b.ts) - new Date(a.ts)).slice(0, 10);
 
     sorted.forEach(ev => {
@@ -100,7 +98,7 @@
   function buildApiUrl() {
     const u = new URL('../../Natante/simulazione/api_posizione_barca.php', window.location.href);
     u.searchParams.set('targa', targa || '');
-    u.searchParams.set('_', Date.now().toString()); // anti-cache
+    u.searchParams.set('_', Date.now().toString());
     return u.toString();
   }
 
