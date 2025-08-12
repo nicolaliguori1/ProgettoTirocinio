@@ -27,7 +27,6 @@ if (pg_num_rows($result) === 0) {
 $row = pg_fetch_assoc($result);
 $nome = $row['nome'];
 
-// Prendi posizione live
 $res_live = pg_query_params($conn, "SELECT ts, lat, lon, id_rotta FROM boats_current_position WHERE targa_barca = $1", [$targa]);
 
 $live = false;
@@ -42,7 +41,6 @@ if ($res_live && pg_num_rows($res_live) > 0) {
     }
 }
 
-// Fallback faro se no posizione live valida
 if (!$live) {
     $query_faro = "SELECT f.lat, f.lon
                    FROM boats b

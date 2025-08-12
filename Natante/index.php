@@ -47,14 +47,12 @@
       }
     }
 
-    // Avvia ricerca con Enter
     document.addEventListener('DOMContentLoaded', () => {
       const input = document.getElementById('codiceBarca');
       input.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') cercaBarca();
       });
 
-      // Chiusure popup
       document.getElementById('popup-close').addEventListener('click', hidePopup);
       document.getElementById('popup-overlay').addEventListener('click', (e) => {
         if (e.target.id === 'popup-overlay') hidePopup(); // chiudi cliccando fuori
@@ -75,12 +73,12 @@
     <button onclick="cercaBarca()">Cerca</button>
   </div>
 
-  <!-- Popup overlay + box (usa le classi del tuo alert.css) -->
   <div id="popup-overlay" class="popup-overlay" style="display:none;">
     <div class="popup" role="alertdialog" aria-modal="true" aria-labelledby="popup-text">
       <p id="popup-text">Messaggio</p>
       <button id="popup-close" type="button">OK</button>
     </div>
   </div>
+  
 </body>
 </html>

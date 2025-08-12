@@ -2,7 +2,6 @@
 -- Abilita l'estensione per l'hashing delle password
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
--- Creazione delle tabelle
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
   nome_utente VARCHAR(100) NOT NULL,
@@ -66,14 +65,12 @@ CREATE TABLE boats_current_position (
 );
 
 
--- Simulazione realistica
 INSERT INTO fari (nome, lat, lon) VALUES
 ('Faro di Capo d’Orso', 40.6333, 14.6833),
 ('Faro di Punta Licosa', 40.2500, 14.9000),
 ('Molo Manfredi', 40.6745, 14.7519);
 
 
--- barche
 INSERT INTO boats (targa, lunghezza, nome, id_user, id_faro) VALUES
 ('SA1234', 12, 'Aurora', NULL, 1),  -- Faro di Capo d’Orso
 ('SA5678', 9, 'Stella Marina', NULL, 2),  -- Faro di Punta Licosa

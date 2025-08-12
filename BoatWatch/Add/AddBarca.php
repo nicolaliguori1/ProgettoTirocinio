@@ -62,54 +62,57 @@ if ($result) {
     <title>Aggiungi Barca</title>
     <link rel="stylesheet" href="../Add/add.css">
     <link rel="stylesheet" href="../alert.css?v=2">
-
 </head>
+
 <body>
-<?php if (!empty($errorMessage)): ?>
-<div class="popup-overlay">
-    <div class="popup">
-        <p><?= htmlspecialchars($errorMessage) ?></p>
-        <button onclick="closePopup()">OK</button>
-    </div>
-</div>
-<script>
-    function closePopup() {
-        document.querySelector('.popup-overlay').style.display = 'none';
-    }
-</script>
-<?php endif; ?>
-        <div class="container">
-        
-<form method="post">
-<?php
-        include "../header.php"
-        ?>
-    <h2>Aggiungi Barca</h2>
-
-    <label for="nome">Nome</label>
-    <input type="text" name="nome" required>
-
-    <label for="lunghezza">Lunghezza</label>
-    <input type="number" name="lunghezza" required>
-
-    <label for="targa">Targa</label>
-    <input type="text" name="targa" required>
-
-    <label for="id_faro">ID Faro</label>
-    <select name="id_faro" id="id_faro" required>
-        <option value=""></option>
-        <?php foreach ($fari as $faro): ?>
-            <option value="<?= htmlspecialchars($faro['id']) ?>">
-                <?= htmlspecialchars($faro['nome']) ?>
-            </option>
-        <?php endforeach; ?>
-    </select>
-
-    <div class="conferma">
-            <input class="add" type="submit" value="Aggiungi barca">
-            <a href="../Elenco/elencoBarche.php" class="btn-back">Torna all'elenco</a>
+    <?php if (!empty($errorMessage)): ?>
+    <div class="popup-overlay">
+        <div class="popup">
+            <p><?= htmlspecialchars($errorMessage) ?></p>
+            <button onclick="closePopup()">OK</button>
         </div>
-</form>
-</div>
+    </div>
+
+    <script>
+        function closePopup() {
+            document.querySelector('.popup-overlay').style.display = 'none';
+        }
+    </script>
+    <?php endif; ?>
+
+    <div class="container">   
+        <form method="post">
+            
+            <?php
+                include "../header.php"
+            ?>
+            <h2>Aggiungi Barca</h2>
+
+            <label for="nome">Nome</label>
+            <input type="text" name="nome" required>
+
+            <label for="lunghezza">Lunghezza</label>
+            <input type="number" name="lunghezza" required>
+
+            <label for="targa">Targa</label>
+            <input type="text" name="targa" required>
+
+            <label for="id_faro">ID Faro</label>
+            <select name="id_faro" id="id_faro" required>
+                <option value=""></option>
+                <?php foreach ($fari as $faro): ?>
+                    <option value="<?= htmlspecialchars($faro['id']) ?>">
+                        <?= htmlspecialchars($faro['nome']) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+
+            <div class="conferma">
+                <input class="add" type="submit" value="Aggiungi barca">
+                <a href="../Elenco/elencoBarche.php" class="btn-back">Torna all'elenco</a>
+            </div>
+
+        </form>
+    </div>
 </body>
 </html>

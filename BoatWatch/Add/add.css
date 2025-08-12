@@ -1,16 +1,10 @@
-select {
-  width: 100%;
+* {
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
-  padding: 12px;
-  margin-bottom: 20px;
-  border-radius: 10px;
-  border: none;
-  background-color: rgba(255, 255, 255, 0.1);
-  color: white;
-  font-size: 1em;
 }
-
-body {
+  
+  body {
     font-family: 'Segoe UI', sans-serif;
     background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
     color: #fff;
@@ -21,7 +15,7 @@ body {
     justify-content: center;
     align-items: center;
   }
-  
+
   form {
     background-color: rgba(255, 255, 255, 0.05);
     padding: 60px;
@@ -67,14 +61,14 @@ body {
   }
 
   select {
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    border: none;
     background-color: rgba(255, 255, 255, 0.1);
     color: white;
-    border: none;
-    border-radius: 10px;
-    padding: 12px 15px;
     font-size: 1em;
   }
 

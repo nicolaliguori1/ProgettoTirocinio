@@ -13,7 +13,7 @@ if ($targa === '') {
 
 // Funzione per calcolare la distanza tra due coordinate GPS (in metri)
 function distanzaHaversine($lat1, $lon1, $lat2, $lon2) {
-    $raggioTerra = 6371000; // metri
+    $raggioTerra = 6371000; 
     $lat1 = deg2rad($lat1);
     $lat2 = deg2rad($lat2);
     $diffLat = $lat2 - $lat1;
@@ -22,10 +22,9 @@ function distanzaHaversine($lat1, $lon1, $lat2, $lon2) {
     $a = sin($diffLat / 2) ** 2 + cos($lat1) * cos($lat2) * sin($diffLon / 2) ** 2;
     $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
 
-    return $raggioTerra * $c; // distanza in metri
+    return $raggioTerra * $c; 
 }
 
-// LIVE
 $res_live = pg_query_params($conn, "
     SELECT ts, lat, lon, id_rotta
     FROM boats_current_position 
@@ -51,7 +50,6 @@ if ($res_live && pg_num_rows($res_live) > 0) {
     }
 }
 
-// FALLBACK FARO se live non valida o assente
 if (!$live) {
     $res_faro = pg_query_params($conn, "
         SELECT f.lat, f.lon
@@ -77,7 +75,6 @@ if (!$live) {
     }
 }
 
-// STORICO posizioni (se ti serve ancora altrove; non necessario per gli eventi)
 $res_storico = pg_query_params($conn, "
     SELECT ts, lat, lon 
     FROM boats_position 
@@ -97,11 +94,9 @@ if ($res_storico) {
             ];
         }
     }
-    // opzionale: riordina crescente
     usort($storico, fn($a, $b) => strtotime($a['ts']) <=> strtotime($b['ts']));
 }
 
-// Se live ancora null, ritorna errore più chiaro
 if (!$live) {
     echo json_encode([
         'error' => 'Nessuna posizione live o faro trovata per questa targa',
@@ -109,7 +104,6 @@ if (!$live) {
     exit;
 }
 
-// Posizione faro (necessaria per stato/eventi)
 $res_faro_pos = pg_query_params($conn, "
     SELECT f.lat, f.lon
     FROM boats b
@@ -119,7 +113,7 @@ $res_faro_pos = pg_query_params($conn, "
 ", [$targa]);
 
 $stato = 'Sconosciuto';
-$soglia = 50; // metri
+$soglia = 50; 
 
 $lat_faro = null;
 $lon_faro = null;
@@ -139,10 +133,8 @@ if ($res_faro_pos && pg_num_rows($res_faro_pos) > 0) {
     }
 }
 
-// --- Calcolo eventi Entrata/Uscita dallo storico posizioni ---
 $eventi = [];
 if ($lat_faro !== null && $lon_faro !== null) {
-    // Prendi abbastanza campioni per cogliere le transizioni (a piacere)
     $res_storico_raw = pg_query_params($conn, "
         SELECT ts, lat, lon
         FROM (
@@ -176,7 +168,6 @@ if ($lat_faro !== null && $lon_faro !== null) {
             $prevStato = $statoP;
         }
 
-        // Tieni gli ultimi 10 più recenti e (opzionale) rimettili in ordine crescente
         usort($eventi, fn($a, $b) => strtotime($b['ts']) <=> strtotime($a['ts']));
         $eventi = array_slice($eventi, 0, 10);
         usort($eventi, fn($a, $b) => strtotime($a['ts']) <=> strtotime($b['ts']));
@@ -185,8 +176,8 @@ if ($lat_faro !== null && $lon_faro !== null) {
 
 echo json_encode([
     'live'    => $live,
-    'storico' => $storico, // opzionale
+    'storico' => $storico, 
     'stato'   => $stato,
-    'eventi'  => $eventi,  // <-- ultimi 10 eventi pronti
+    'eventi'  => $eventi,  
 ]);
 exit;

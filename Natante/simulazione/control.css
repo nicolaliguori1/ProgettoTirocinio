@@ -1,4 +1,3 @@
-/* Reset base */
 * {
   margin: 0;
   padding: 0;
@@ -16,13 +15,11 @@ body {
   padding: 20px;
 }
 
-  /* Contenitore principale */
   .sim-wrapper {
     max-width: 400px;
     width: 100%;
   }
   
-  /* Box contenente i controlli */
   .sim-container {
     background-color: rgba(255, 255, 255, 0.05);
     padding: 40px;
@@ -48,7 +45,6 @@ body {
     color: #00d4ff;
   }
   
-  /* Pulsanti */
   .sim-container button {
     padding: 12px 20px;
     margin: 10px 5px;
@@ -65,7 +61,6 @@ body {
     background: #00aacc;
   }
   
-  /* Nota in basso */
   .sim-container small {
     display: block;
     margin-top: 25px;
