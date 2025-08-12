@@ -2,14 +2,12 @@
 session_start();
 include __DIR__ . '/../../connessione.php';
 
-// Verifica se l'utente è loggato
 if (!isset($_SESSION["id"])) {
     die("Accesso non autorizzato.");
 }
 
 $user_id = $_SESSION["id"];
 
-// Recupera la targa della barca da modificare
 if (!isset($_GET["targa"])) {
     die("Targa barca mancante.");
 }
@@ -17,7 +15,6 @@ if (!isset($_GET["targa"])) {
 $targa = $_GET["targa"];
 $errore = "";
 
-// Se il form è stato inviato
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nome = $_POST["nome"];
     $lunghezza = intval($_POST["lunghezza"]);
@@ -25,7 +22,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id_faro = intval($_POST["id_faro"]);
     $targa_originale = $_POST["targa_originale"];
 
-    // ✅ Verifica se la targa esiste già (diversa dalla barca attuale)
     $check_sql = "SELECT 1 FROM boats WHERE targa = $1 AND targa <> $2";
     $check_res = pg_query_params($conn, $check_sql, [$nuova_targa, $targa_originale]);
 
@@ -48,7 +44,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-// Recupera i dati attuali della barca
 $sql = "SELECT * FROM boats WHERE targa = $1 AND id_user = $2";
 pg_prepare($conn, "get_boat", $sql);
 $res = pg_execute($conn, "get_boat", [$targa, $user_id]);
@@ -58,7 +53,6 @@ if (!$boat) {
     die("Barca non trovata o accesso negato.");
 }
 
-// Fari menu a tendina
 $fari = [];
 $query = "SELECT id, nome FROM fari ORDER BY nome";
 $result = pg_query($conn, $query);
@@ -138,7 +132,6 @@ if ($result) {
     </form>
 </div>
 
-<!-- Popup per errori -->
 <div id="popup-overlay" class="popup-overlay" style="display:none;">
     <div class="popup" role="alertdialog" aria-modal="true">
         <p id="popup-text"></p>

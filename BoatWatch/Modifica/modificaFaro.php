@@ -8,7 +8,6 @@ if (!isset($_GET["id"])) {
 
 $id_faro = intval($_GET["id"]);
 
-// Recupera dati attuali del faro
 $sql = "SELECT * FROM fari WHERE id = $1";
 pg_prepare($conn, "get_faro", $sql);
 $res = pg_execute($conn, "get_faro", [$id_faro]);
@@ -18,16 +17,13 @@ if (!$faro) {
     die("Faro non trovato.");
 }
 
-// Se il form è stato inviato
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nome = trim($_POST["nome"]);
     $lat = floatval($_POST["latitudine"]);
     $lon = floatval($_POST["longitudine"]);
 
-    // Controllo nome duplicato (escluso questo faro)
     $check_nome = pg_query_params($conn, "SELECT 1 FROM fari WHERE nome = $1 AND id <> $2", array($nome, $id_faro));
 
-    // Controllo coordinate duplicate (escluso questo faro)
     $check_coord = pg_query_params($conn, "SELECT 1 FROM fari WHERE lat = $1 AND lon = $2 AND id <> $3", array($lat, $lon, $id_faro));
 
     if (pg_num_rows($check_nome) > 0) {

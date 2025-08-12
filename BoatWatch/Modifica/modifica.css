@@ -1,4 +1,3 @@
-/* Reset base */
 * {
   margin: 0;
   padding: 0;
@@ -76,7 +75,7 @@ input[type="number"]:focus {
 
 .conferma input[type="submit"],
 .conferma .btn-back {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* stesso font */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
   padding: 12px 20px;
   border-radius: 10px;
   font-size: 16px;
