@@ -26,7 +26,7 @@ if ($result) {
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="elenco.css?v=6">
+    <link rel="stylesheet" href="elenco.css">
     <title>Elenco Barche</title>
 </head>
 <body>

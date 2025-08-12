@@ -68,7 +68,7 @@ if ($result) {
 <head>
     <meta charset="UTF-8">
     <title>Modifica Barca</title>
-    <link rel="stylesheet" href="modifica.css?v=4">
+    <link rel="stylesheet" href="modifica.css">
     <link rel="stylesheet" href="../alert.css"> 
     <script>
         function showPopup(message) {

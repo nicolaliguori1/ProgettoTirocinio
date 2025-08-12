@@ -50,7 +50,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <title>Modifica Faro</title>
-    <link rel="stylesheet" href="modifica.css?v=2">
+    <link rel="stylesheet" href="modifica.css">
     <link rel="stylesheet" href="../alert.css">
 
 </head>

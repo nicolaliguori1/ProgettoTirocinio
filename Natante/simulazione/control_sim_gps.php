@@ -7,7 +7,7 @@ $current_status = trim(@file_get_contents($status_file)) ?: 'off';
 <html lang="it">
 <head>
 <meta charset="UTF-8" />
-<link rel="stylesheet" href="control.css?v=2">
+<link rel="stylesheet" href="control.css">
 <title>Controllo Simulazione GPS</title>
 <script>
 function setStatus(status) {

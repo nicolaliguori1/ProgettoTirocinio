@@ -36,7 +36,7 @@ if (isset($_GET['id'])) {
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="dettaglio.css?v=2">
+    <link rel="stylesheet" href="dettaglio.css">
     <title>Dettaglio Faro</title>
 </head>
 <body>

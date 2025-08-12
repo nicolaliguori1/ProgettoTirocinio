@@ -6,10 +6,8 @@
         $lat = floatval($_POST["latitudine"]);
         $lon = floatval($_POST["longitudine"]);
 
-        // Controllo se esiste già un faro con lo stesso nome
         $check_nome = pg_query_params($conn, "SELECT 1 FROM fari WHERE nome = $1", array($nome));
 
-        // Controllo se esiste già un faro con stesse coordinate
         $check_coord = pg_query_params($conn, "SELECT 1 FROM fari WHERE lat = $1 AND lon = $2", array($lat, $lon));
 
         if (pg_num_rows($check_nome) > 0) {
@@ -37,8 +35,8 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="../Add/add.css?v=4">
-    <link rel="stylesheet" href="../alert.css?v=2">
+    <link rel="stylesheet" href="../Add/add.css">
+    <link rel="stylesheet" href="../alert.css">
     <title>Aggiungi Nuovo Faro</title>
 </head>
 

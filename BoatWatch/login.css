@@ -20,7 +20,7 @@
     max-width: 400px;
   }
   
-  .form-container2 {
+  .form-container {
     background-color: rgba(255, 255, 255, 0.05);
     padding: 40px;
     border-radius: 20px;
@@ -29,7 +29,7 @@
     text-align: center;
   }
   
-  .form-container2 h3 {
+  .form-container h3 {
     font-size: 2em;
     margin-bottom: 20px;
     color: #00d4ff;

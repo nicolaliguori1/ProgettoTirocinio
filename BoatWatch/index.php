@@ -52,14 +52,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="login.css?v=2">
+    <link rel="stylesheet" href="login.css">
     <title>Login</title>
 </head>
 
 <body>
 
     <div class="page-wrapper">
-        <div class="form-container2">
+        <div class="form-container">
             <h3>Accedi</h3>
             <form id="login-form">
                 <input id="email" name="email" type="email" placeholder="E-mail" required>

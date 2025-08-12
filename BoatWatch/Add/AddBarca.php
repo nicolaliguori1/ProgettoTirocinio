@@ -61,7 +61,7 @@ if ($result) {
     <meta charset="UTF-8">
     <title>Aggiungi Barca</title>
     <link rel="stylesheet" href="../Add/add.css">
-    <link rel="stylesheet" href="../alert.css?v=2">
+    <link rel="stylesheet" href="../alert.css">
 </head>
 
 <body>
@@ -82,7 +82,7 @@ if ($result) {
 
     <div class="container">   
         <form method="post">
-            
+
             <?php
                 include "../header.php"
             ?>
