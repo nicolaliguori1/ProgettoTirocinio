@@ -79,7 +79,7 @@ $initialLon = is_numeric($live['lon']) ? floatval($live['lon']) : 0;
 
 <body>
   <div class="pulsante-indietro">
-  <a href="http://localhost/tirocinio/ProgettoTirocinio/Natante/">Indietro</a>
+  <a href="index.php">Indietro</a>
 </div>
 
   <div class="NomeBarca">
@@ -102,12 +102,13 @@ $initialLon = is_numeric($live['lon']) ? floatval($live['lon']) : 0;
         <h2 id="lon"><?= (is_numeric($live['lon'])) ? htmlspecialchars($live['lon']) : 'N/D' ?></h2>
       </div>
       <div class="box">
+        <h2><strong>Presenza nel porto</strong></h2>
         <h2 id="presfaro"></h2>
       </div>
     </div>
 
     <div id="map"></div>
-    <!-- STORICO PRESENZA -->
+    
     <div class="storico">
   
   <table id="storico-table">
@@ -209,16 +210,16 @@ if (mapElement) {
       .then(data => {
         if (data.stato) {
           document.getElementById('presfaro').innerHTML =
-            '<h3>Presenza nel porto</h3><h2>' + data.stato + '</h2>';
+            '<h2>' + data.stato + '</h2>';
         } else {
           document.getElementById('presfaro').innerHTML =
-            '<h3>Presenza nel porto</h3><h2>Errore</h2>';
+            '<h2>Errore</h2>';
           console.error(data.errore || 'Errore sconosciuto');
         }
       })
       .catch(err => {
         document.getElementById('presfaro').innerHTML =
-          '<h3>Presenza nel porto</h3><h2>Errore</h2>';
+          '<h2>Errore</h2>';
         console.error('Errore chiamata api_posizione_barca:', err);
       });
   }

@@ -106,29 +106,19 @@ if ($last_pos && $last_pos['ts']) {
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
   <title><?= htmlspecialchars($nome_faro) ?></title>
-  <style>
-    #mappa { height: 400px; margin-top: 20px; }
-  </style>
+  
 </head>
 <body>  
   <div class="pulsante-indietro">
-  <a href="http://localhost/tirocinio/ProgettoTirocinio/Faro/">Indietro</a>
+  <a href="index.php">Indietro</a>
 </div>
   <div class="NomeFaro">
     <h1><?= htmlspecialchars(strtoupper($nome_faro)) ?></h1>
   </div>
 
-  <div class="sezione">
-    <h1>Posizione</h1>
+  <div class="container">
+    <h1>Dettagli Faro</h1>
     <div class="box-wrapper">
-      <div class="box">
-        <h2><strong>Nome</strong></h2>
-        <h2><?= htmlspecialchars($nome_faro) ?></h2>
-      </div>
-      <div class="box">
-        <h2><strong>Stato Faro</strong></h2>
-        <h2 id="stato-faro"><?= htmlspecialchars($stato) ?></h2>
-      </div>    
       <div class="box">
         <h2><strong>Latitudine</strong></h2>
         <h2 id="lat-faro"><?= htmlspecialchars($lat) ?></h2>
@@ -137,10 +127,14 @@ if ($last_pos && $last_pos['ts']) {
         <h2><strong>Longitudine</strong></h2>
         <h2 id="lon-faro"><?= htmlspecialchars($lon) ?></h2>
       </div>  
+      <div class="box">
+        <h2><strong>Stato Faro</strong></h2>
+        <h2 id="stato-faro"><?= htmlspecialchars($stato) ?></h2>
+      </div>  
     </div>
   </div>
 
-  <div id="mappa"></div>
+  <div id="map"></div>
 
   <script>
     const FARO_ID = <?= $id ?>;
@@ -149,7 +143,7 @@ if ($last_pos && $last_pos['ts']) {
     const lonElem = document.getElementById("lon-faro");
     const statoElem = document.getElementById("stato-faro");
 
-    let map = L.map('mappa').setView(
+    let map = L.map('map').setView(
         [parseFloat(latElem.textContent) || 0, parseFloat(lonElem.textContent) || 0],
         15
     );
