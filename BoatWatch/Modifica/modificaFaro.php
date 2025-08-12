@@ -55,6 +55,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <title>Modifica Faro</title>
     <link rel="stylesheet" href="modifica.css?v=2">
+    <link rel="stylesheet" href="../alert.css">
+
 </head>
 <body>
 
@@ -86,7 +88,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <label>Longitudine</label>
         <input type="number" step="any" name="longitudine" value="<?= htmlspecialchars($faro["lon"]) ?>" required>
 
-        <input type="submit" value="Salva modifiche">
+        <div class="conferma">
+            <input type="submit" value="Salva modifiche">
+            <a href="../Elenco/elencoFari.php" class="btn-back">Torna all'elenco</a>
+        </div>
     </form>
 </div>
 </body>
