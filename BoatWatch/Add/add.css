@@ -1,4 +1,3 @@
-/* Applica lo stesso box model */
 input, select {
   width: 100%;
   box-sizing: border-box;

@@ -15,7 +15,7 @@ $utente = $_SESSION['nome'] ?? "Utente";
 <head>
     <meta charset="UTF-8">
     <title>Dashboard</title>
-    <link rel="stylesheet" href="dashboard.css?v=2">
+    <link rel="stylesheet" href="dashboard.css?v=3">
 </head>
 <body>
 <div class="Dashboard">

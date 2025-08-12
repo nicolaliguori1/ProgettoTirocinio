@@ -80,13 +80,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrazione</title>
     <link rel="stylesheet" href="registrazione.css">
+    <!-- Stili del popup -->
+    <link rel="stylesheet" href="alert.css">
     <style>
         .registrazione { text-align: center; }
         .errore { color: red; font-size: 0.9em; margin-top: 5px; display: none; }
+        .errore.show { display: block; }
     </style>
 </head>
 
 <body>
+
+    <!-- Popup di alert: usa gli stili definiti in alert.css (classe .alert, ecc.) -->
+    <div id="alert-popup" class="alert" style="display:none;" role="alert" aria-live="assertive">
+        <span id="alert-message"></span>
+        <button id="alert-close" type="button" aria-label="Chiudi">&times;</button>
+    </div>
+
     <div class="container">
         <div class="blocco-registrazione">
         <h2 style="color: #00d4ff; text-align: center; font-size: 26px; font-weight: bold; margin-top: 40px; margin-bottom: 20px;">Registrazione</h2>
@@ -142,6 +152,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   const errEmail = document.getElementById('errore-email');
   const errPass  = document.getElementById('errore-conferma-password');
 
+  // --- Popup helpers ---
+  const popup = document.getElementById('alert-popup');
+  const popupMsg = document.getElementById('alert-message');
+  const popupClose = document.getElementById('alert-close');
+
+  function mostraPopup(messaggio) {
+    if (!popup || !popupMsg) return;
+    popupMsg.textContent = messaggio;
+    popup.style.display = 'block';
+    // focus sul bottone chiudi per accessibilità
+    if (popupClose) popupClose.focus();
+  }
+
+  function chiudiPopup() {
+    if (!popup) return;
+    popup.style.display = 'none';
+    // ritorna il focus al campo conferma password, così l’utente corregge subito
+    if (cpass) cpass.focus();
+  }
+
+  if (popupClose) {
+    popupClose.addEventListener('click', chiudiPopup);
+  }
+  // chiusura con ESC
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') chiudiPopup();
+  });
+
+  // --- Error helpers ---
   function showError(el, msg) {
     if (!el) return;
     el.textContent = msg;
@@ -154,12 +193,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     el.classList.remove('show');
   }
 
+  // bridge per gli oninput inline già presenti nell'HTML
+  window.nascondiErroreEmail = function () {
+    hideError(errEmail);
+  };
+  window.nascondiErrore = function (id) {
+    const el = document.getElementById(id);
+    hideError(el);
+  };
+
   function isValidEmail(v) {
     // semplice ma efficace per il form
     return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
   }
 
-  // Validazione principale richiamata dall’onsubmit PHP: onsubmit="return controllaForm()"
+  // Validazione principale richiamata dall’onsubmit
   window.controllaForm = function controllaForm() {
     let ok = true;
 
@@ -184,7 +232,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       showError(errPass, 'La password deve avere almeno 6 caratteri.');
       ok = false;
     } else if (p !== cp) {
+      // >>> QUI: blocco e popup se le password sono diverse <<<
       showError(errPass, 'Le password non coincidono.');
+      mostraPopup('Le password non coincidono.');
       ok = false;
     } else {
       hideError(errPass);
@@ -195,13 +245,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   // Feedback “live” mentre l’utente digita
   email.addEventListener('input', () => {
-    // rimuovo eventuale messaggio server/cliente quando l’email torna valida
     if (isValidEmail(email.value.trim())) hideError(errEmail);
     else showError(errEmail, 'Formato email non valido.');
   });
 
   pass.addEventListener('input', () => {
-    // se allungo la password oltre 6 e coincide, nascondo
     if (pass.value.length >= 6 && pass.value === cpass.value) hideError(errPass);
   });
 

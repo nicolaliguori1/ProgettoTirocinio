@@ -35,7 +35,7 @@ if ($result) {
         include "../header.php"
         ?>
         <h1>Elenco Fari</h1>
-        <button onclick="window.location.href='../Add/AddFaro.php'">➕ Aggiungi Faro</button>
+        <button class="add" onclick="window.location.href='../Add/AddFaro.php'">➕ Aggiungi Faro</button>
 
         <?php if (count($fari) > 0): ?>
             <table>
