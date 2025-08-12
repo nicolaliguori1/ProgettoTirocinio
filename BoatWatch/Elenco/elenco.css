@@ -26,7 +26,6 @@ h1 {
     text-align: center;
 }
 
-/* Bottone aggiungi */
 .add{
     padding: 12px 20px;
     font-size: 1em;
@@ -46,7 +45,6 @@ h1 {
     background: #00aacc;
 }
 
-/* Stile tabella */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -88,7 +86,6 @@ a:hover {
     color: #00aacc;
 }
 
-/* Paragrafo messaggio nessuna barca */
 .no-boats {
     text-align: center;
     padding: 20px;

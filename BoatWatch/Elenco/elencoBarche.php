@@ -2,14 +2,12 @@
 session_start();
 include __DIR__ . '/../../connessione.php';
 
-// Verifica se l'utente è loggato
 if (!isset($_SESSION["id"])) {
     die("Accesso non autorizzato.");
 }
 
 $user_id = $_SESSION["id"];
 
-// Query per tutte le barche dell'utente loggato
 $query = "SELECT * FROM boats WHERE id_user = $1";
 $result = pg_query_params($conn, $query, array($user_id));
 
