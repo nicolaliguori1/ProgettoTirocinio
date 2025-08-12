@@ -61,8 +61,8 @@
             <a href="../Elenco/elencoBarche.php" 
                style="display: inline-block; padding: 10px 20px; background-color: #00d4ff; 
                       color: #000; text-decoration: none; border-radius: 10px; 
-                      font-weight: bold; transition: background 0.3s ease;">
-                ⬅ Torna all'elenco barche
+                      transition: background 0.3s ease;">
+                Torna all'elenco barche
             </a>
         </div>
     </div>
