@@ -35,7 +35,7 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="../Add/add.css">
+    <link rel="stylesheet" href="../Add/add.css?v=2">
     <link rel="stylesheet" href="../alert.css">
     <title>Aggiungi Nuovo Faro</title>
 </head>

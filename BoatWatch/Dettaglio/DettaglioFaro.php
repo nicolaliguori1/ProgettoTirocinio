@@ -38,6 +38,19 @@ if (isset($_GET['id'])) {
     <meta charset="UTF-8">
     <link rel="stylesheet" href="dettaglio.css">
     <title>Dettaglio Faro</title>
+    <style>
+        .elenco-barche {
+            margin-top: 10px;
+        }
+        .elenco-barche div {
+            padding: 8px 12px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            margin-bottom: 8px;
+            color: #00d4ff;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -51,13 +64,11 @@ if (isset($_GET['id'])) {
 
             <h2>Barche associate al faro</h2>
             <?php if (count($barche) > 0): ?>
-                <ul>
+                <div class="elenco-barche">
                     <?php foreach ($barche as $barca): ?>
-                        <li>
-                            <strong><?= htmlspecialchars($barca['nome']) ?></strong>
-                        </li>
+                        <div><?= htmlspecialchars($barca['nome']) ?></div>
                     <?php endforeach; ?>
-                </ul>
+                </div>
             <?php else: ?>
                 <p>Nessuna barca associata a questo faro.</p>
             <?php endif; ?>
@@ -71,7 +82,7 @@ if (isset($_GET['id'])) {
                style="display: inline-block; padding: 10px 20px; background-color: #00d4ff; 
                       color: #000; text-decoration: none; border-radius: 10px; 
                       font-weight: bold; transition: background 0.3s ease;">
-                ⬅ Torna all'elenco fari
+                Torna all'elenco fari
             </a>
         </div>
     </div>
