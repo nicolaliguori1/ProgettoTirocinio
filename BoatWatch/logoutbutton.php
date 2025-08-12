@@ -1,21 +1,23 @@
 <style>
 .logout-button {
-    background-color: red;
-    color: white;
+    padding: 8px 16px; /* più piccolo */
+    font-size: 0.9em;  /* testo leggermente ridotto */
+    background: #ff4d4d; /* rosso acceso */
+    color: #fff;
+    border: none;
+    border-radius: 8px;
     cursor: pointer;
-    margin-top: 20px;
-    transition: background-color 0.3s ease;
-    padding: 12px 24px;
-    font-size: 1em;    
-    border-radius: 10px;
-    width: 120px;
+    transition: background 0.3s ease;
+    width: 100px; /* ridotta larghezza */
+    margin-top: 20px; /* ↑ distanzia il bottone dagli altri */
 }
 
 .logout-button:hover {
-    background-color: darkred;
+    background: #cc0000; /* rosso più scuro al passaggio */
 }
+
 </style>
 
 <button onclick="location.href='../logout.php'" class="logout-button">
-    LOGOUT
+    Logout
 </button>
