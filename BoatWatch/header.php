@@ -25,8 +25,6 @@ if (session_status() === PHP_SESSION_NONE) {
             gap: 30px;
         }
 
-
-
         .header a.home-btn {
             color: #00d4ff;
             text-decoration: none;

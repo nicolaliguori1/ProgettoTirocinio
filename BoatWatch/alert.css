@@ -1,19 +1,17 @@
-/* Popup overlay */
 .popup-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(15, 32, 39, 0.8); /* sfondo scuro semitrasparente coerente con background */
+    background: rgba(15, 32, 39, 0.8);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 999;
-    backdrop-filter: blur(5px); /* effetto blur coerente con il form */
+    backdrop-filter: blur(5px); 
 }
 
-/* Popup box */
 .popup {
     background-color: rgba(255, 255, 255, 0.05);
     border-radius: 20px;
@@ -27,14 +25,12 @@
     backdrop-filter: blur(10px);
 }
 
-/* Error text */
 .popup p {
-    color: #00d4ff; /* stesso rosso usato nei messaggi di errore */
+    color: #00d4ff; 
     font-size: 18px;
     margin-bottom: 20px;
 }
 
-/* Button */
 .popup button {
     background-color: #00d4ff;
     color: #000;
@@ -51,7 +47,6 @@
     background-color: #00aacc;
 }
 
-/* Animation */
 @keyframes slideDown {
     from {
         transform: translateY(-20px);

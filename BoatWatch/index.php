@@ -35,10 +35,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['id']    = $data['id'];
             http_response_code(200);
         } else {
-            http_response_code(401); // credenziali errate
+            http_response_code(401); 
         }
     } else {
-        http_response_code(400); // campi mancanti
+        http_response_code(400); 
     }
 
     exit();

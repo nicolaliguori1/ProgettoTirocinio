@@ -42,9 +42,9 @@ input[type="password"] {
   background-color: rgba(255, 255, 255, 0.1);
   color: #fff;
   font-size: 1em;
-  display: block; /* Mantieni blocco per larghezza */
-  margin: 0 auto 20px auto; /* Centro orizzontalmente */
-  width: 90%; /* Regola larghezza visiva */
+  display: block; 
+  margin: 0 auto 20px auto; 
+  width: 90%; 
 }
 
 input[type="submit"] {
@@ -65,7 +65,6 @@ input[type="submit"]:hover {
 
 .errore { display:none; color:red; }
 .errore.show { display:block; }
-
 
 a {
   color: #00d4ff;

@@ -78,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrazione</title>
     <link rel="stylesheet" href="registrazione.css">
-    <link rel="stylesheet" href="alert.css"> <!-- tuo file popup-overlay/popup -->
+    <link rel="stylesheet" href="alert.css"> 
     <style>
         .registrazione { text-align: center; }
         .errore { color: red; font-size: 0.9em; margin-top: 5px; display: none; }
@@ -129,7 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
 <script>
-// ====== CREAZIONE POPUP IN STILE alert.css ======
+
 function mostraPopup(messaggio) {
     const overlay = document.createElement('div');
     overlay.className = 'popup-overlay';
@@ -149,12 +149,11 @@ function mostraPopup(messaggio) {
     overlay.appendChild(popup);
     document.body.appendChild(overlay);
 
-    // Chiudi cliccando fuori
+   
     overlay.addEventListener('click', (e) => {
         if (e.target === overlay) document.body.removeChild(overlay);
     });
 
-    // Chiudi con ESC
     document.addEventListener('keydown', function escClose(ev) {
         if (ev.key === 'Escape') {
             if (document.body.contains(overlay)) {
@@ -165,7 +164,7 @@ function mostraPopup(messaggio) {
     });
 }
 
-// ====== VALIDAZIONE FORM ======
+
 const email  = document.getElementById('email');
 const pass   = document.getElementById('password');
 const cpass  = document.getElementById('conferma-password');
@@ -214,7 +213,6 @@ function controllaForm() {
     return ok;
 }
 
-// ====== MOSTRA ERRORI SERVER-SIDE CON POPUP ======
 <?php if (!empty($errore_generico)) : ?>
     mostraPopup(<?= json_encode($errore_generico) ?>);
 <?php endif; ?>
