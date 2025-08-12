@@ -28,7 +28,6 @@
         return;
       }
 
-      // opzionale: verifica che input sia numerico
       if (!/^\d+$/.test(input)) {
         showPopup("Inserisci un ID numerico valido.");
         return;

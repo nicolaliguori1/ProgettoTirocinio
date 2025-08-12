@@ -31,7 +31,6 @@ function inviaPosizioni($conn) {
     }
 }
 
-
 while (true) {
     inviaPosizioni($conn);
     sleep(60);

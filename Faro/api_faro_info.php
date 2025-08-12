@@ -9,7 +9,6 @@ if (!$conn) {
 
 $id = $_GET['id'] ?? '';  
 
-// controllo che sia un numero intero positivo
 if (!ctype_digit($id)) {
     echo json_encode(['trovato' => false]);
     exit;

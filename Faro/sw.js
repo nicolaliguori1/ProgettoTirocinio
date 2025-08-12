@@ -7,14 +7,12 @@ const CACHED_URLS = [
   '/icons/icona_faro.png'
 ];
 
-// Install: cache risorse statiche
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => cache.addAll(CACHED_URLS))
   );
 });
 
-// Activate: pulizia cache vecchie
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys => {
@@ -25,7 +23,6 @@ self.addEventListener('activate', event => {
   );
 });
 
-// Fetch: cache-first con fallback online
 self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request).then(cached => {

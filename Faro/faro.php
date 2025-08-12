@@ -70,7 +70,6 @@ if (!$faro) {
 
 $nome_faro = $faro['nome'];
 
-// Recupera ultima posizione
 $query_last_pos = "
     SELECT lat, lon, ts
     FROM fari_position

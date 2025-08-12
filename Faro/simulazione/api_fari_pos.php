@@ -11,7 +11,6 @@ if (!ctype_digit($id)) {
 
 $id = (int)$id;
 
-// Prende l'ultima posizione
 $query_last_pos = "
     SELECT lat, lon, ts
     FROM fari_position
