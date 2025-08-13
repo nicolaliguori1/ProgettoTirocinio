@@ -40,6 +40,7 @@
     font-size: 2em;
     color: #00d4ff;
     text-align: center;
+    margin-bottom: 25px;
   }
   
   .box {
@@ -51,8 +52,8 @@
     color: #00d4ff;
     text-align: center;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    width:25vw;
-    height: 9vh;
+    width:45vw;
+    height: 18vh;
   }
 
   .box-wrapper {
