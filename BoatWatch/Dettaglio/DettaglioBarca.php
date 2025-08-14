@@ -68,7 +68,6 @@
 
 <script>
   const targa = <?= json_encode($targa) ?>;
-
   function renderEventi(eventi) {
     const tbody = document.querySelector('#storico-table tbody');
     tbody.innerHTML = '';
@@ -77,14 +76,11 @@
       tbody.innerHTML = '<tr><td colspan="3">Nessun evento di entrata/uscita.</td></tr>';
       return;
     }
-
     const sorted = [...eventi].sort((a, b) => new Date(b.ts) - new Date(a.ts)).slice(0, 10);
-
     sorted.forEach(ev => {
       const ts = new Date(ev.ts);
       const giorno = isNaN(ts) ? '-' : ts.toLocaleDateString('it-IT');
       const orario = isNaN(ts) ? '-' : ts.toLocaleTimeString('it-IT');
-
       const tr = document.createElement('tr');
       tr.innerHTML = `
         <td>${giorno}</td>
