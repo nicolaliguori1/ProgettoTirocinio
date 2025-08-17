@@ -1,5 +1,5 @@
 <?php
-require __DIR__ . '/../../connessione.php';
+require __DIR__ . '/../../connessione.php'; 
 
 $status_file = __DIR__ . '/sim_status.txt';
 
@@ -24,10 +24,7 @@ $routes = [
     ]
 ];
 
-$conn = pg_connect($connection_string);
-if (!$conn) {
-    die("Errore di connessione al database.\n");
-}
+
 
 while (true) {
     $status = @file_get_contents($status_file);
@@ -56,21 +53,19 @@ while (true) {
     }
 
     // Legge tutte le posizioni correnti 
-    $targas = array_keys($boats);
-    $placeholders = implode(',', array_fill(0, count($targas), '$'));
-    $params = $targas;
-
+    
     $positions = [];
-    if (!empty($targas)) {
-        $posQuery = pg_query_params($conn,
-            "SELECT targa_barca, lat, lon, id_rotta FROM boats_current_position WHERE targa_barca IN (" . implode(',', array_map(fn($i) => '$' . ($i+1), array_keys($targas))) . ")",
-            $params
-        );
+    $posQuery = pg_query($conn,
+        "SELECT targa_barca, lat, lon, id_rotta 
+        FROM boats_current_position"
+    );
 
+    if ($posQuery) {
         while ($row = pg_fetch_assoc($posQuery)) {
             $positions[$row['targa_barca']] = $row;
         }
     }
+
 
     foreach ($boats as $targa => $id_faro) {
         if (!isset($routes[$id_faro])) {
@@ -102,13 +97,16 @@ while (true) {
 
         // Aggiorna posizione corrente o inserisce se non esiste
         $update = pg_query_params($conn,
-            "UPDATE boats_current_position SET lat=$2, lon=$3, ts=NOW(), id_rotta=$4 WHERE targa_barca=$1",
+            "UPDATE boats_current_position 
+             SET lat=$2, lon=$3, ts=NOW(), id_rotta=$4 
+             WHERE targa_barca=$1",
             [$targa, $newLat, $newLon, $next_rotta]
         );
 
         if (pg_affected_rows($update) === 0) {
             pg_query_params($conn,
-                "INSERT INTO boats_current_position (targa_barca, lat, lon, ts, id_rotta) VALUES ($1, $2, $3, NOW(), $4)",
+                "INSERT INTO boats_current_position (targa_barca, lat, lon, ts, id_rotta) 
+                 VALUES ($1, $2, $3, NOW(), $4)",
                 [$targa, $newLat, $newLon, $next_rotta]
             );
             echo "[" . date('H:i:s') . "] [$targa] Inserita posizione iniziale: $newLat, $newLon\n";

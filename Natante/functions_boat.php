@@ -12,7 +12,7 @@ function getBoatName($conn, $targa) {
     return null;
 }
 
-// Recupera la posizione del faro associato a una barca
+// Posizione faro
 function getFaroPosition($conn, $targa) {
     $query = "SELECT f.lat, f.lon
               FROM boats b
@@ -52,7 +52,7 @@ function getLivePosition($conn, $targa) {
         }
     }
 
-    // fallback → usa il faro
+    // Uso la posizione del faro
     $faro = getFaroPosition($conn, $targa);
     if ($faro) {
         return [
@@ -87,7 +87,7 @@ function getBoatHistory($conn, $targa) {
     return $history;
 }
 
-// Determina lo stato della barca (porto/mare)
+// Determina lo stato della barca 
 function getBoatStatus($conn, $targa) {
     $live = getLivePosition($conn, $targa);
     if (!$live || $live['id_rotta'] === 0) {
@@ -96,7 +96,7 @@ function getBoatStatus($conn, $targa) {
     return "In mare";
 }
 
-// Calcolo distanza (Haversine)
+// Calcolo distanza 
 function distanzaHaversine($lat1, $lon1, $lat2, $lon2) {
     $R = 6371000; // raggio della Terra in metri
     $dLat = deg2rad($lat2 - $lat1);

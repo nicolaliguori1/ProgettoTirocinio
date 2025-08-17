@@ -16,9 +16,8 @@ if (!$faro) {
 
 // Recupera ultima posizione o default
 $last_pos = getFaroData($conn, $id);
-$initialLat = is_numeric($last_pos['lat']) ? floatval($last_pos['lat']) : 0;
-$initialLon = is_numeric($last_pos['lon']) ? floatval($last_pos['lon']) : 0;
-$statoFaro = $last_pos['stato'] ?? 'inattivo';
+$initialLat = is_numeric($last_pos['lat'] ?? null) ? floatval($last_pos['lat']) : 0;
+$initialLon = is_numeric($last_pos['lon'] ?? null) ? floatval($last_pos['lon']) : 0;
 ?>
 <!DOCTYPE html>
 <html lang="it">
@@ -41,7 +40,7 @@ $statoFaro = $last_pos['stato'] ?? 'inattivo';
   <div class="box-wrapper">
     <div class="box"><h2><strong>Latitudine</strong></h2><h2 id="lat"><?= htmlspecialchars($last_pos['lat'] ?? 'N/D') ?></h2></div>
     <div class="box"><h2><strong>Longitudine</strong></h2><h2 id="lon"><?= htmlspecialchars($last_pos['lon'] ?? 'N/D') ?></h2></div>
-    <div class="box"><h2><strong>Stato</strong></h2><h2 id="stato"><?= htmlspecialchars($statoFaro) ?></h2></div>
+    <div class="box"><h2><strong>Stato</strong></h2><h2 id="stato">...</h2></div>
   </div>
 
   <div id="map" style="height:500px;"></div>
@@ -73,7 +72,6 @@ function aggiornaDati() {
       document.getElementById('stato').textContent = data.stato ?? 'inattivo';
 
       marker.setLatLng([currentLat, currentLon]);
-      map.setView([currentLat, currentLon], 13);
     })
     .catch(err => console.error(err));
 }
