@@ -3,19 +3,12 @@ require __DIR__ . '/../connessione.php';
 require __DIR__ . '/functions_boat.php';
 
 $targa = trim($_GET['targa'] ?? '');
-if ($targa === '') {
-    die('Errore: targa non specificata');
-}
+if ($targa === '') die('Errore: targa non specificata');
 
-// Recupera il nome della barca usando la funzione centralizzata
 $nome_barca = getBoatName($conn, $targa);
-if (!$nome_barca) {
-    die('Errore: barca non trovata');
-}
+if (!$nome_barca) die('Errore: barca non trovata');
 
-// Recupera posizione live (o faro se assente)
 $live = getLivePosition($conn, $targa);
-
 $initialLat = is_numeric($live['lat']) ? floatval($live['lat']) : 0;
 $initialLon = is_numeric($live['lon']) ? floatval($live['lon']) : 0;
 ?>
@@ -51,9 +44,7 @@ $initialLon = is_numeric($live['lon']) ? floatval($live['lon']) : 0;
       <thead>
         <tr><th>Giorno</th><th>Orario</th><th>Latitudine</th><th>Longitudine</th></tr>
       </thead>
-      <tbody>
-        <tr><td colspan="4">Caricamento storico...</td></tr>
-      </tbody>
+      <tbody><tr><td colspan="4">Caricamento storico...</td></tr></tbody>
     </table>
   </div>
 </div>
@@ -66,13 +57,10 @@ let initialLon = <?= json_encode($initialLon) ?>;
 const map = L.map('map').setView([initialLat, initialLon], 13);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap contributors' }).addTo(map);
 
-let marker = null;
-let polyline = null;
-let pathPoints = [];
-let lineaVisibile = false;
+let marker = null, polyline = null, pathPoints = [], lineaVisibile = false;
 
 function aggiornaDati() {
-  fetch('info_posizione_barca.php?targa=' + encodeURIComponent(targa))
+  fetch('info_barca.php?targa=' + encodeURIComponent(targa))
     .then(res => res.json())
     .then(data => {
       if (!data.live || data.live.lat == null || data.live.lon == null) return;
@@ -88,8 +76,7 @@ function aggiornaDati() {
 
       if (data.stato?.trim().toLowerCase() === "nel porto") {
         if (polyline) { map.removeLayer(polyline); polyline = null; }
-        lineaVisibile = false;
-        pathPoints = [];
+        lineaVisibile = false; pathPoints = [];
         return;
       }
 
@@ -101,53 +88,40 @@ function aggiornaDati() {
         pathPoints.push(liveLatLng);
         if (polyline) polyline.setLatLngs(pathPoints);
       }
-    })
-    .catch(err => console.error(err));
+    });
 }
 
 function aggiornaPresenzaPorto() {
-  fetch('info_posizione_barca.php?targa=' + encodeURIComponent(targa))
+  fetch('info_barca.php?targa=' + encodeURIComponent(targa))
     .then(res => res.json())
     .then(data => {
       document.getElementById('presfaro').innerHTML = data.stato ? '<h2>' + data.stato + '</h2>' : '<h2>Errore</h2>';
-    })
-    .catch(err => console.error(err));
+    });
 }
 
 function aggiornaStoricoPosizioni() {
-  fetch('info_posizione_barca.php?targa=' + encodeURIComponent(targa))
+  fetch('info_barca.php?targa=' + encodeURIComponent(targa))
     .then(res => res.json())
     .then(data => {
       const tbody = document.querySelector('#storico-table tbody');
       tbody.innerHTML = '';
-    if (!data.storico || data.storico.length === 0) {
-  tbody.innerHTML = '<tr><td colspan="4">Nessun dato disponibile.</td></tr>';
-  return;
-}
-
-// Il backend restituisce già lo storico ordinato (dal più vecchio al più recente o viceversa).
-data.storico.forEach(entry => {
-  const ts = new Date(entry.ts);
-  const row = document.createElement('tr');
-  row.innerHTML = `<td>${ts.toLocaleDateString('it-IT')}</td>
-                   <td>${ts.toLocaleTimeString('it-IT')}</td>
-                   <td>${entry.lat}</td>
-                   <td>${entry.lon}</td>`;
-  tbody.appendChild(row);
-});
-
-    })
-    .catch(err => {
-      console.error(err);
-      document.querySelector('#storico-table tbody').innerHTML = '<tr><td colspan="4">Errore nel caricamento dello storico.</td></tr>';
+      if (!data.storico || data.storico.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4">Nessun dato disponibile.</td></tr>';
+        return;
+      }
+      data.storico.forEach(entry => {
+        const ts = new Date(entry.ts);
+        const row = document.createElement('tr');
+        row.innerHTML = `<td>${ts.toLocaleDateString('it-IT')}</td>
+                         <td>${ts.toLocaleTimeString('it-IT')}</td>
+                         <td>${entry.lat}</td>
+                         <td>${entry.lon}</td>`;
+        tbody.appendChild(row);
+      });
     });
 }
 
-
-aggiornaDati();
-aggiornaPresenzaPorto();
-aggiornaStoricoPosizioni();
-
+aggiornaDati(); aggiornaPresenzaPorto(); aggiornaStoricoPosizioni();
 setInterval(aggiornaDati, 3000);
 setInterval(aggiornaPresenzaPorto, 3000);
 setInterval(aggiornaStoricoPosizioni, 3000);

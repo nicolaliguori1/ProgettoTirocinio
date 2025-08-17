@@ -19,7 +19,6 @@ if (!$faroData) {
     exit;
 }
 
-
 echo json_encode([
     'trovato' => true,
     'lat' => $faroData['lat'],

@@ -16,7 +16,6 @@ if (!$faro) {
 
 // Recupera ultima posizione o default
 $last_pos = getFaroData($conn, $id);
-
 $initialLat = is_numeric($last_pos['lat']) ? floatval($last_pos['lat']) : 0;
 $initialLon = is_numeric($last_pos['lon']) ? floatval($last_pos['lon']) : 0;
 $statoFaro = $last_pos['stato'] ?? 'inattivo';
@@ -30,7 +29,7 @@ $statoFaro = $last_pos['stato'] ?? 'inattivo';
 <link rel="manifest" href="manifest.json">
 <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"/>
-<title> <?= htmlspecialchars($faro['nome']) ?></title>
+<title><?= htmlspecialchars($faro['nome']) ?></title>
 </head>
 <body>
 
