@@ -13,14 +13,14 @@ $routes = [
             [40.6220, 14.6900], [40.6260, 14.6850], [40.6300, 14.6800]
     ],
     2 => [
-            [14.9000, 40.2500], [14.8990, 40.2502], [14.8950, 40.2504], [14.8850, 40.2506],
-            [14.8800, 40.2508], [14.8750, 40.2510], [14.8700, 40.2512], [14.8650, 40.2514],
-            [14.8600, 40.2515], [14.8550, 40.2513], [14.8500, 40.2510], [14.8450, 40.2506],
-            [14.8420, 40.2500], [14.8400, 40.2493], [14.8420, 40.2486], [14.8450, 40.2480],
-            [14.8500, 40.2475], [14.8550, 40.2472], [14.8600, 40.2471], [14.8650, 40.2473],
-            [14.8700, 40.2476], [14.8750, 40.2480], [14.8800, 40.2485], [14.8850, 40.2490],
-            [14.8900, 40.2495], [14.8950, 40.2500], [14.8980, 40.2504], [14.8990, 40.2507],
-            [14.9000, 40.2500] 
+            [40.2500, 14.9000], [40.2502, 14.8990], [40.2504, 14.8950], [40.2506, 14.8850],
+            [40.2508, 14.8800], [40.2510, 14.8750], [40.2512, 14.8700], [40.2514, 14.8650],
+            [40.2515, 14.8600], [40.2513, 14.8550], [40.2510, 14.8500], [40.2506, 14.8450],
+            [40.2500, 14.8420], [40.2493, 14.8400], [40.2486, 14.8420], [40.2480, 14.8450],
+            [40.2475, 14.8500], [40.2472, 14.8550], [40.2471, 14.8600], [40.2473, 14.8650],
+            [40.2476, 14.8700], [40.2480, 14.8750], [40.2485, 14.8800], [40.2490, 14.8850],
+            [40.2495, 14.8900], [40.2500, 14.8950], [40.2504, 14.8980], [40.2507, 14.8990],
+            [40.2500, 14.9000]
     ]
 ];
 
@@ -50,7 +50,7 @@ while (true) {
 
     while ($row = pg_fetch_assoc($result)) {
         $targa = $row['targa'];
-        $id_faro = (int)$row['id_faro'];
+        $id_faro = $row['id_faro'];
 
         if (!isset($routes[$id_faro])) {
             echo "[" . date('H:i:s') . "] [$targa] Faro $id_faro senza rotta definita.\n";
@@ -85,11 +85,11 @@ while (true) {
         $point = $noisyRoute[$id_rotta];
         $newLat = $point[0];
         $newLon = $point[1];
-        $now = date('Y-m-d H:i:s.u');
+        
 
         $insertHist = pg_query_params($conn,
-            "INSERT INTO boats_position (targa_barca, lat, lon, ts) VALUES ($1, $2, $3, $4)",
-            [$targa, $newLat, $newLon, $now]
+            "INSERT INTO boats_position (targa_barca, lat, lon, ts) VALUES ($1, $2, $3, NOW())",
+            [$targa, $newLat, $newLon]
         );
 
         if (!$insertHist) {
@@ -107,9 +107,9 @@ while (true) {
         if (pg_num_rows($check) > 0) {
             $update = pg_query_params($conn,
                 "UPDATE boats_current_position 
-                 SET lat = $2, lon = $3, ts = $4, id_rotta = $5 
+                 SET lat = $2, lon = $3, ts = NOW(), id_rotta = $4 
                  WHERE targa_barca = $1",
-                [$targa, $newLat, $newLon, $now, $next_rotta]
+                [$targa, $newLat, $newLon, $next_rotta]
             );
             if ($update) {
                 echo "[" . date('H:i:s') . "] [$targa] Aggiornata posizione: $newLat, $newLon (id_rotta $next_rotta)\n";
@@ -119,8 +119,8 @@ while (true) {
         } else {
             $insert = pg_query_params($conn,
                 "INSERT INTO boats_current_position (targa_barca, lat, lon, ts, id_rotta) 
-                 VALUES ($1, $2, $3, $4, $5)",
-                [$targa, $newLat, $newLon, $now, $next_rotta]
+                 VALUES ($1, $2, $3, NOW(), $4)",
+                [$targa, $newLat, $newLon, $next_rotta]
             );
             if ($insert) {
                 echo "[" . date('H:i:s') . "] [$targa] Inserita posizione iniziale (faro): $newLat, $newLon\n";
