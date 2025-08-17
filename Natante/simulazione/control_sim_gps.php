@@ -38,7 +38,7 @@ function setStatus(status) {
       <button onclick="setStatus('on')">Avvia Simulazione</button>
       <button onclick="setStatus('off')">Ferma Simulazione</button>
 
-      <small>Lo script <code>sim_gps.php</code> deve essere avviato da terminale e ascolta questo stato.</small>
+      
     </div>
   </div>
 

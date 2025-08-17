@@ -34,7 +34,7 @@
       }
 
       try {
-        const res = await fetch('api_faro_info.php?id=' + encodeURIComponent(input), { cache: 'no-store' });
+        const res = await fetch('faro_info.php?id=' + encodeURIComponent(input), { cache: 'no-store' });
         if (!res.ok) throw new Error('HTTP ' + res.status);
         const data = await res.json();
 

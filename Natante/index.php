@@ -32,7 +32,7 @@
       }
 
       try {
-        const res = await fetch('api_boat_info.php?targa=' + encodeURIComponent(value), { cache: 'no-store' });
+        const res = await fetch('info_barca.php?targa=' + encodeURIComponent(value), { cache: 'no-store' });
         if (!res.ok) throw new Error('HTTP ' + res.status);
         const data = await res.json();
 

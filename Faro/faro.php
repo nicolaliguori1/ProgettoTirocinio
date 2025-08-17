@@ -1,185 +1,86 @@
 <?php
 require __DIR__ . '/../connessione.php';
-date_default_timezone_set('UTC');
+require __DIR__ . '/functions_faro.php';
 
-$id = $_GET['id'] ?? '';
-
-
-if (isset($_GET['api']) && $_GET['api'] == '1') {
-    if (!ctype_digit($id)) {
-        http_response_code(400);
-        echo json_encode(["error" => "ID faro non valido"]);
-        exit;
-    }
-    $id = (int)$id;
-
-    $query_last_pos = "
-        SELECT lat, lon, ts
-        FROM fari_position
-        WHERE id_faro = $id
-        ORDER BY ts DESC
-        LIMIT 1
-    ";
-    $res_last_pos = pg_query($conn, $query_last_pos);
-    $last_pos = pg_fetch_assoc($res_last_pos);
-
-    if (!$last_pos) {
-        $query_faro = "SELECT lat, lon FROM fari WHERE id = $id";
-        $res_faro = pg_query($conn, $query_faro);
-        $faro = pg_fetch_assoc($res_faro);
-
-        $data = [
-            "lat" => $faro['lat'] ?? null,
-            "lon" => $faro['lon'] ?? null,
-            "stato" => "inattivo"
-        ];
-    } else {
-        $now = time();
-        $last_ts = strtotime($last_pos['ts']);
-        $stato = ($now - $last_ts <= 60) ? "attivo" : "inattivo";
-
-        $data = [
-            "lat" => $last_pos['lat'],
-            "lon" => $last_pos['lon'],
-            "stato" => $stato,
-            "ts" => $last_pos['ts']
-        ];
-    }
-
-    header('Content-Type: application/json');
-    echo json_encode($data);
-    exit;
+// Prendi l'ID e assicurati che sia un intero valido
+$id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+if ($id <= 0) {
+    die('Errore: ID faro non specificato o non valido');
 }
 
-
-if (!ctype_digit($id)) {
-    echo "<h2>Errore: ID faro non valido.</h2>";
-    exit;
-}
-
-$id = (int)$id;
-
-$query_faro = "SELECT * FROM fari WHERE id = $id";
-$res_faro = pg_query($conn, $query_faro);
-$faro = pg_fetch_assoc($res_faro);
-
+// Recupera i dati del faro
+$faro = getFaroById($conn, $id);
 if (!$faro) {
-    echo "<h2>Errore: Faro non trovato.</h2>";
-    exit;
+    die('Errore: Faro non trovato');
 }
 
-$nome_faro = $faro['nome'];
+// Recupera ultima posizione o default
+$last_pos = getFaroData($conn, $id);
 
-$query_last_pos = "
-    SELECT lat, lon, ts
-    FROM fari_position
-    WHERE id_faro = $id
-    ORDER BY ts DESC
-    LIMIT 1
-";
-$res_last_pos = pg_query($conn, $query_last_pos);
-$last_pos = pg_fetch_assoc($res_last_pos);
-
-$lat = $last_pos['lat'] ?? $faro['lat'] ?? 'N/D';
-$lon = $last_pos['lon'] ?? $faro['lon'] ?? 'N/D';
-
-$stato = 'inattivo';
-if ($last_pos && $last_pos['ts']) {
-    $last_ts = strtotime($last_pos['ts']);
-    $now = time();
-    if (($now - $last_ts) <= 60) {
-        $stato = 'attivo';
-    }
-}
+$initialLat = is_numeric($last_pos['lat']) ? floatval($last_pos['lat']) : 0;
+$initialLon = is_numeric($last_pos['lon']) ? floatval($last_pos['lon']) : 0;
+$statoFaro = $last_pos['stato'] ?? 'inattivo';
 ?>
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <link rel="stylesheet" href="css/faro.css">
-  <link rel="manifest" href="manifest.json">
-
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
-  <title><?= htmlspecialchars($nome_faro) ?></title>
-  
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="css/faro.css?v=1">
+<link rel="manifest" href="manifest.json">
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"/>
+<title> <?= htmlspecialchars($faro['nome']) ?></title>
 </head>
-<body>  
-  <div class="pulsante-indietro">
-  <a href="index.php">Indietro</a>
+<body>
+
+<div class="pulsante-indietro"><a href="index.php">Indietro</a></div>
+<div class="NomeFaro"><h1><?= htmlspecialchars($faro['nome']) ?></h1></div>
+
+<div class="sezione">
+  <h1>Posizione Attuale</h1>
+  <div class="box-wrapper">
+    <div class="box"><h2><strong>Latitudine</strong></h2><h2 id="lat"><?= htmlspecialchars($last_pos['lat'] ?? 'N/D') ?></h2></div>
+    <div class="box"><h2><strong>Longitudine</strong></h2><h2 id="lon"><?= htmlspecialchars($last_pos['lon'] ?? 'N/D') ?></h2></div>
+    <div class="box"><h2><strong>Stato</strong></h2><h2 id="stato"><?= htmlspecialchars($statoFaro) ?></h2></div>
+  </div>
+
+  <div id="map" style="height:500px;"></div>
 </div>
-  <div class="NomeFaro">
-    <h1><?= htmlspecialchars(strtoupper($nome_faro)) ?></h1>
-  </div>
 
-  <div class="container">
-    <h1>Dettagli Faro</h1>
-    <div class="box-wrapper">
-      <div class="box">
-        <h2><strong>Latitudine</strong></h2>
-        <h2 id="lat-faro"><?= htmlspecialchars($lat) ?></h2>
-      </div>
-      <div class="box">  
-        <h2><strong>Longitudine</strong></h2>
-        <h2 id="lon-faro"><?= htmlspecialchars($lon) ?></h2>
-      </div>  
-      <div class="box">
-        <h2><strong>Stato Faro</strong></h2>
-        <h2 id="stato-faro"><?= htmlspecialchars($stato) ?></h2>
-      </div>  
-    </div>
-  </div>
+<script>
+const idFaro = <?= json_encode($id) ?>;
+let initialLat = <?= json_encode($initialLat) ?>;
+let initialLon = <?= json_encode($initialLon) ?>;
 
-  <div id="map"></div>
+const map = L.map('map').setView([initialLat, initialLon], 13);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; OpenStreetMap contributors'
+}).addTo(map);
 
-  <script>
-    const FARO_ID = <?= $id ?>;
+let marker = L.marker([initialLat, initialLon]).addTo(map);
 
-    const latElem = document.getElementById("lat-faro");
-    const lonElem = document.getElementById("lon-faro");
-    const statoElem = document.getElementById("stato-faro");
+function aggiornaDati() {
+  fetch('faro_info.php?id=' + encodeURIComponent(idFaro))
+    .then(res => res.json())
+    .then(data => {
+      if (!data || !data.lat || !data.lon) return;
 
-    let map = L.map('map').setView(
-        [parseFloat(latElem.textContent) || 0, parseFloat(lonElem.textContent) || 0],
-        15
-    );
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap'
-    }).addTo(map);
+      const currentLat = parseFloat(data.lat);
+      const currentLon = parseFloat(data.lon);
 
-    let marker = L.marker(
-        [parseFloat(latElem.textContent) || 0, parseFloat(lonElem.textContent) || 0]
-    ).addTo(map);
+      document.getElementById('lat').textContent = currentLat;
+      document.getElementById('lon').textContent = currentLon;
+      document.getElementById('stato').textContent = data.stato ?? 'inattivo';
 
-    async function aggiornaDati() {
-        try {
-            const res = await fetch(`faro.php?id=${FARO_ID}&api=1`);
-            const data = await res.json();
+      marker.setLatLng([currentLat, currentLon]);
+      map.setView([currentLat, currentLon], 13);
+    })
+    .catch(err => console.error(err));
+}
 
-            if (data.error) {
-                console.error(data.error);
-                return;
-            }
-
-            latElem.textContent = data.lat ?? "N/D";
-            lonElem.textContent = data.lon ?? "N/D";
-            statoElem.textContent = data.stato ?? "N/D";
-
-            if (data.lat && data.lon) {
-                const latNum = parseFloat(data.lat);
-                const lonNum = parseFloat(data.lon);
-                marker.setLatLng([latNum, lonNum]);
-                map.setView([latNum, lonNum]);
-            }
-        } catch (err) {
-            console.error("Errore nel recupero dati faro:", err);
-        }
-    }
-
-    aggiornaDati();
-    setInterval(aggiornaDati, 3000);
-  </script>
+aggiornaDati();
+setInterval(aggiornaDati, 2000);
+</script>
 </body>
 </html>
