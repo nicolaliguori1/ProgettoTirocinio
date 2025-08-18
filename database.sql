@@ -65,14 +65,17 @@ CREATE TABLE boats_current_position (
 );
 
 
+INSERT INTO users (nome_utente, pw, email) VALUES
+('c.panico16', 'password123', 'c.panico16@studenti.unisa.it'),
+('m.orefice12', 'password123', 'm.orefice12@studenti.unisa.it'),
+('n.liguori1', 'password123', 'n.liguori1@studenti.unisa.it');
+
 INSERT INTO fari (nome, lat, lon) VALUES
 ('Faro di Capo d’Orso', 40.6333, 14.6833),
 ('Faro di Punta Licosa', 40.2500, 14.9000),
 ('Molo Manfredi', 40.6745, 14.7519);
 
-
 INSERT INTO boats (targa, lunghezza, nome, id_user, id_faro) VALUES
-('SA1234', 12, 'Aurora', NULL, 1),  -- Faro di Capo d’Orso
-('SA5678', 9, 'Stella Marina', NULL, 2),  -- Faro di Punta Licosa
-('SA9012', 15, 'Onda Libera', NULL, 3);  -- Faro del Porto di Salerno
-
+('SA1234', 12, 'Aurora', 1, 1),  -- Faro di Capo d’Orso
+('SA5678', 9, 'Stella Marina', 2, 2),  -- Faro di Punta Licosa
+('SA9012', 15, 'Onda Libera', 3, 3);  -- Faro del Porto di Salerno
