@@ -50,53 +50,135 @@
       document.getElementById('searchForm').addEventListener('submit', validateInputAndSubmit);
     });
   </script>
-
   <style>
-    body {
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-      margin: 0;
-      background: #0b1220;
-      color: #fff;
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-    }
-    .card {
-      background: #111a2b;
-      border: 1px solid #22314f;
-      border-radius: 16px;
-      padding: 24px;
-      width: min(520px, 92vw);
-      box-shadow: 0 10px 30px rgba(0,0,0,.35);
-    }
-    h1 { margin: 0 0 12px; font-size: 1.4rem; font-weight: 600; }
-    p  { margin: 0 0 24px; color: #b6c2e2; }
-    .row { display: grid; grid-template-columns: 1fr auto; gap: 12px; }
-    input[type="text"]{
-      background: #0e1626; border: 1px solid #2b3b5f;
-      color:#fff; padding: 12px 14px; border-radius: 10px; font-size: 1rem;
-    }
-    button{
-      background:#00BFFF; color:#111; border:0; padding: 12px 16px;
-      border-radius: 10px; font-weight:700; cursor:pointer;
-    }
-    button:hover{ filter: brightness(0.95); }
-    /* popup */
-    #popup-overlay{
-      position: fixed; inset:0; background: rgba(0,0,0,.55);
-      display:none; align-items:center; justify-content:center; z-index: 9999;
-    }
-    #popup {
-      background:#111a2b; border:1px solid #22314f; border-radius:14px;
-      padding: 18px; width:min(420px, 92vw);
-    }
-    #popup h2 { margin:0 0 10px; font-size:1.1rem; }
-    #popup p  { margin:0 0 16px; color:#c4d0ef; }
-    #popup button{
-      background:#00BFFF; color:#111; border:0; padding: 10px 14px;
-      border-radius: 10px; font-weight:700; cursor:pointer;
-    }
-  </style>
+    /* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Body */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+  color: #fff;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+/* Card principale */
+.card {
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 40px;
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  max-width: 500px;
+  width: 100%;
+}
+
+/* Titolo */
+.card h1 {
+  font-size: 1.8em;
+  color: #00d4ff;
+  margin-bottom: 15px;
+}
+
+.card p {
+  margin-bottom: 30px;
+  font-size: 1em;
+  color: #ddd;
+}
+
+/* Form */
+.row {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.row input {
+  padding: 12px 16px;
+  font-size: 1em;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  width: 200px;
+}
+
+.row button {
+  padding: 12px 24px;
+  font-size: 1em;
+  background: #00d4ff;
+  color: #000;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.row button:hover {
+  background: #00aacc;
+}
+
+/* Popup overlay */
+#popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+#popup {
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 30px;
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+}
+
+#popup h2 {
+  font-size: 1.4em;
+  margin-bottom: 15px;
+  color: #ffcc00;
+}
+
+#popup p {
+  margin-bottom: 20px;
+  font-size: 1em;
+}
+
+#popup button {
+  padding: 10px 20px;
+  font-size: 1em;
+  background: #00d4ff;
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+#popup button:hover {
+  background: #00aacc;
+}
+
+</style>
 </head>
 <body>
   <main class="card" role="main">
