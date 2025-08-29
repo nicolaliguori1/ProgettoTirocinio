@@ -153,7 +153,6 @@ async function aggiornaStorico() {
       return;
     }
 
-    // Mostra (ad es.) gli ultimi 10 cambi di stato
     eventi.slice(0, 10).forEach(ev => {
       const ts = new Date(ev.ts);
       const giorno = isNaN(ts) ? '-' : ts.toLocaleDateString('it-IT');

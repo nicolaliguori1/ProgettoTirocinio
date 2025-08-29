@@ -1,18 +1,32 @@
 {
-"lang": "it",
-"name": "PWA Natante",
-"short_name": "Natante",
-"description": "Applicazione web per il monitoraggio di un singolo natante: salvataggio continuo della terna timestamp-latitudine-longitudine ",
-"start_url": "/",
-"background_color": "#00BFFF",
-"theme_color": "#00BFFF",
-"orientation": "any",
-"display": "fullscreen",
-"icons": [
-{
-"src": "/icons/icona_natante.png",
-"sizes": "512x512"
-}
-]
-}
-
+    "lang": "it",
+    "name": "PWA Natante",
+    "short_name": "Natante",
+    "description": "Applicazione web per il monitoraggio di un singolo natante: salvataggio continuo della terna timestamp-latitudine-longitudine",
+    "start_url": "/",
+    "scope": "/",
+    "background_color": "#00BFFF",
+    "theme_color": "#00BFFF",
+    "orientation": "any",
+    "display": "standalone",
+    "icons": [
+      {
+        "src": "/icons/icona_natante-192.png",
+        "sizes": "192x192",
+        "type": "image/png",
+        "purpose": "any maskable"
+      },
+      {
+        "src": "/icons/icona_natante-512.png",
+        "sizes": "512x512",
+        "type": "image/png",
+        "purpose": "any maskable"
+      },
+      {
+        "src": "/icons/icona_natante.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ]
+  }
+  

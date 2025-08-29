@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
+  <meta name="theme-color" content="#FFD700">
   <meta charset="UTF-8">
   <title>Ricerca Faro</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="apple-touch-icon" href="/icons/icona_faro-180.png">
   <link rel="stylesheet" href="css/index.css">
   <link rel="stylesheet" href="../BoatWatch/alert.css"> 
   <script>
@@ -16,11 +19,16 @@
       document.getElementById('popup-close').focus();
     }
 
-    function hidePopup() {
+    function closePopup() {
       document.getElementById('popup-overlay').style.display = 'none';
     }
 
-    async function cercaFaro() {
+    function onKeyDown(e) {
+      if (e.key === 'Escape') closePopup();
+    }
+
+    function validateInputAndSubmit(e) {
+      e.preventDefault();
       const input = document.getElementById('codiceFaro').value.trim();
 
       if (input === '') {
@@ -33,53 +41,86 @@
         return;
       }
 
-      try {
-        const res = await fetch('faro_info.php?id=' + encodeURIComponent(input), { cache: 'no-store' });
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        const data = await res.json();
-
-        if (data.trovato) {
-          window.location.href = 'faro.php?id=' + encodeURIComponent(input);
-        } else {
-          showPopup("Faro non trovato.");
-        }
-      } catch (error) {
-        console.error("Errore nella ricerca:", error);
-        showPopup("Errore nella connessione al server.");
-      }
+      window.location.href = 'faro.php?id=' + encodeURIComponent(input);
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-      const input = document.getElementById('codiceFaro');
-      input.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') cercaFaro();
-      });
-
-      document.getElementById('popup-close').addEventListener('click', hidePopup);
-      document.getElementById('popup-overlay').addEventListener('click', (e) => {
-        if (e.target.id === 'popup-overlay') hidePopup();
-      });
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') hidePopup();
-      });
+    window.addEventListener('DOMContentLoaded', () => {
+      document.addEventListener('keydown', onKeyDown);
+      document.getElementById('searchForm').addEventListener('submit', validateInputAndSubmit);
     });
   </script>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      background: #0b1220;
+      color: #fff;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+    }
+    .card {
+      background: #111a2b;
+      border: 1px solid #22314f;
+      border-radius: 16px;
+      padding: 24px;
+      width: min(520px, 92vw);
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
+    }
+    h1 { margin: 0 0 12px; font-size: 1.4rem; font-weight: 600; }
+    p  { margin: 0 0 24px; color: #b6c2e2; }
+    .row { display: grid; grid-template-columns: 1fr auto; gap: 12px; }
+    input[type="text"]{
+      background: #0e1626; border: 1px solid #2b3b5f;
+      color:#fff; padding: 12px 14px; border-radius: 10px; font-size: 1rem;
+    }
+    button{
+      background:#ffd700; color:#111; border:0; padding: 12px 16px;
+      border-radius: 10px; font-weight:700; cursor:pointer;
+    }
+    button:hover{ filter: brightness(0.95); }
+    /* popup */
+    #popup-overlay{
+      position: fixed; inset:0; background: rgba(0,0,0,.55);
+      display:none; align-items:center; justify-content:center; z-index: 9999;
+    }
+    #popup {
+      background:#111a2b; border:1px solid #22314f; border-radius:14px;
+      padding: 18px; width:min(420px, 92vw);
+    }
+    #popup h2 { margin:0 0 10px; font-size:1.1rem; }
+    #popup p  { margin:0 0 16px; color:#c4d0ef; }
+    #popup button{
+      background:#ffd700; color:#111; border:0; padding: 10px 14px;
+      border-radius: 10px; font-weight:700; cursor:pointer;
+    }
+  </style>
 </head>
-
 <body>
-  <div class="container">
-    <h1>Benvenuto nel Lighthouse Tracker</h1>
-    <p>Inserisci l'ID numerico del faro per visualizzare i dettagli.</p>
+  <main class="card" role="main">
+    <h1>Ricerca Faro</h1>
+    <p>Inserisci l'ID numerico del faro per visualizzare lo stato.</p>
+    <form id="searchForm" class="row">
+      <input id="codiceFaro" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="Es. 12345" aria-label="ID faro">
+      <button type="submit">Cerca</button>
+    </form>
+  </main>
 
-    <input type="text" id="codiceFaro" placeholder="Es: 1, 2, 3...">
-    <button onclick="cercaFaro()">Cerca</button>
-  </div>
-
-  <div id="popup-overlay" class="popup-overlay" style="display:none;">
-    <div class="popup" role="alertdialog" aria-modal="true" aria-labelledby="popup-text">
+  <!-- popup -->
+  <div id="popup-overlay" role="dialog" aria-modal="true" aria-labelledby="popup-title">
+    <div id="popup">
+      <h2 id="popup-title">Attenzione</h2>
       <p id="popup-text">Messaggio</p>
-      <button id="popup-close" type="button">OK</button>
+      <button id="popup-close" onclick="closePopup()" type="button">OK</button>
     </div>
   </div>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(console.error);
+  });
+}
+</script>
 </body>
 </html>

@@ -4,81 +4,126 @@
   <meta charset="UTF-8">
   <title>Ricerca Barca</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- PWA essentials -->
   <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#00BFFF">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="apple-touch-icon" href="/icons/icona_natante-180.png">
+
+  <!-- CSS -->
   <link rel="stylesheet" href="css/index.css">
   <link rel="stylesheet" href="../BoatWatch/alert.css"> 
+
   <script>
     function showPopup(message) {
       const overlay = document.getElementById('popup-overlay');
       const text = document.getElementById('popup-text');
-      const closeBtn = document.getElementById('popup-close');
-
       text.textContent = message;
       overlay.style.display = 'flex';
-      closeBtn.focus();
+      document.getElementById('popup-close').focus();
     }
 
-    function hidePopup() {
+    function closePopup() {
       document.getElementById('popup-overlay').style.display = 'none';
     }
 
-    async function cercaBarca() {
-      const inputEl = document.getElementById('codiceBarca');
-      const value = inputEl.value.trim();
+    function onKeyDown(e) {
+      if (e.key === 'Escape') closePopup();
+    }
 
-      if (value === '') {
-        showPopup('Inserisci una targa valida.');
+    function validateInputAndSubmit(e) {
+      e.preventDefault();
+      const input = document.getElementById('targaBarca').value.trim();
+
+      if (input === '') {
+        showPopup("Inserisci una targa valida.");
         return;
       }
 
-      try {
-        const res = await fetch('info_barca.php?targa=' + encodeURIComponent(value), { cache: 'no-store' });
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        const data = await res.json();
-
-        if (data && data.trovata) {
-          window.location.href = 'barca.php?targa=' + encodeURIComponent(value);
-        } else {
-          showPopup('Barca non trovata.');
-        }
-      } catch (err) {
-        console.error('Errore nella ricerca:', err);
-        showPopup('Errore nella connessione al server.');
-      }
+      // Qui puoi aggiungere altre validazioni (alfanumerico ecc.)
+      window.location.href = 'barca.php?targa=' + encodeURIComponent(input);
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-      const input = document.getElementById('codiceBarca');
-      input.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') cercaBarca();
-      });
-
-      document.getElementById('popup-close').addEventListener('click', hidePopup);
-      document.getElementById('popup-overlay').addEventListener('click', (e) => {
-        if (e.target.id === 'popup-overlay') hidePopup(); // chiudi cliccando fuori
-      });
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') hidePopup();
-      });
+    window.addEventListener('DOMContentLoaded', () => {
+      document.addEventListener('keydown', onKeyDown);
+      document.getElementById('searchForm').addEventListener('submit', validateInputAndSubmit);
     });
   </script>
+
+  <style>
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      background: #0b1220;
+      color: #fff;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+    }
+    .card {
+      background: #111a2b;
+      border: 1px solid #22314f;
+      border-radius: 16px;
+      padding: 24px;
+      width: min(520px, 92vw);
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
+    }
+    h1 { margin: 0 0 12px; font-size: 1.4rem; font-weight: 600; }
+    p  { margin: 0 0 24px; color: #b6c2e2; }
+    .row { display: grid; grid-template-columns: 1fr auto; gap: 12px; }
+    input[type="text"]{
+      background: #0e1626; border: 1px solid #2b3b5f;
+      color:#fff; padding: 12px 14px; border-radius: 10px; font-size: 1rem;
+    }
+    button{
+      background:#00BFFF; color:#111; border:0; padding: 12px 16px;
+      border-radius: 10px; font-weight:700; cursor:pointer;
+    }
+    button:hover{ filter: brightness(0.95); }
+    /* popup */
+    #popup-overlay{
+      position: fixed; inset:0; background: rgba(0,0,0,.55);
+      display:none; align-items:center; justify-content:center; z-index: 9999;
+    }
+    #popup {
+      background:#111a2b; border:1px solid #22314f; border-radius:14px;
+      padding: 18px; width:min(420px, 92vw);
+    }
+    #popup h2 { margin:0 0 10px; font-size:1.1rem; }
+    #popup p  { margin:0 0 16px; color:#c4d0ef; }
+    #popup button{
+      background:#00BFFF; color:#111; border:0; padding: 10px 14px;
+      border-radius: 10px; font-weight:700; cursor:pointer;
+    }
+  </style>
 </head>
-
 <body>
-  <div class="container">
-    <h1>Benvenuto nel Boat Tracker</h1>
+  <main class="card" role="main">
+    <h1>Ricerca Barca</h1>
     <p>Inserisci la targa della barca per visualizzare i dettagli.</p>
+    <form id="searchForm" class="row">
+      <input id="targaBarca" type="text" placeholder="Es. ABC123" aria-label="Targa barca">
+      <button type="submit">Cerca</button>
+    </form>
+  </main>
 
-    <input type="text" id="codiceBarca" placeholder="Es: ITA-001" autocomplete="off">
-    <button onclick="cercaBarca()">Cerca</button>
-  </div>
-
-  <div id="popup-overlay" class="popup-overlay" style="display:none;">
-    <div class="popup" role="alertdialog" aria-modal="true" aria-labelledby="popup-text">
+  <!-- popup -->
+  <div id="popup-overlay" role="dialog" aria-modal="true" aria-labelledby="popup-title">
+    <div id="popup">
+      <h2 id="popup-title">Attenzione</h2>
       <p id="popup-text">Messaggio</p>
-      <button id="popup-close" type="button">OK</button>
+      <button id="popup-close" onclick="closePopup()" type="button">OK</button>
     </div>
   </div>
-  
+
+  <!-- Service Worker registration -->
+  <script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js').catch(console.error);
+    });
+  }
+  </script>
 </body>
 </html>

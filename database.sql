@@ -66,9 +66,9 @@ CREATE TABLE boats_current_position (
 
 
 INSERT INTO users (nome_utente, pw, email) VALUES
-('c.panico16', 'password123', 'c.panico16@studenti.unisa.it'),
-('m.orefice12', 'password123', 'm.orefice12@studenti.unisa.it'),
-('n.liguori1', 'password123', 'n.liguori1@studenti.unisa.it');
+('c.panico16', crypt('password123', gen_salt('bf')), 'c.panico16@studenti.unisa.it'),
+('m.orefice12', crypt('password123', gen_salt('bf')), 'm.orefice12@studenti.unisa.it'),
+('n.liguori1', crypt('password123', gen_salt('bf')), 'n.liguori1@studenti.unisa.it');
 
 INSERT INTO fari (nome, lat, lon) VALUES
 ('Faro di Capo d’Orso', 40.6333, 14.6833),
