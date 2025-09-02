@@ -1,4 +1,4 @@
-/* PWA Faro service worker */
+
 const CACHE_NAME = 'faro-pwa-v2';
 const CACHED_URLS = [
   '/',
@@ -26,15 +26,15 @@ self.addEventListener('activate', event => {
   })());
 });
 
-// Network-first per documenti/API, cache-first per asset statici
+
 self.addEventListener('fetch', event => {
   const req = event.request;
   const url = new URL(req.url);
 
-  // Gestisco solo stessa origin
+
   if (url.origin !== self.location.origin) return;
 
-  // Asset statici: cache-first
+
   if (req.destination === 'style' || req.destination === 'script' || req.destination === 'image' || req.destination === 'font') {
     event.respondWith(
       caches.match(req).then(cached => cached || fetch(req).then(res => {
@@ -51,7 +51,7 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // Documenti e API: network-first con fallback offline
+ 
   if (req.mode === 'navigate' || (req.destination === '' && (req.method === 'GET'))) {
     event.respondWith(
       fetch(req).then(res => {

@@ -4,7 +4,7 @@ require __DIR__ . '/functions_faro.php';
 
 header('Content-Type: application/json');
 
-// Controllo ID faro
+
 $id = $_GET['id'] ?? '';
 if (!ctype_digit($id)) {
     echo json_encode(['trovato' => false]);
@@ -17,10 +17,10 @@ if (!$faroData) {
     exit;
 }
 
-// Calcola lo stato reale
+
 $stato = calcolaStatoFaro($faroData, 60);
 
-// Risposta JSON
+
 echo json_encode([
     'trovato' => true,
     'lat' => $faroData['lat'],

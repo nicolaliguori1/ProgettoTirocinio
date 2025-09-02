@@ -31,7 +31,7 @@ function inviaPosizioni($conn) {
 
 while (true) {
     inviaPosizioni($conn);
-    sleep(60); // attesa 60 secondi
+    sleep(60); 
 }
 
 pg_close($conn);

@@ -22,7 +22,7 @@ $storico = getBoatHistory($conn, $targa);
 $faro = getFaroPosition($conn, $targa);
 
 // Determina stato
-$soglia = 50; // metri
+$soglia = 50; 
 $stato = 'Sconosciuto';
 if ($faro) {
     if (!$live || $live['ts'] === null) {

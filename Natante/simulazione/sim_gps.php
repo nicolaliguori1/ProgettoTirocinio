@@ -34,7 +34,7 @@ while (true) {
         continue;
     }
 
-    // Legge tutte le barche con faro
+    
     $boatsResult = pg_query($conn, "SELECT targa, id_faro FROM boats WHERE id_faro IS NOT NULL");
     if (!$boatsResult) {
         echo "[" . date('H:i:s') . "] Errore query barche: " . pg_last_error($conn) . "\n";
@@ -52,7 +52,7 @@ while (true) {
         continue;
     }
 
-    // Legge tutte le posizioni correnti 
+    
     
     $positions = [];
     $posQuery = pg_query($conn,
@@ -75,7 +75,7 @@ while (true) {
 
         $route = $routes[$id_faro];
 
-        // Posizione corrente
+        
         $id_rotta = $positions[$targa]['id_rotta'] ?? 0;
 
         if (!isset($route[$id_rotta])) {
@@ -87,7 +87,7 @@ while (true) {
         $newLat = $point[0] + ((mt_rand() / mt_getrandmax() - 0.5) * 0.0002);
         $newLon = $point[1] + ((mt_rand() / mt_getrandmax() - 0.5) * 0.0002);
 
-        // Inserisce storico
+        
         pg_query_params($conn,
             "INSERT INTO boats_position (targa_barca, lat, lon, ts) VALUES ($1, $2, $3, NOW())",
             [$targa, $newLat, $newLon]
@@ -95,7 +95,7 @@ while (true) {
 
         $next_rotta = ($id_rotta + 1) % count($route);
 
-        // Aggiorna posizione corrente o inserisce se non esiste
+        
         $update = pg_query_params($conn,
             "UPDATE boats_current_position 
              SET lat=$2, lon=$3, ts=NOW(), id_rotta=$4 

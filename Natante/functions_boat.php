@@ -1,7 +1,7 @@
 <?php
 require __DIR__ . '/../connessione.php';
 
-// Recupera il nome della barca
+
 function getBoatName($conn, $targa) {
     $query = "SELECT nome FROM boats WHERE targa = $1";
     $res = pg_query_params($conn, $query, [$targa]);
@@ -12,7 +12,7 @@ function getBoatName($conn, $targa) {
     return null;
 }
 
-// Posizione faro
+
 function getFaroPosition($conn, $targa) {
     $query = "SELECT f.lat, f.lon
               FROM boats b
@@ -31,7 +31,7 @@ function getFaroPosition($conn, $targa) {
     return null;
 }
 
-// Recupera la posizione live della barca (se non c’è, ritorna il faro)
+
 function getLivePosition($conn, $targa) {
     $res = pg_query_params(
         $conn,
@@ -52,7 +52,7 @@ function getLivePosition($conn, $targa) {
         }
     }
 
-    // Uso la posizione del faro
+   
     $faro = getFaroPosition($conn, $targa);
     if ($faro) {
         return [
@@ -66,7 +66,7 @@ function getLivePosition($conn, $targa) {
     return ['ts' => null, 'lat' => null, 'lon' => null, 'id_rotta' => 0];
 }
 
-// Recupera lo storico (ultimi 10 record)
+
 function getBoatHistory($conn, $targa) {
     $query = "SELECT ts, lat, lon 
               FROM boats_position 
@@ -87,7 +87,7 @@ function getBoatHistory($conn, $targa) {
     return $history;
 }
 
-// Determina lo stato della barca 
+
 function getBoatStatus($conn, $targa) {
     $live = getLivePosition($conn, $targa);
     if (!$live || $live['id_rotta'] === 0) {
@@ -96,9 +96,9 @@ function getBoatStatus($conn, $targa) {
     return "In mare";
 }
 
-// Calcolo distanza 
+
 function distanzaHaversine($lat1, $lon1, $lat2, $lon2) {
-    $R = 6371000; // raggio della Terra in metri
+    $R = 6371000; 
     $dLat = deg2rad($lat2 - $lat1);
     $dLon = deg2rad($lon2 - $lon1);
     $a = sin($dLat/2) * sin($dLat/2) +

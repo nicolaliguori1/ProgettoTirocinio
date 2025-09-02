@@ -2,19 +2,19 @@
 require __DIR__ . '/../connessione.php';
 require __DIR__ . '/functions_faro.php';
 
-// Prendi l'ID e assicurati che sia un intero valido
+
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 if ($id <= 0) {
     die('Errore: ID faro non specificato o non valido');
 }
 
-// Recupera i dati del faro
+
 $faro = getFaroById($conn, $id);
 if (!$faro) {
     die('Errore: Faro non trovato');
 }
 
-// Recupera ultima posizione o default
+
 $last_pos = getFaroData($conn, $id);
 $initialLat = is_numeric($last_pos['lat'] ?? null) ? floatval($last_pos['lat']) : 0;
 $initialLon = is_numeric($last_pos['lon'] ?? null) ? floatval($last_pos['lon']) : 0;

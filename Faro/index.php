@@ -50,14 +50,14 @@
     });
   </script>
   <style>
-/* Reset */
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* Body */
+
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
@@ -69,7 +69,7 @@ body {
   padding: 20px;
 }
 
-/* Card principale */
+
 .card {
   background-color: rgba(255, 255, 255, 0.05);
   padding: 40px;
@@ -81,7 +81,6 @@ body {
   width: 100%;
 }
 
-/* Titolo */
 .card h1 {
   font-size: 1.8em;
   color: #00d4ff;
@@ -94,7 +93,7 @@ body {
   color: #ddd;
 }
 
-/* Form */
+
 .row {
   display: flex;
   gap: 10px;
@@ -122,7 +121,7 @@ body {
   background: rgba(255, 255, 255, 0.2);
 }
 
-/* Bottone */
+
 .row button {
   padding: 12px 24px;
   font-size: 1em;
@@ -138,7 +137,7 @@ body {
   background: #00aacc;
 }
 
-/* Popup overlay */
+
 #popup-overlay {
   position: fixed;
   top: 0;
@@ -152,7 +151,7 @@ body {
   z-index: 1000;
 }
 
-/* Popup box */
+
 #popup {
   background-color: rgba(255, 255, 255, 0.1);
   padding: 30px;
@@ -164,7 +163,7 @@ body {
   width: 90%;
 }
 
-/* Titolo e testo popup */
+
 #popup h2 {
   font-size: 1.4em;
   margin-bottom: 15px;
@@ -176,7 +175,7 @@ body {
   font-size: 1em;
 }
 
-/* Bottone popup */
+
 #popup button {
   padding: 10px 20px;
   font-size: 1em;

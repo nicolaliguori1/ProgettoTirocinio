@@ -5,13 +5,13 @@
   <title>Ricerca Barca</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- PWA essentials -->
+
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#00BFFF">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <link rel="apple-touch-icon" href="/icons/icona_natante-180.png">
 
-  <!-- CSS -->
+
   <link rel="stylesheet" href="css/index.css">
   <link rel="stylesheet" href="../BoatWatch/alert.css"> 
 
@@ -41,7 +41,7 @@
         return;
       }
 
-      // Qui puoi aggiungere altre validazioni (alfanumerico ecc.)
+      
       window.location.href = 'barca.php?targa=' + encodeURIComponent(input);
     }
 
@@ -51,14 +51,14 @@
     });
   </script>
   <style>
-    /* Reset */
+  
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* Body */
+
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
@@ -70,7 +70,7 @@ body {
   padding: 20px;
 }
 
-/* Card principale */
+
 .card {
   background-color: rgba(255, 255, 255, 0.05);
   padding: 40px;
@@ -82,7 +82,7 @@ body {
   width: 100%;
 }
 
-/* Titolo */
+
 .card h1 {
   font-size: 1.8em;
   color: #00d4ff;
@@ -95,7 +95,7 @@ body {
   color: #ddd;
 }
 
-/* Form */
+
 .row {
   display: flex;
   gap: 10px;
@@ -127,7 +127,7 @@ body {
   background: #00aacc;
 }
 
-/* Popup overlay */
+
 #popup-overlay {
   position: fixed;
   top: 0;
@@ -190,7 +190,7 @@ body {
     </form>
   </main>
 
-  <!-- popup -->
+
   <div id="popup-overlay" role="dialog" aria-modal="true" aria-labelledby="popup-title">
     <div id="popup">
       <h2 id="popup-title">Attenzione</h2>
@@ -199,7 +199,7 @@ body {
     </div>
   </div>
 
-  <!-- Service Worker registration -->
+
   <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
